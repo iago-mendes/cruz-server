@@ -11,6 +11,9 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 mongoose.connect('mongodb://localhost:27017/cruz', {useNewUrlParser: true, useUnifiedTopology: true})
+mongoose.connection
+.once('open', () => console.log('connection has been made'))
+.on('error', error => console.log('[connection error]: ', error))
 import './models/Client'
 
 app.use(routes)
