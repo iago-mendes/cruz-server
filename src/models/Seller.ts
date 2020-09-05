@@ -14,7 +14,7 @@ const SellerSchema = new mongoose.Schema(
     }],
     representadas:
     [{
-        id: {type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor', required: true},
+        id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
         comissao: {type: Number, required: true}
     }]
 })
