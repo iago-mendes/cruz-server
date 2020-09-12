@@ -5,7 +5,7 @@ const CompanySchema = new mongoose.Schema(
     imagem: {type: String, required: false},
     razao_social: {type: String, required: true},
     nome_fantasia: {type: String, required: true},
-    cnpj: {type: Number, required: true},
+    cnpj: {type: String, required: true},
     telefones: [{type: Number, required: true}],
     email: {type: String, required: true},
     comissao:
@@ -34,4 +34,4 @@ const CompanySchema = new mongoose.Schema(
     }]
 })
 
-mongoose.model('Representada', CompanySchema)
+export const Company = mongoose.model('Representada', CompanySchema)
