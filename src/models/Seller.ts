@@ -19,4 +19,4 @@ const SellerSchema = new mongoose.Schema(
     }]
 })
 
-mongoose.model('Vendedor', SellerSchema)
+export const Seller = mongoose.model('Vendedor', SellerSchema)
