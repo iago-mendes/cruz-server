@@ -5,8 +5,8 @@ const ClientSchema = new mongoose.Schema(
     imagem: {type: String, required: false},
     razao_social: {type: String, required: true},
     nome_fantasia: {type: String, required: true},
-    cnpj: {type: Number, required: true},
-    insc_estadual: {type: Number, required: true},
+    cnpj: {type: String, required: true},
+    insc_estadual: {type: String, required: true},
     telefone: {type: Number, required: true},
     email: {type: String, required: true},
     vendedores: [{type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor'}],
@@ -28,8 +28,8 @@ const ClientSchema = new mongoose.Schema(
     representadas:
     [{
         id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada'},
-        tabela: {type: mongoose.Schema.Types.ObjectId}
+        tabela: {type: String}
     }]
 })
 
-mongoose.model('Cliente', ClientSchema)
+export const Client = mongoose.model('Cliente', ClientSchema)
