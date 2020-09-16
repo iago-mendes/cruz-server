@@ -2,11 +2,11 @@ import mongoose from 'mongoose'
 
 const RequestSchema = new mongoose.Schema(
 {
-    numero: {type: Number, required: true},
     data: {type: Date, default: Date.now(), required: true},
     condicao: {type: String, required: true},
     digitado_por: {type: String, required: false},
     cliente: {type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true},
+    vendedor: {type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor', required: true},
     representada: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
     linha: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.linhas', required: true},
     peso: {type: Number, required: false},
@@ -29,4 +29,4 @@ const RequestSchema = new mongoose.Schema(
     }]
 })
 
-mongoose.model('Pedido', RequestSchema)
+export const Request = mongoose.model('Pedido', RequestSchema)
