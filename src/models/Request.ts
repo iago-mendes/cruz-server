@@ -1,5 +1,20 @@
 import mongoose from 'mongoose'
 
+export interface RequestInterface
+{
+    data: Date
+    condicao: string
+    digitado_por: string
+    cliente: string
+    vendedor: string
+    representada: string
+    linha: string
+    peso: number
+    tipo: {venda: boolean, troca: boolean}
+    status: {concluido: boolean, enviado: boolean, faturado: boolean}
+    produtos: Array<{id: string, quantidade: number, preco: number}>
+}
+
 const RequestSchema = new mongoose.Schema(
 {
     data: {type: Date, default: Date.now(), required: true},

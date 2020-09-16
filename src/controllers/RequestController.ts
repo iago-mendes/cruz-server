@@ -1,6 +1,9 @@
 import { Request, Response, NextFunction, request } from 'express'
 
-import { Request as RequestModel } from '../models/Request'
+import { Request as RequestModel, RequestInterface } from '../models/Request'
+import { Company } from '../models/Company'
+import { Client } from '../models/Client'
+import { Seller } from '../models/Seller'
 
 export default class RequestController
 {
@@ -42,6 +45,11 @@ export default class RequestController
     {
         try {
             const requests = await RequestModel.find()
+            requests.map(async request =>
+            {
+                const company = await Company.findById(request)
+                const client = await Client.findById(request)
+            })
             return res.json(requests)
         } catch (error) {
             next(error)
