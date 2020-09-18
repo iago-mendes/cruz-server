@@ -1,5 +1,27 @@
 import mongoose from 'mongoose'
 
+type CompanyType = mongoose.Document &
+{
+    imagem?: string
+    razao_social: string
+    nome_fantasia: string
+    cnpj: string
+    telefones: Array<string>
+    email: string
+    comissao: {porcentagem: number, obs: Array<string>}
+    linhas: Array<{nome: string, produtos: Array<
+    {
+        imagem?: string
+        codigo: number
+        nome: string
+        ipi: number
+        st: number
+        unidade: string
+        comissao: number
+        tabelas: Array<{nome: string, preco: number}>
+    }>}>
+}
+
 const CompanySchema = new mongoose.Schema(
 {
     imagem: {type: String, required: false},
@@ -34,4 +56,4 @@ const CompanySchema = new mongoose.Schema(
     }]
 })
 
-export const Company = mongoose.model('Representada', CompanySchema)
+export default mongoose.model<CompanyType>('Representada', CompanySchema)

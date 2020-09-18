@@ -1,5 +1,16 @@
 import mongoose from 'mongoose'
 
+type SellerType = mongoose.Document &
+{
+    nome: string
+    imagem?: string
+    email: string
+    senha: string
+    admin: boolean
+    telefones: Array<{numero: number, whatsapp: boolean}>
+    representadas: Array<{id: string, comissao: number}>
+}
+
 const SellerSchema = new mongoose.Schema(
 {
     nome: {type: String, required: true},
@@ -19,4 +30,4 @@ const SellerSchema = new mongoose.Schema(
     }]
 })
 
-export const Seller = mongoose.model('Vendedor', SellerSchema)
+export default mongoose.model<SellerType>('Vendedor', SellerSchema)

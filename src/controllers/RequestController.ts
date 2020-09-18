@@ -1,9 +1,9 @@
-import { Request, Response, NextFunction, request } from 'express'
+import { Request, Response, NextFunction } from 'express'
 
-import { Request as RequestModel, RequestInterface } from '../models/Request'
-import { Company } from '../models/Company'
-import { Client } from '../models/Client'
-import { Seller } from '../models/Seller'
+import RequestModel from '../models/Request'
+import Company from '../models/Company'
+import Client from '../models/Client'
+import Seller from '../models/Seller'
 
 export default class RequestController
 {

@@ -1,5 +1,28 @@
 import mongoose from 'mongoose'
 
+type ClientType = mongoose.Document &
+{
+    imagem?: string
+    razao_social: string
+    nome_fantasia: string
+    cnpj: string
+    insc_estadual: string
+    telefone: number
+    email: string
+    vendedores: Array<string>
+    endereco:
+    {
+        rua?: string
+        numero?: number
+        bairro?: string
+        cep?: number
+        cidade?: string
+        uf?: string
+    }
+    status: {ativo: boolean, aberto: boolean, nome_sujo: boolean}
+    representadas: Array<{id: string, tabela: string}>
+}
+
 const ClientSchema = new mongoose.Schema(
 {
     imagem: {type: String, required: false},
@@ -32,4 +55,4 @@ const ClientSchema = new mongoose.Schema(
     }]
 })
 
-export const Client = mongoose.model('Cliente', ClientSchema)
+export default mongoose.model<ClientType>('Cliente', ClientSchema)

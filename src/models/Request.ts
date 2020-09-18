@@ -1,15 +1,15 @@
 import mongoose from 'mongoose'
 
-export interface RequestInterface
+type RequestType = mongoose.Document &
 {
     data: Date
     condicao: string
-    digitado_por: string
+    digitado_por?: string
     cliente: string
     vendedor: string
     representada: string
     linha: string
-    peso: number
+    peso?: number
     tipo: {venda: boolean, troca: boolean}
     status: {concluido: boolean, enviado: boolean, faturado: boolean}
     produtos: Array<{id: string, quantidade: number, preco: number}>
@@ -44,4 +44,4 @@ const RequestSchema = new mongoose.Schema(
     }]
 })
 
-export const Request = mongoose.model('Pedido', RequestSchema)
+export default mongoose.model<RequestType>('Pedido', RequestSchema)
