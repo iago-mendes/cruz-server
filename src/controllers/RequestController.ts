@@ -5,6 +5,28 @@ import Company from '../models/Company'
 import Client from '../models/Client'
 import Seller from '../models/Seller'
 
+interface ListInterface
+{
+    id: string
+    data: Date
+    cliente: string
+    vendedor: string
+    representada: string
+    tipo: {venda: boolean, troca: boolean}
+    status: {concluido: boolean, enviado: boolean, faturado: boolean}
+}
+
+const defaultList =
+{
+    id: '',
+    data: new Date(),
+    cliente: '',
+    vendedor: '',
+    representada: '',
+    tipo: {venda: false, troca: false},
+    status: {concluido: false, enviado: false, faturado: false}
+}
+
 export default class RequestController
 {
     async create(req: Request, res: Response, next: NextFunction)
@@ -44,13 +66,30 @@ export default class RequestController
     async list(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const requests = await RequestModel.find()
-            requests.map(async request =>
+            let list: ListInterface[] = []
+            await RequestModel.find().then(requests =>
             {
-                const company = await Company.findById(request)
-                const client = await Client.findById(request)
+                requests.map(async request =>
+                {
+                    const client = await Client.findById(request.cliente)
+                    const seller = await Seller.findById(request.vendedor)
+                    const company = await Company.findById(request.representada)
+                    const tmp =
+                    {
+                        id: request._id,
+                        data: request.data,
+                        cliente: String(client?.nome_fantasia),
+                        vendedor: String(seller?.nome),
+                        representada: String(company?.nome_fantasia),
+                        tipo: request.tipo,
+                        status: request.status
+                    }
+                    list.push(tmp)
+                    console.log(tmp)
+                })
             })
-            return res.json(requests)
+            console.log(list)
+            return res.json(list)
         } catch (error) {
             next(error)
         }
