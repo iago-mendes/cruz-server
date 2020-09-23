@@ -67,28 +67,27 @@ export default class RequestController
     {
         try {
             let list: ListInterface[] = []
-            await RequestModel.find().then(requests =>
+            const requests = await RequestModel.find()
+
+            const promises = requests.map(async request =>
             {
-                requests.map(async request =>
+                const client = await Client.findById(request.cliente)
+                const seller = await Seller.findById(request.vendedor)
+                const company = await Company.findById(request.representada)
+                const tmp =
                 {
-                    const client = await Client.findById(request.cliente)
-                    const seller = await Seller.findById(request.vendedor)
-                    const company = await Company.findById(request.representada)
-                    const tmp =
-                    {
-                        id: request._id,
-                        data: request.data,
-                        cliente: String(client?.nome_fantasia),
-                        vendedor: String(seller?.nome),
-                        representada: String(company?.nome_fantasia),
-                        tipo: request.tipo,
-                        status: request.status
-                    }
-                    list.push(tmp)
-                    console.log(tmp)
-                })
+                    id: request._id,
+                    data: request.data,
+                    cliente: String(client?.nome_fantasia),
+                    vendedor: String(seller?.nome),
+                    representada: String(company?.nome_fantasia),
+                    tipo: request.tipo,
+                    status: request.status
+                }
+                list.push(tmp)
             })
-            console.log(list)
+            await Promise.all(promises)
+
             return res.json(list)
         } catch (error) {
             next(error)
