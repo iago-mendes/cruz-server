@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { Company } from '../models/Company'
+import Company from '../models/Company'
 
 export default class CompanyController
 {

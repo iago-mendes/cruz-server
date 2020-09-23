@@ -2,6 +2,7 @@ import mongoose from 'mongoose'
 
 type CompanyType = mongoose.Document &
 {
+    _id: string
     imagem?: string
     razao_social: string
     nome_fantasia: string
@@ -9,8 +10,9 @@ type CompanyType = mongoose.Document &
     telefones: Array<string>
     email: string
     comissao: {porcentagem: number, obs: Array<string>}
-    linhas: Array<{nome: string, produtos: Array<
+    linhas: Array<{_id: string, nome: string, produtos: Array<
     {
+        _id: string
         imagem?: string
         codigo: number
         nome: string
