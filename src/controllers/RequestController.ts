@@ -43,10 +43,10 @@ interface ShowInterface
     representada: {id: string, nome: string}
     linha: {id: string, nome: string}
     produtos: Array<Product>
+    descontoTotal: number
     valorTotalProdutos: number
     valorTotal: number
 }
-
 
 const defaultList =
 {
@@ -141,6 +141,7 @@ export default class RequestController
                 {
                     let totalValue = 0
                     let totalProductsValue = 0
+                    let totalDiscount = 0
 
                     let products: Product[] = []
                     const promises = request.produtos.map(async productSold =>
@@ -160,6 +161,7 @@ export default class RequestController
 
                                 totalProductsValue += productSold.quantidade*productSold.preco
                                 totalValue += subtotal
+                                totalDiscount += (Number(tablePrice)-productSold.preco)*productSold.quantidade
 
                                 const tmp =
                                 {
@@ -195,6 +197,7 @@ export default class RequestController
                             representada: {id: request.representada, nome: company !== null ? company.nome_fantasia : ''},
                             linha: {id: request.linha, nome: line !== undefined ? line.nome : ''},
                             produtos: products,
+                            descontoTotal: totalDiscount,
                             valorTotalProdutos: totalProductsValue,
                             valorTotal: totalValue
                         }
