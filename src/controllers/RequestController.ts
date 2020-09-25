@@ -132,7 +132,8 @@ export default class RequestController
                 const client = await Client.findById(request.cliente)
                 const seller = await Seller.findById(request.vendedor)
                 const company = await Company.findById(request.representada)
-                const line = company?.linhas.find(linha => linha._id === request.linha)
+
+                const line = company?.linhas.find(linha => String(linha._id) == request.linha)
                 if (line !== undefined)
                 {
                     let totalValue = 0
@@ -168,7 +169,8 @@ export default class RequestController
                                     subtotal: subtotal
                                 }
                             }
-                            else return {
+                            else{
+                                return {
                                 id: '',
                                 nome: '',
                                 imagem: '',
@@ -178,7 +180,7 @@ export default class RequestController
                                 ipi: 0,
                                 st: 0,
                                 subtotal: 0
-                            }
+                            }}
                         })
                         Promise.all(tmp)
                         return tmp
@@ -207,7 +209,9 @@ export default class RequestController
                         }
                        return res.json(show)
                     }
+                    else res.status(500).send('products is undefined')
                 }
+                else res.status(500).send('line is undefined')
             }
         } catch (error) {
             next(error)
