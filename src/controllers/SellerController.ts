@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { Seller } from '../models/Seller'
+import Seller from '../models/Seller'
 
 export default class SellerControler
 {

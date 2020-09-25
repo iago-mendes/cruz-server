@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 
-import { Client } from '../models/Client'
+import Client from '../models/Client'
 
 export default class ClientController
 {
