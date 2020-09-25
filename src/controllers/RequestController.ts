@@ -143,13 +143,13 @@ export default class RequestController
                     {
                         const tmp = request.produtos.map(productSold =>
                         {
-                            if (product._id === productSold.id)
+                            if (String(product._id) == productSold.id)
                             {
                                 const table = client?.representadas
-                                    .find(tmpCompany => tmpCompany.id === company?._id)?.tabela
+                                    .find(tmpCompany => String(tmpCompany.id) == String(company?._id))?.tabela
                                 const tablePrice = line.produtos
-                                    .find(tmpProduct => tmpProduct._id === product._id)?.tabelas
-                                    .find(tmpTable => tmpTable.nome === table)?.preco
+                                    .find(tmpProduct => String(tmpProduct._id) == String(product._id))?.tabelas
+                                    .find(tmpTable => String(tmpTable.nome) == String(table))?.preco
                                 const subtotal = productSold.quantidade*productSold.preco
                                     +productSold.quantidade*productSold.preco*product.ipi/100
                                     +productSold.quantidade*productSold.preco*product.st/100
@@ -213,6 +213,16 @@ export default class RequestController
                 }
                 else res.status(500).send('line is undefined')
             }
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async all(req: Request, res: Response, next: NextFunction)
+    {
+        try {
+            const requests = await RequestModel.find()
+            return res.json(requests)
         } catch (error) {
             next(error)
         }

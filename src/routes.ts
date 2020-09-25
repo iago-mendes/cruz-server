@@ -35,5 +35,6 @@ routes.put('/requests/:id', Request.update)
 routes.delete('/requests/:id', Request.remove)
 routes.get('/requests', Request.list)
 routes.get('/requests/:id', Request.show)
+routes.get('/requests-all', Request.all)
 
 export default routes
