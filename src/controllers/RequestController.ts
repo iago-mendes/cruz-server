@@ -16,6 +16,19 @@ interface ListInterface
     status: {concluido: boolean, enviado: boolean, faturado: boolean}
 }
 
+interface Product
+{
+    id: string
+    nome: string
+    imagem: string
+    quantidade: number
+    preco: number
+    precoTabela: number
+    ipi: number
+    st: number
+    subtotal: number
+}
+
 interface ShowInterface
 {
     id: string
@@ -29,21 +42,11 @@ interface ShowInterface
     vendedor: {id: string, nome: string}
     representada: {id: string, nome: string}
     linha: {id: string, nome: string}
-    produtos: Array<
-    {
-        id: string,
-        nome: string,
-        imagem: string,
-        quantidade: number, 
-        preco: number, 
-        precoTabela: number,
-        ipi: number,
-        st: number,
-        subtotal: number
-    }>
+    produtos: Array<Product>
     valorTotalProdutos: number
     valorTotal: number
 }
+
 
 const defaultList =
 {
@@ -139,9 +142,10 @@ export default class RequestController
                     let totalValue = 0
                     let totalProductsValue = 0
 
-                    const products = line.produtos.map(product =>
+                    let products: Product[] = []
+                    const promises = request.produtos.map(async productSold =>
                     {
-                        const tmp = request.produtos.map(productSold =>
+                        line.produtos.map(product =>
                         {
                             if (String(product._id) == productSold.id)
                             {
@@ -157,7 +161,8 @@ export default class RequestController
                                 totalProductsValue += productSold.quantidade*productSold.preco
                                 totalValue += subtotal
 
-                                return {
+                                const tmp =
+                                {
                                     id: product._id,
                                     nome: product.nome,
                                     imagem: String(product.imagem),
@@ -168,25 +173,11 @@ export default class RequestController
                                     st: product.st,
                                     subtotal: subtotal
                                 }
+                                products.push(tmp)
                             }
-                            else{
-                                return {
-                                id: '',
-                                nome: '',
-                                imagem: '',
-                                quantidade: 0, 
-                                preco: 0, 
-                                precoTabela: 0,
-                                ipi: 0,
-                                st: 0,
-                                subtotal: 0
-                            }}
                         })
-                        Promise.all(tmp)
-                        return tmp
-                    })[0]
-                    await Promise.all(products)
-                    console.log(products)
+                    })
+                    await Promise.all(promises)
 
                     if (products !== undefined)
                     {
