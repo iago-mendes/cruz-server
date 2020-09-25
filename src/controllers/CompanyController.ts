@@ -57,4 +57,14 @@ export default class CompanyController
             next(error)
         }
     }
+
+    async all(req: Request, res: Response, next: NextFunction)
+    {
+        try {
+            const companies = await Company.find()
+            return res.json(companies)
+        } catch (error) {
+            next(error)
+        }
+    }
 }

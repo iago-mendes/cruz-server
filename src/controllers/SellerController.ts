@@ -57,4 +57,14 @@ export default class SellerControler
             next(error)
         }
     }
+
+    async all(req: Request, res: Response, next: NextFunction)
+    {
+        try {
+            const sellers = await Seller.find()
+            return res.json(sellers)
+        } catch (error) {
+            next(error)
+        }
+    }
 }

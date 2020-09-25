@@ -57,4 +57,14 @@ export default class ClientController
             next(error)
         }
     }
+
+    async all(req: Request, res: Response, next: NextFunction)
+    {
+        try {
+            const clients = await Client.find()
+            return res.json(clients)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
