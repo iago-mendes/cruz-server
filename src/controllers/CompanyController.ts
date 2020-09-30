@@ -74,7 +74,14 @@ export default class CompanyController
     {
         try {
             const company = await Company.findById(req.params.id)
-            return res.json(company)
+            return res.json(
+            {
+                id: company?._id,
+                imagem: company?.imagem,
+                nome_fantasia: company?.nome_fantasia,
+                descricao: company?.descricao,
+                site: company?.site
+            })
         } catch (error) {
             next(error)
         }
