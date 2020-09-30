@@ -1,6 +1,8 @@
 import { Request, Response, NextFunction } from 'express'
 
 import Client from '../models/Client'
+import Company from '../models/Company'
+import Seller from '../models/Seller'
 
 interface List
 {
@@ -96,7 +98,50 @@ export default class ClientController
     {
         try {
             const client = await Client.findById(req.params.id)
-            return res.json(client)
+            if (client !== null)
+            {
+                let sellers: {id: string, nome: string}[] = []
+                const promises1 = client.vendedores.map(async seller =>
+                {
+                    const tmpSeller = await Seller.findById(seller)
+                    sellers.push(
+                    {
+                        id: seller,
+                        nome: String(tmpSeller?.nome)
+                    })
+                })
+                await Promise.all(promises1)
+
+                let companies: {id: string, nome_fantasia: string, tabela: string}[] = []
+                const promises2 = client.representadas.map(async company =>
+                {
+                    const tmpCompany = await Company.findById(company.id)
+                    companies.push(
+                    {
+                        id: company.id,
+                        nome_fantasia: String(tmpCompany?.nome_fantasia),
+                        tabela: company.tabela
+                    })
+                })
+                await Promise.all(promises2)
+
+                return res.json(
+                {
+                    id: client.id,
+                    imagem: client.imagem,
+                    razao_social: client.razao_social,
+                    nome_fantasia: client.razao_social,
+                    cnpj: client.cnpj,
+                    insc_estadual: client.insc_estadual,
+                    telefone: client.telefone,
+                    email: client.email,
+                    endereco: client.endereco,
+                    status: client.status,
+                    vendedores: sellers,
+                    representadas: companies
+                })
+            }
+
         } catch (error) {
             next(error)
         }
