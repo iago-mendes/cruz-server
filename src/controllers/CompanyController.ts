@@ -2,6 +2,14 @@ import { Request, Response, NextFunction } from 'express'
 
 import Company from '../models/Company'
 
+interface ListInterface
+{
+    id: string
+    imagem: string
+    nome_fantasia: string
+    descricao_curta: string
+}
+
 export default class CompanyController
 {
     async create(req: Request, res: Response, next: NextFunction)
@@ -41,8 +49,22 @@ export default class CompanyController
     async list(req: Request, res: Response, next: NextFunction)
     {
         try {
+            let list: ListInterface[] = []
             const companies = await Company.find()
-            return res.json(companies)
+
+            const promises = companies.map(company =>
+            {
+                list.push(
+                {
+                    id: company._id,
+                    imagem: String(company.imagem),
+                    nome_fantasia: company.nome_fantasia,
+                    descricao_curta: String(company.decricao_curta)
+                })
+            })
+            await Promise.all(promises)
+
+            return res.json(list)
         } catch (error) {
             next(error)
         }
