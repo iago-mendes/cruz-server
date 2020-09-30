@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from 'express'
 
 import Seller from '../models/Seller'
+import Company from '../models/Company'
 
 interface List
 {
@@ -74,7 +75,30 @@ export default class SellerControler
     {
         try {
             const seller = await Seller.findById(req.params.id)
-            return res.json(seller)
+            if(seller !== null)
+            {
+                let companies: {id: string, nome_fantasia: string}[] = []
+                const promises = seller.representadas.map(async company =>
+                {
+                    const tmpCompany = await Company.findById(company.id)
+                    companies.push(
+                    {
+                        id: company.id,
+                        nome_fantasia: String(tmpCompany?.nome_fantasia)
+                    })
+                })
+                await Promise.all(promises)
+
+                return res.json(
+                {
+                    id: seller._id,
+                    imagem: seller.imagem,
+                    nome: seller.nome,
+                    funcao: seller.funcao,
+                    telefones: seller.telefones,
+                    representadas: companies
+                })
+            }
         } catch (error) {
             next(error)
         }
