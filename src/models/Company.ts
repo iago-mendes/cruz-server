@@ -9,6 +9,9 @@ type CompanyType = mongoose.Document &
     cnpj: string
     telefones: Array<string>
     email: string
+    decricao_curta?: string
+    descricao?: string
+    site?: string
     comissao: {porcentagem: number, obs: Array<string>}
     linhas: Array<{_id: string, nome: string, produtos: Array<
     {
@@ -32,6 +35,9 @@ const CompanySchema = new mongoose.Schema(
     cnpj: {type: String, required: true},
     telefones: [{type: Number, required: true}],
     email: {type: String, required: true},
+    descricao_curta: {type: String, required: false},
+    descricao: {type: String, required: false},
+    site: {type: String, required: false},
     comissao:
     {
         porcentagem: {type: Number, required: true},
