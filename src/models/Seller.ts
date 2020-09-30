@@ -6,6 +6,7 @@ type SellerType = mongoose.Document &
     imagem?: string
     email: string
     senha: string
+    funcao?: string
     admin: boolean
     telefones: Array<{numero: number, whatsapp: boolean}>
     representadas: Array<{id: string, comissao: number}>
@@ -17,6 +18,7 @@ const SellerSchema = new mongoose.Schema(
     imagem: {type: String, required: false},
     email: {type: String, required: true},
     senha: {type: String, required: true},
+    funcao: {type: String, required: false},
     admin: {type: Boolean, required: true},
     telefones:
     [{

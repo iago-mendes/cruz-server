@@ -2,6 +2,14 @@ import { Request, Response, NextFunction } from 'express'
 
 import Seller from '../models/Seller'
 
+interface List
+{
+    id: string
+    imagem: string
+    nome: string
+    funcao: string
+}
+
 export default class SellerControler
 {
     async create(req: Request, res: Response, next: NextFunction)
@@ -41,8 +49,22 @@ export default class SellerControler
     async list(req: Request, res: Response, next: NextFunction)
     {
         try {
+            let list: List[] = []
             const sellers = await Seller.find()
-            return res.json(sellers)
+
+            const promises = sellers.map(seller =>
+            {
+                list.push(
+                {
+                    id: seller._id,
+                    imagem: String(seller.imagem),
+                    nome: seller.nome,
+                    funcao: String(seller.funcao)
+                })
+            })
+            await Promise.all(promises)
+
+            return res.json(list)
         } catch (error) {
             next(error)
         }
