@@ -130,7 +130,7 @@ export default class ClientController
                     id: client.id,
                     imagem: client.imagem,
                     razao_social: client.razao_social,
-                    nome_fantasia: client.razao_social,
+                    nome_fantasia: client.nome_fantasia,
                     cnpj: client.cnpj,
                     insc_estadual: client.insc_estadual,
                     telefone: client.telefone,
