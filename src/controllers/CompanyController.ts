@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express'
+import fs from 'fs'
 
 import Company from '../models/Company'
 
@@ -15,8 +16,33 @@ export default class CompanyController
     async create(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const company = req.body
-            Company.create(company)
+            const {
+                razao_social, 
+                nome_fantasia,
+                cnpj,
+                telefones,
+                email,
+                comissao,
+                linhas,
+                descricao_curta,
+                descricao,
+                site
+            } = req.body
+            const imagem = req.file.filename
+            Company.create(
+            {
+                imagem,
+                razao_social,
+                nome_fantasia,
+                cnpj,
+                telefones,
+                email,
+                comissao,
+                linhas,
+                descricao_curta,
+                descricao,
+                site
+            })
             return res.status(201).send()
         } catch (error) {
             next(error)
@@ -26,8 +52,43 @@ export default class CompanyController
     async update(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const company = req.body
-            const tmp = Company.findByIdAndUpdate(req.params.id, company, {new: true})
+            const id = req.params.id
+            const {
+                razao_social, 
+                nome_fantasia,
+                cnpj,
+                telefones,
+                email,
+                comissao,
+                linhas,
+                descricao_curta,
+                descricao,
+                site
+            } = req.body
+            const imagem = req.file.filename
+            const company =
+            {
+                id,
+                imagem,
+                razao_social,
+                nome_fantasia,
+                cnpj,
+                telefones,
+                email,
+                comissao,
+                linhas,
+                descricao_curta,
+                descricao,
+                site
+            }
+
+            const previous = await Company.findById(id)
+            fs.unlink(`../../uploads/${previous?.imagem}`, err =>
+            {
+                if(err) console.log(err)
+            })
+
+            const tmp = Company.findByIdAndUpdate(id, company, {new: true})
             res.status(200).send()
             return tmp
         } catch (error) {
@@ -59,7 +120,7 @@ export default class CompanyController
                     id: company._id,
                     imagem: String(company.imagem),
                     nome_fantasia: company.nome_fantasia,
-                    descricao_curta: String(company.decricao_curta)
+                    descricao_curta: String(company.descricao_curta)
                 })
             })
             await Promise.all(promises)

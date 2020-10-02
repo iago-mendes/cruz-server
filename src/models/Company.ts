@@ -9,7 +9,7 @@ type CompanyType = mongoose.Document &
     cnpj: string
     telefones: Array<string>
     email: string
-    decricao_curta?: string
+    descricao_curta?: string
     descricao?: string
     site?: string
     comissao: {porcentagem: number, obs: Array<string>}
