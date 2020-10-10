@@ -19,8 +19,6 @@ mongoose.connection
 .once('open', () => console.log('connection has been made'))
 .on('error', error => console.log('[connection error]: ', error))
 
-import './models/Company'
-
 app.use(routes)
 
 app.listen(1973, () => console.log('server is running'))
