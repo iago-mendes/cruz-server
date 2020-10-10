@@ -10,14 +10,14 @@ export default
 {
     logIn: async (req: Request, res: Response) =>
     {
-        let user = {email: '', password: ''}
+        let user = {email: '', password: '', id: ''}
 
         const client = await Client.findOne({email: req.body.email})
-        if (client) user = {email: client.email, password: client.senha}
+        if (client) user = {email: client.email, password: client.senha, id: client._id}
         else
         {
             const seller = await Seller.findOne({email: req.body.email})
-            if (seller) user = {email: seller.email, password: seller.senha}
+            if (seller) user = {email: seller.email, password: seller.senha, id: seller._id}
             else return res.status(404).send({ message: "Usuário não encontrado." })
         }
 
@@ -29,6 +29,6 @@ export default
         })
 
         const token = jwt.sign({id: user.email}, secret)
-        return res.status(200).send({email: user.email, token})
+        return res.status(200).send({email: user.email, id: user.id, token})
     }
 }

@@ -6,7 +6,7 @@ import { secret } from '../config/auth'
 
 export default
 {
-    verigyToken: (req: Request, res: Response, next: NextFunction) =>
+    verifyToken: (req: Request, res: Response, next: NextFunction) =>
     {
         let token = req.headers["x-access-token"]
       

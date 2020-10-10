@@ -10,38 +10,42 @@ import CompanyController from './controllers/CompanyController'
 import SellerController from './controllers/SellerController'
 import ClientController from './controllers/ClientController'
 import RequestController from './controllers/RequestController'
+import AuthController from './controllers/AuthController'
+import auth from './middleware/authJwt'
 
 const Company = new CompanyController()
 const Seller = new SellerController()
 const Client = new ClientController()
 const Request = new RequestController()
 
-routes.post('/companies', upload.single('imagem'), Company.create)
-routes.put('/companies/:id', upload.single('imagem'), Company.update)
-routes.delete('/companies/:id', Company.remove)
-routes.get('/companies', Company.list)
-routes.get('/companies/:id', Company.show)
-routes.get('/companies-all', Company.all)
+routes.post('/login', AuthController.logIn)
 
-routes.post('/sellers', upload.single('imagem'), Seller.create)
-routes.put('/sellers/:id', upload.single('imagem'), Seller.update)
-routes.delete('/sellers/:id', Seller.remove)
+routes.post('/companies', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Company.create)
+routes.put('/companies/:id', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Company.update)
+routes.delete('/companies/:id', [auth.verifyToken, auth.isAdmin], Company.remove)
+routes.get('/companies', auth.verifyToken, Company.list)
+routes.get('/companies/:id', auth.verifyToken, Company.show)
+routes.get('/companies-all', auth.verifyToken, Company.all)
+
+routes.post('/sellers', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Seller.create)
+routes.put('/sellers/:id', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Seller.update)
+routes.delete('/sellers/:id', [auth.verifyToken, auth.isAdmin], Seller.remove)
 routes.get('/sellers', Seller.list)
-routes.get('/sellers/:id', Seller.show)
-routes.get('/sellers-all', Seller.all)
+routes.get('/sellers/:id', [auth.verifyToken, auth.isAdmin], Seller.show)
+routes.get('/sellers-all', [auth.verifyToken, auth.isAdmin], Seller.all)
 
-routes.post('/clients', upload.single('imagem'), Client.create)
-routes.put('/clients/:id', upload.single('imagem'), Client.update)
-routes.delete('/clients/:id', Client.remove)
-routes.get('/clients', Client.list)
-routes.get('/clients/:id', Client.show)
-routes.get('/clients-all', Client.all)
+routes.post('/clients', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Client.create)
+routes.put('/clients/:id', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Client.update)
+routes.delete('/clients/:id', [auth.verifyToken, auth.isAdmin], Client.remove)
+routes.get('/clients', [auth.verifyToken, auth.isSeller], Client.list)
+routes.get('/clients/:id', [auth.verifyToken, auth.isSeller], Client.show)
+routes.get('/clients-all', [auth.verifyToken, auth.isSeller], Client.all)
 
-routes.post('/requests', Request.create)
-routes.put('/requests/:id', Request.update)
-routes.delete('/requests/:id', Request.remove)
-routes.get('/requests', Request.list)
-routes.get('/requests/:id', Request.show)
-routes.get('/requests-all', Request.all)
+routes.post('/requests', [auth.verifyToken, auth.isSeller], Request.create)
+routes.put('/requests/:id', [auth.verifyToken, auth.isSeller], Request.update)
+routes.delete('/requests/:id', [auth.verifyToken, auth.isSeller], Request.remove)
+routes.get('/requests', [auth.verifyToken, auth.isSeller], Request.list)
+routes.get('/requests/:id', [auth.verifyToken, auth.isSeller], Request.show)
+routes.get('/requests-all', [auth.verifyToken, auth.isSeller], Request.all)
 
 export default routes
