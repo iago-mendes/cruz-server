@@ -9,6 +9,7 @@ type ClientType = mongoose.Document &
     insc_estadual: string
     telefone: number
     email: string
+    senha: string
     vendedores: Array<string>
     endereco:
     {
@@ -32,6 +33,7 @@ const ClientSchema = new mongoose.Schema(
     insc_estadual: {type: String, required: true},
     telefone: {type: Number, required: true},
     email: {type: String, required: true},
+    senha: {type: String, required: true},
     vendedores: [{type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor'}],
     endereco:
     {

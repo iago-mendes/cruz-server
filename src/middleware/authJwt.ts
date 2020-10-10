@@ -4,7 +4,7 @@ import jwt from 'jsonwebtoken'
 import Seller from '../models/Seller'
 import { secret } from '../config/auth'
 
-export const authJWT =
+export default
 {
     verigyToken: (req: Request, res: Response, next: NextFunction) =>
     {
