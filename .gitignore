@@ -1,3 +1,4 @@
 node_modules/*
-src/config/db.ts
 uploads/*
+src/config/db.ts
+src/config/auth.ts
