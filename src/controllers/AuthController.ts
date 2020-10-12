@@ -21,10 +21,10 @@ export default
             else return res.status(404).send({ message: "Usuário não encontrado." })
         }
 
-        const isPasswordValid = bcrypt.compareSync(req.body.password, user.password)
+        const isPasswordValid = String(req.body.password) === user.password
         if (!isPasswordValid) return res.status(401).send(
         {
-            accessToken: null,
+            token: null,
             message: "Senha inválida!"
         })
 

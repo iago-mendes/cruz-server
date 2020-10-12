@@ -8,14 +8,13 @@ export default
 {
     verifyToken: (req: Request, res: Response, next: NextFunction) =>
     {
-        let token = req.headers["x-access-token"]
+        let token = req.headers['token']
       
         if (token)
         {      
             jwt.verify(String(token), secret, (err, decoded) =>
             {
                 if (err) return res.status(401).send({ message: "Unauthorized!" })
-                // req.userId = decoded.id
                 next()
             })
         }
@@ -24,7 +23,7 @@ export default
 
     isSeller: (req: Request, res: Response, next: NextFunction) =>
     {
-        const {id} = req.query
+        const id = req.headers['id']
 
         Seller.findById(id).exec((err, seller) =>
         {
@@ -36,7 +35,7 @@ export default
     
     isAdmin: (req: Request, res: Response, next: NextFunction) =>
     {
-        const {id} = req.query
+        const id = req.headers['id']
 
         Seller.findById(id).exec((err, seller) =>
         {

@@ -53,7 +53,6 @@ export default class ClientController
     {
         try {
             const {cidade} = req.query
-            console.log(String(cidade))
 
             let list: List[] = []
             const clients = await Client.find()
