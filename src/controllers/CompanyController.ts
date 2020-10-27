@@ -132,7 +132,7 @@ export default class CompanyController
             }
             else fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous?.imagem)))
 
-            const tmp = Company.findByIdAndUpdate(id, company, {new: true})
+            const tmp = Company.findByIdAndUpdate(id, company)
             res.status(200).send()
             return tmp
         } catch (error) {
