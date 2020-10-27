@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from 'express'
 import fs from 'fs'
+import path from 'path'
 
 import Company from '../models/Company'
 import baseUrl from '../config/baseUrl'
@@ -103,15 +104,14 @@ export default class CompanyController
                 telefones,
                 email,
                 comissao,
-                linhas,
                 descricao_curta,
                 descricao,
                 site
             } = req.body
-            const imagem = req.file.filename
+            let imagem = req.file.filename
             const company =
             {
-                id,
+                _id: id,
                 imagem,
                 razao_social,
                 nome_fantasia,
@@ -119,17 +119,18 @@ export default class CompanyController
                 telefones,
                 email,
                 comissao,
-                linhas,
                 descricao_curta,
                 descricao,
                 site
             }
 
             const previous = await Company.findById(id)
-            fs.unlink(`../../uploads/${previous?.imagem}`, err =>
+            if (imagem.slice(0, 32) === previous?.imagem)
             {
-                if(err) console.log(err)
-            })
+                fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', imagem))
+                imagem = previous?.imagem
+            }
+            else fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous?.imagem)))
 
             const tmp = Company.findByIdAndUpdate(id, company, {new: true})
             res.status(200).send()
@@ -142,7 +143,12 @@ export default class CompanyController
     async remove(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const tmp = Company.findByIdAndDelete(req.params.id)
+            const {id} = req.params
+
+            const company = await Company.findById(id)
+            fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(company?.imagem)))
+
+            const tmp = Company.findByIdAndDelete(id)
             res.status(200).send()
             return tmp
         } catch (error) {
