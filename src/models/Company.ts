@@ -13,9 +13,9 @@ type CompanyType = mongoose.Document &
     descricao?: string
     site?: string
     comissao: {porcentagem: number, obs: Array<string>}
-    linhas: Array<{_id: string, nome: string, produtos: Array<
+    linhas: Array<{_id?: string, nome: string, produtos: Array<
     {
-        _id: string
+        _id?: string
         imagem?: string
         codigo: number
         nome: string

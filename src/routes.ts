@@ -20,7 +20,11 @@ const Request = new RequestController()
 
 routes.post('/login', AuthController.logIn)
 
-routes.post('/companies', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Company.create)
+routes.post(
+    '/companies',
+    [auth.verifyToken, auth.isAdmin, upload.fields([{name: 'imagem', maxCount: 1}, {name: 'imagens_produtos'}])],
+    Company.create
+)
 routes.put('/companies/:id', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Company.update)
 routes.delete('/companies/:id', [auth.verifyToken, auth.isAdmin], Company.remove)
 routes.get('/companies', auth.verifyToken, Company.list)

@@ -11,6 +11,28 @@ interface ListInterface
     descricao_curta: string
 }
 
+interface Images
+{
+    imagem: Array<{filename: string}>,
+    imagens_produtos: Array<{originalname: string, filename: string}>
+}
+
+interface Line
+{
+    nome: string,
+    produtos: Array<
+    {
+        imagem?: string
+        codigo: number
+        nome: string
+        ipi: number
+        st: number
+        unidade: string
+        comissao: number
+        tabelas: Array<{nome: string, preco: number}>
+    }>
+}
+
 export default class CompanyController
 {
     async create(req: Request, res: Response, next: NextFunction)
@@ -28,17 +50,37 @@ export default class CompanyController
                 descricao,
                 site
             } = req.body
-            const imagem = req.file.filename
+
+            const images = (req.files as unknown) as Images
+            const lines = (JSON.parse(linhas) as Line[]).map(linha => (
+                {
+                    nome: linha.nome,
+                    produtos: linha.produtos.map(produto => (
+                    {
+                        imagem: String(images.imagens_produtos
+                            .find(image => image.originalname === String(produto.imagem))?.filename),
+                        codigo: produto.codigo,
+                        nome: produto.nome,
+                        ipi: produto.ipi,
+                        st: produto.st,
+                        unidade: produto.unidade,
+                        comissao: produto.comissao,
+                        tabelas: produto.tabelas
+                    }
+                    ))
+                }
+            ))
+            
             Company.create(
             {
-                imagem,
+                imagem: images.imagem[0].filename,
                 razao_social,
                 nome_fantasia,
                 cnpj,
-                telefones,
+                telefones: JSON.parse(telefones),
                 email,
-                comissao,
-                linhas,
+                comissao: JSON.parse(comissao),
+                linhas: lines,
                 descricao_curta,
                 descricao,
                 site
