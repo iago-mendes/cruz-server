@@ -1,6 +1,7 @@
 import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
+import path from 'path'
 
 import routes from './routes'
 import { dbName, password } from './config/db'
@@ -25,5 +26,7 @@ app.use(function(req, res, next)
     next()
 })
 app.use(routes)
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 
 app.listen(1973, () => console.log('server is running'))

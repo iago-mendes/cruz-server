@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from 'express'
 import fs from 'fs'
 
 import Company from '../models/Company'
+import baseUrl from '../config/baseUrl'
 
 interface ListInterface
 {
@@ -160,7 +161,7 @@ export default class CompanyController
                 list.push(
                 {
                     id: company._id,
-                    imagem: String(company.imagem),
+                    imagem: `${baseUrl}/uploads/${String(company.imagem)}`,
                     nome_fantasia: company.nome_fantasia,
                     descricao_curta: String(company.descricao_curta)
                 })
@@ -180,7 +181,7 @@ export default class CompanyController
             return res.json(
             {
                 id: company?._id,
-                imagem: company?.imagem,
+                imagem: `${baseUrl}/uploads/${String(company?.imagem)}`,
                 nome_fantasia: company?.nome_fantasia,
                 descricao: company?.descricao,
                 site: company?.site
