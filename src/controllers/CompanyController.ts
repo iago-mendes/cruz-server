@@ -16,12 +16,14 @@ interface ListInterface
 interface Images
 {
     imagem: Array<{filename: string}>,
+    imagens_linhas: Array<{originalname: string, filename: string}>,
     imagens_produtos: Array<{originalname: string, filename: string}>
 }
 
 interface Line
 {
     nome: string,
+    imagem: string,
     produtos: Array<
     {
         imagem?: string
@@ -57,6 +59,8 @@ export default class CompanyController
             const lines = (JSON.parse(linhas) as Line[]).map(linha => (
                 {
                     nome: linha.nome,
+                    imagem: String(images.imagens_linhas
+                        .find(image => image.originalname === String(linha.imagem))?.filename),
                     produtos: linha.produtos.map(produto => (
                     {
                         imagem: String(images.imagens_produtos

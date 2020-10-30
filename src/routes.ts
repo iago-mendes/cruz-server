@@ -24,7 +24,7 @@ routes.post('/login', AuthController.logIn)
 
 routes.post(
     '/companies',
-    [auth.verifyToken, auth.isAdmin, upload.fields([{name: 'imagem', maxCount: 1}, {name: 'imagens_produtos'}])],
+    [auth.verifyToken, auth.isAdmin, upload.fields([{name: 'imagem', maxCount: 1}, {name: 'imagens_linhas'}, {name: 'imagens_produtos'}])],
     Company.create
 )
 routes.put('/companies/:id', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Company.update)
@@ -34,6 +34,7 @@ routes.get('/companies/:id', auth.verifyToken, Company.show)
 routes.get('/companies-all', auth.verifyToken, Company.all)
 
 routes.get('/companies/:id/products', Product.listLines)
+routes.put('/companies/:id/products/:line', upload.single('imagem'), Product.updateLine)
 routes.get('/companies/:id/products/:line', Product.listProducts)
 
 routes.post('/sellers', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Seller.create)
