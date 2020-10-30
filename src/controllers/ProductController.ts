@@ -9,7 +9,19 @@ export default class ProductController
     {
         try {
             const company = await Company.findById(req.params.id)
-            return res.json(company?.linhas)
+            if (!company) return res.json({message: 'company not found'})
+
+            const list = company.linhas.map(linha => (
+            {
+                id: linha._id,
+                nome: linha.nome,
+                imagem: linha.imagem
+                    ? `${baseUrl}/uploads/${linha.imagem}`
+                    : `${baseUrl}/uploads/assets/no-image.png`
+            }))
+            await Promise.all(list)
+
+            return res.json(list)
         } catch (error) {
             next(error)
         }
@@ -24,8 +36,10 @@ export default class ProductController
 
             const list = line.produtos.map(produto => (
             {
-                _id: produto._id,
-                imagem: `${baseUrl}/uploads/${produto.imagem}`,
+                id: produto._id,
+                imagem: produto.imagem
+                    ? `${baseUrl}/uploads/${produto.imagem}`
+                    : `${baseUrl}/uploads/assets/no-image.png`,
                 nome: produto.nome,
                 unidade: produto.unidade
             }))
