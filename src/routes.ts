@@ -7,6 +7,7 @@ import multerConfig from './config/multer'
 const upload = multer(multerConfig)
 
 import CompanyController from './controllers/CompanyController'
+import ProductController from './controllers/ProductController'
 import SellerController from './controllers/SellerController'
 import ClientController from './controllers/ClientController'
 import RequestController from './controllers/RequestController'
@@ -14,6 +15,7 @@ import AuthController from './controllers/AuthController'
 import auth from './middleware/authJwt'
 
 const Company = new CompanyController()
+const Product = new ProductController()
 const Seller = new SellerController()
 const Client = new ClientController()
 const Request = new RequestController()
@@ -30,6 +32,8 @@ routes.delete('/companies/:id', [auth.verifyToken, auth.isAdmin], Company.remove
 routes.get('/companies', auth.verifyToken, Company.list)
 routes.get('/companies/:id', auth.verifyToken, Company.show)
 routes.get('/companies-all', auth.verifyToken, Company.all)
+
+routes.get('/companies/:id/products', Product.getLines)
 
 routes.post('/sellers', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Seller.create)
 routes.put('/sellers/:id', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Seller.update)

@@ -13,7 +13,7 @@ type CompanyType = mongoose.Document &
     descricao?: string
     site?: string
     comissao: {porcentagem: number, obs: Array<string>}
-    linhas: Array<{_id?: string, nome: string, produtos: Array<
+    linhas: Array<{_id?: string, nome: string, imagem?: string, produtos: Array<
     {
         _id?: string
         imagem?: string
@@ -46,6 +46,7 @@ const CompanySchema = new mongoose.Schema(
     linhas:
     [{
         nome: {type: String, required: true},
+        imagem: {type: String, required: false},
         produtos:
         [{
             imagem: {type: String, required: false},
