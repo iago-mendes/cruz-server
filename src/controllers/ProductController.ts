@@ -3,6 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 import Company from '../models/Company'
+import Client from '../models/Client'
 import baseUrl from '../config/baseUrl'
 
 export default class ProductController
@@ -81,6 +82,40 @@ export default class ProductController
                     : `${baseUrl}/uploads/assets/no-image.png`,
                 nome: produto.nome,
                 unidade: produto.unidade
+            }))
+            await Promise.all(list)
+
+            return res.json(list)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async listPricedProducts(req: Request, res: Response, next: NextFunction)
+    {
+        try {
+            const company = await Company.findById(req.params.id)
+            const line = company?.linhas.find(linha => linha._id == req.params.line)
+            if (!line) return res.json({message: 'line not found'})
+
+            const {client: clientId} = req.query
+            const client = await Client.findById(clientId)
+            if (!client) return res.json({message: 'client not found'})
+
+            console.log('[client.representadas]', client.representadas)
+            console.log('[company.id]', company?._id)
+            const table = client.representadas.find(representada => representada.id == String(company?._id))?.tabela
+            if (!table) return res.json({message: 'table not found'})
+
+            const list = line.produtos.map(produto => (
+            {
+                id: produto._id,
+                imagem: produto.imagem
+                    ? `${baseUrl}/uploads/${produto.imagem}`
+                    : `${baseUrl}/uploads/assets/no-image.png`,
+                nome: produto.nome,
+                unidade: produto.unidade,
+                preco: produto.tabelas.find(tabela => tabela.nome == table)?.preco
             }))
             await Promise.all(list)
 

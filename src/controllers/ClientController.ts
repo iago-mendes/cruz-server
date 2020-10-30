@@ -30,7 +30,7 @@ export default class ClientController
     {
         try {
             const client = req.body
-            const tmp = await Client.findByIdAndUpdate(req.params.id, client, {new: true})
+            const tmp = await Client.findByIdAndUpdate(req.params.id, client)
             res.status(200).send()
             return tmp
         } catch (error) {

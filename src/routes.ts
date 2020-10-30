@@ -36,6 +36,7 @@ routes.get('/companies-all', auth.verifyToken, Company.all)
 routes.get('/companies/:id/products', Product.listLines)
 routes.put('/companies/:id/products/:line', upload.single('imagem'), Product.updateLine)
 routes.get('/companies/:id/products/:line', Product.listProducts)
+routes.get('/companies/:id/products-priced/:line', Product.listPricedProducts)
 
 routes.post('/sellers', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Seller.create)
 routes.put('/sellers/:id', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Seller.update)
