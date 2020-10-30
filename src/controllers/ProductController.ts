@@ -180,6 +180,7 @@ export default class ProductController
                     ? `${baseUrl}/uploads/${product.imagem}`
                     : `${baseUrl}/uploads/assets/no-image.png`,
                 nome: product.nome,
+                codigo: product.codigo,
                 unidade: product.unidade,
                 ipi: product.ipi,
                 st: product.st,
@@ -187,6 +188,63 @@ export default class ProductController
             }
 
             return res.json(show)
+        } catch (error) {
+            next(error)
+        }
+    }
+
+    async updateProduct(req: Request, res: Response, next: NextFunction)
+    {
+        try {
+            const {nome, unidade, ipi, st, tabelas, codigo, comissao} = req.body
+            let image = req.file
+
+            let previousCompany = await Company.findById(req.params.id)
+            if (!previousCompany) return res.json({message: 'company not found'})
+            const previousLine = previousCompany.linhas.find(linha => linha._id == req.params.line)
+            if (!previousLine) return res.json({message: 'line not found'})
+            const previous = previousLine.produtos.find(produto => produto._id == req.params.product)
+            if (!previous) return res.json({message: 'product not found'})
+
+            if (image)
+            {
+                if (image.originalname === previous.imagem)
+                {
+                    fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', image.filename))
+                    image.filename = previous.imagem
+                }
+                else if (previous.imagem) fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', previous.imagem))
+            }
+            else if (previous.imagem) fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', previous.imagem))
+
+            const lines = previousCompany.linhas.map(linha =>
+            {
+                if (linha._id != req.params.line) return linha
+                else return {
+                    _id: linha._id,
+                    nome: linha.nome,
+                    imagem: linha.imagem,
+                    produtos: linha.produtos.map(produto =>
+                    {
+                        if (produto._id != req.params.product) return produto
+                        else return {
+                            _id: produto._id,
+                            imagem: image ? image.filename : undefined,
+                            codigo,
+                            nome,
+                            ipi,
+                            st,
+                            unidade,
+                            comissao,
+                            tabelas: JSON.parse(tabelas)
+                        }
+                    })
+                }
+            })
+
+            const tmp = await Company.findByIdAndUpdate(req.params.id, {linhas: lines})
+            res.status(200).send()
+            return tmp
         } catch (error) {
             next(error)
         }
