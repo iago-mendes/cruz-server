@@ -108,7 +108,18 @@ export default class CompanyController
                 descricao,
                 site
             } = req.body
+
             let imagem = req.file.filename
+            const newHash = imagem.slice(0, 33)
+
+            const previous = await Company.findById(id)
+            if (imagem.replace(newHash, '') === previous?.imagem)
+            {
+                fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', imagem))
+                imagem = String(previous?.imagem)
+            }
+            else fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous?.imagem)))
+
             const company =
             {
                 _id: id,
@@ -116,21 +127,13 @@ export default class CompanyController
                 razao_social,
                 nome_fantasia,
                 cnpj,
-                telefones,
+                telefones: JSON.parse(telefones),
                 email,
-                comissao,
+                comissao: JSON.parse(comissao),
                 descricao_curta,
                 descricao,
                 site
             }
-
-            const previous = await Company.findById(id)
-            if (imagem.slice(0, 32) === previous?.imagem)
-            {
-                fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', imagem))
-                imagem = previous?.imagem
-            }
-            else fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous?.imagem)))
 
             const tmp = Company.findByIdAndUpdate(id, company)
             res.status(200).send()
