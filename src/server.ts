@@ -5,6 +5,7 @@ import path from 'path'
 
 import routes from './routes'
 import { dbName, password } from './config/db'
+import errorHandler from './errors/handler'
 
 const app = express()
 
@@ -28,5 +29,7 @@ app.use(function(req, res, next)
 app.use(routes)
 
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
+
+app.use(errorHandler)
 
 app.listen(1973, () => console.log('server is running'))
