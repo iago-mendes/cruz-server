@@ -165,7 +165,7 @@ export default class RequestController
 
                                 const tmp =
                                 {
-                                    id: product._id,
+                                    id: String(product._id),
                                     nome: product.nome,
                                     imagem: String(product.imagem),
                                     quantidade: productSold.quantidade, 
