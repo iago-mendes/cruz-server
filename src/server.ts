@@ -4,7 +4,6 @@ import mongoose from 'mongoose'
 import path from 'path'
 
 import routes from './routes'
-import { dbName, password } from './config/db'
 import errorHandler from './errors/handler'
 
 const app = express()
@@ -14,7 +13,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 mongoose.connect(
-    `mongodb+srv://admin:${password}@cluster0.c7b5n.mongodb.net/${dbName}?retryWrites=true&w=majority`,
+    'mongodb://localhost:27017/cruz',
     {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false}
 )
 mongoose.connection

@@ -1,1 +1,1 @@
-export const secret = 'cruz-representacoes-10021973'
+export const secret = ''
