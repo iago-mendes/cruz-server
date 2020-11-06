@@ -1,4 +1,4 @@
 node_modules/*
 uploads/*
-src/config/db.ts
 src/config/auth.ts
+dist/*
