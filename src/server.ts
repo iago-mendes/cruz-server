@@ -31,4 +31,4 @@ app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 
 app.use(errorHandler)
 
-app.listen(1973, () => console.log('server is running'))
+app.listen(7373, () => console.log('server is running'))
