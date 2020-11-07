@@ -113,31 +113,31 @@ export default class CompanyController
                 site
             } = req.body
 
-            let imagem = req.file.filename
-            const newHash = imagem.slice(0, 33)
-
-            const previous = await Company.findById(id)
-            if (imagem.replace(newHash, '') === previous?.imagem)
+            let image = req.file
+            
+            interface Update
             {
-                fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', imagem))
-                imagem = String(previous?.imagem)
+                [letter: string]: any
             }
-            else fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous?.imagem)))
+            let company: Update = {}
 
-            const company =
+            company['_id'] = id
+            if(image)
             {
-                _id: id,
-                imagem,
-                razao_social,
-                nome_fantasia,
-                cnpj,
-                telefones: JSON.parse(telefones),
-                email,
-                comissao: JSON.parse(comissao),
-                descricao_curta,
-                descricao,
-                site
+                company['imagem'] = image.filename
+                const previous = await Company.findById(id)
+                if (previous?.imagem)
+                    fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
             }
+            if(razao_social) company['razao_social'] = razao_social
+            if(nome_fantasia) company['nome_fantasia'] = nome_fantasia
+            if(cnpj) company['cnpj'] = cnpj
+            if(telefones) company['telefones'] = JSON.parse(telefones)
+            if(email) company['email'] = email
+            if(comissao) company['comissao'] = JSON.parse(comissao)
+            if(descricao_curta) company['descricao_curta'] = descricao_curta
+            if(descricao) company['descricao'] = descricao
+            if(site) company['site'] = site
 
             const tmp = Company.findByIdAndUpdate(id, company)
             res.status(200).send()
