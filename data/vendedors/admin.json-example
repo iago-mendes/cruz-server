@@ -1,0 +1,9 @@
+{
+    "_id": "",
+    "nome": "",
+    "telefones": [],
+    "email": "",
+    "senha": "",
+    "admin": true,
+    "representadas": []
+}
