@@ -59,11 +59,11 @@ export default class CompanyController
             const lines = (JSON.parse(linhas) as Line[]).map(linha => (
                 {
                     nome: linha.nome,
-                    imagem: String(images.imagens_linhas
+                    imagem: images.imagens_linhas && String(images.imagens_linhas
                         .find(image => image.originalname === String(linha.imagem))?.filename),
                     produtos: linha.produtos.map(produto => (
                     {
-                        imagem: String(images.imagens_produtos
+                        imagem: images.imagens_produtos && String(images.imagens_produtos
                             .find(image => image.originalname === String(produto.imagem))?.filename),
                         codigo: produto.codigo,
                         nome: produto.nome,
@@ -79,7 +79,7 @@ export default class CompanyController
             
             Company.create(
             {
-                imagem: images.imagem[0].filename,
+                imagem: images.imagem && images.imagem[0].filename,
                 razao_social,
                 nome_fantasia,
                 cnpj,
