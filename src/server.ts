@@ -2,11 +2,13 @@ import express from 'express'
 import cors from 'cors'
 import mongoose from 'mongoose'
 import path from 'path'
+import dotenv from 'dotenv'
 
 import routes from './routes'
 import errorHandler from './errors/handler'
 
 const app = express()
+dotenv.config()
 
 app.use(cors())
 app.use(express.json())
