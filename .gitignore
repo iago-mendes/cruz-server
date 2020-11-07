@@ -2,3 +2,4 @@ node_modules/*
 uploads/*
 src/config/auth.ts
 dist/*
+.env

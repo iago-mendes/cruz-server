@@ -4,7 +4,6 @@ import bcrypt from 'bcrypt'
 
 import Client from '../models/Client'
 import Seller from '../models/Seller'
-import { secret } from '../config/auth'
 
 export default
 {
@@ -31,7 +30,7 @@ export default
             message: "Senha inválida!"
         })
 
-        const token = jwt.sign({id: user.email}, secret)
+        const token = jwt.sign({id: user.email}, String(process.env.AUTH_SECRET))
         return res.status(200).send({token, id: user.id, role: user.role})
     }
 }
