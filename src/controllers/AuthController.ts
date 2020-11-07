@@ -1,6 +1,5 @@
 import { Request, Response } from 'express'
 import jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
 
 import Client from '../models/Client'
 import Seller from '../models/Seller'

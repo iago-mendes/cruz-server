@@ -2,7 +2,6 @@ import { Request, Response, NextFunction } from 'express'
 import jwt from 'jsonwebtoken'
 
 import Seller from '../models/Seller'
-import { secret } from '../config/auth'
 
 export default
 {
@@ -12,7 +11,7 @@ export default
       
         if (token)
         {      
-            jwt.verify(String(token), secret, (err, decoded) =>
+            jwt.verify(String(token), String(process.env.AUTH_SECRET), (err, decoded) =>
             {
                 if (err) return res.status(401).send({ message: "Unauthorized!" })
                 next()
