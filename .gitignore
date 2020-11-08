@@ -1,5 +1,6 @@
 node_modules/*
 uploads/*
+!uploads/assets/
 src/config/auth.ts
 dist/*
 .env
