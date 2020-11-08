@@ -29,7 +29,7 @@ export default
             message: "Senha inválida!"
         })
 
-        const token = jwt.sign({id: user.email}, String(process.env.AUTH_SECRET))
-        return res.status(200).send({token, id: user.id, role: user.role})
+        const token = jwt.sign({id: user.id, role: user.role}, String(process.env.AUTH_SECRET))
+        return res.status(200).send({token})
     }
 }
