@@ -32,6 +32,7 @@ routes.delete('/companies/:id', [auth.verifyToken, auth.isAdmin], Company.remove
 routes.get('/companies', auth.verifyToken, Company.list)
 routes.get('/companies/:id', auth.verifyToken, Company.show)
 routes.get('/companies-all', auth.verifyToken, Company.all)
+routes.get('/companies-all/:id', auth.verifyToken, Company.allOne)
 
 routes.get('/companies/:id/products', auth.verifyToken, Product.listLines)
 routes.put('/companies/:id/products/:line', [auth.verifyToken, auth.isAdmin, upload.single('imagem')], Product.updateLine)

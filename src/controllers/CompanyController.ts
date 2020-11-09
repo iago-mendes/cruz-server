@@ -213,4 +213,15 @@ export default class CompanyController
             next(error)
         }
     }
+
+    async allOne(req: Request, res: Response, next: NextFunction)
+    {
+        try {
+            const {id} = req.params
+            const company = await Company.findById(id)
+            return res.json(company)
+        } catch (error) {
+            next(error)
+        }
+    }
 }
