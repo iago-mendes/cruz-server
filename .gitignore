@@ -4,4 +4,4 @@ uploads/*
 src/config/auth.ts
 dist/*
 .env
-data/*/*.json
+db/data/*/*.json
