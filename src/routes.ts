@@ -20,7 +20,8 @@ const Seller = new SellerController()
 const Client = new ClientController()
 const Request = new RequestController()
 
-routes.post('/login', AuthController.logIn)
+routes.post('/login/client', AuthController.logInClient)
+routes.post('/login/seller', AuthController.logInSeller)
 
 routes.post(
     '/companies',
