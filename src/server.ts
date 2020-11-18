@@ -6,7 +6,6 @@ import dotenv from 'dotenv'
 
 import routes from './routes'
 import errorHandler from './errors/handler'
-import checkKey from './middleware/checkKey'
 
 const app = express()
 dotenv.config()
@@ -23,7 +22,6 @@ mongoose.connection
 .once('open', () => console.log('connection has been made'))
 .on('error', error => console.log('[connection error]: ', error))
 
-app.use(checkKey)
 app.use(routes)
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 
