@@ -6,6 +6,7 @@ import dotenv from 'dotenv'
 
 import routes from './routes'
 import errorHandler from './errors/handler'
+import checkKey from './middleware/checkKey'
 
 const app = express()
 dotenv.config()
@@ -22,13 +23,8 @@ mongoose.connection
 .once('open', () => console.log('connection has been made'))
 .on('error', error => console.log('[connection error]: ', error))
 
-app.use(function(req, res, next)
-{
-    res.header("Access-Control-Allow-Headers", "token, Origin, Content-Type, Accept, id")
-    next()
-})
+app.use(checkKey)
 app.use(routes)
-
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 
 app.use(errorHandler)
