@@ -15,8 +15,14 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
 mongoose.connect(
-    'mongodb://localhost:27017/cruz',
-    {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false}
+    `mongodb://localhost:27017/${process.env.DB_NAME}?authSource=admin`,
+    {
+			user: process.env.DB_USER,
+			pass: process.env.DB_PWD,
+			useNewUrlParser: true,
+			useUnifiedTopology: true,
+			useFindAndModify: false
+		}
 )
 mongoose.connection
 .once('open', () => console.log('connection has been made'))
