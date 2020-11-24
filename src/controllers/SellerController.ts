@@ -1,14 +1,17 @@
 import { Request, Response, NextFunction } from 'express'
+import fs from 'fs'
+import path from 'path'
 
 import Seller from '../models/Seller'
 import Company from '../models/Company'
+import baseUrl from '../config/baseUrl'
 
 interface List
 {
     id: string
     imagem: string
     nome: string
-    funcao: string
+    funcao: string | undefined
 }
 
 export default class SellerControler
@@ -16,8 +19,20 @@ export default class SellerControler
     async create(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const seller = req.body
-            await Seller.create(seller)
+						const image = req.file
+						const {nome, telefones, email, senha, funcao, admin, representadas} = req.body
+						
+            await Seller.create(
+						{
+							nome,
+							imagem: image && image.filename,
+							telefones: JSON.parse(telefones),
+							email,
+							senha,
+							funcao,
+							admin,
+							representadas: JSON.parse(representadas)
+						})
             return res.status(201).send()
         } catch (error) {
             next(error)
@@ -27,10 +42,35 @@ export default class SellerControler
     async update(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const seller = req.body
-            const tmp = await Seller.findByIdAndUpdate(req.params.id, seller, {new: true})
-            res.status(200).send()
-            return tmp
+					const {id} = req.params
+					const image = req.file
+					const {nome, telefones, email, senha, funcao, admin, representadas} = req.body
+
+					interface Update
+					{
+							[letter: string]: any
+					}
+					let seller: Update = {}
+
+					seller['_id'] = id
+					if (nome) seller['nome'] = nome
+					if (image)
+					{
+						seller['image'] = image.filename
+						const previous = await Seller.findById(id)
+						if (previous?.imagem)
+							fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
+					}
+					if (telefones) seller['telefones'] = JSON.parse(telefones)
+					if (email) seller['email'] = email
+					if (senha) seller['senha'] = senha
+					if (funcao) seller['funcao'] = funcao
+					if (admin) seller['admin'] = admin
+					if (representadas) seller['representadas'] = JSON.parse(representadas)
+
+					const newSeller = await Seller.findByIdAndUpdate(id, seller, {new: true})
+					res.status(200).send()
+					return newSeller
         } catch (error) {
             next(error)
         }
@@ -39,9 +79,15 @@ export default class SellerControler
     async remove(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const tmp = await Seller.findByIdAndDelete(req.params.id)
-            res.status(200).send()
-            return tmp
+					const {id} = req.params
+
+					const company = await Company.findById(id)
+					if (company?.imagem)
+						fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', company.imagem))
+
+					const tmp = await Seller.findByIdAndDelete(id)
+					res.status(200).send()
+					return tmp
         } catch (error) {
             next(error)
         }
@@ -58,9 +104,11 @@ export default class SellerControler
                 list.push(
                 {
                     id: seller._id,
-                    imagem: String(seller.imagem),
+                    imagem: seller.imagem
+											? `${baseUrl}/uploads/${seller.imagem}`
+											: `${baseUrl}/uploads/assets/no-image.png`,
                     nome: seller.nome,
-                    funcao: String(seller.funcao)
+                    funcao: seller.funcao
                 })
             })
             await Promise.all(promises)
@@ -92,7 +140,9 @@ export default class SellerControler
                 return res.json(
                 {
                     id: seller._id,
-                    imagem: seller.imagem,
+                    imagem: seller.imagem
+											? `${baseUrl}/uploads/${seller.imagem}`
+											: `${baseUrl}/uploads/assets/no-image.png`,
                     nome: seller.nome,
                     funcao: seller.funcao,
                     telefones: seller.telefones,
