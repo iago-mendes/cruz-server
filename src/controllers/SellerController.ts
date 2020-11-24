@@ -56,10 +56,14 @@ export default class SellerControler
 					if (nome) seller['nome'] = nome
 					if (image)
 					{
-						seller['image'] = image.filename
+						seller['imagem'] = image.filename
 						const previous = await Seller.findById(id)
 						if (previous?.imagem)
-							fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
+							try {
+								fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
+							} catch (error) {
+								if (error.code == 'ENOENT') console.log('file not found!')
+							}
 					}
 					if (telefones) seller['telefones'] = JSON.parse(telefones)
 					if (email) seller['email'] = email
@@ -68,9 +72,9 @@ export default class SellerControler
 					if (admin) seller['admin'] = admin
 					if (representadas) seller['representadas'] = JSON.parse(representadas)
 
-					const newSeller = await Seller.findByIdAndUpdate(id, seller, {new: true})
+					const tmp = await Seller.findByIdAndUpdate(id, seller)
 					res.status(200).send()
-					return newSeller
+					return tmp
         } catch (error) {
             next(error)
         }
