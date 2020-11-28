@@ -10,6 +10,7 @@ import SellerController from './controllers/SellerController'
 import ClientController from './controllers/ClientController'
 import RequestController from './controllers/RequestController'
 import AuthController from './controllers/AuthController'
+import Line from './controllers/LineController'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -35,8 +36,10 @@ routes.get('/companies/:id', checkKey, Company.show)
 routes.get('/companies-all', checkKey, Company.all)
 routes.get('/companies-all/:id', checkKey, Company.allOne)
 
-routes.get('/companies/:id/products', checkKey, Product.listLines)
-routes.put('/companies/:id/products/:line', [checkKey, upload.single('imagem')], Product.updateLine)
+routes.post('/companies/:id/lines', [checkKey, upload.single('imagem')], Line.create)
+routes.get('/companies/:id/lines', checkKey, Line.list)
+routes.put('/companies/:id/lines/:line', [checkKey, upload.single('imagem')], Line.update)
+
 routes.get('/companies/:id/products/:line', checkKey, Product.listProducts)
 routes.get('/companies/:id/products-priced/:line', checkKey, Product.listPricedProducts)
 routes.get('/companies/:id/products-priced/:line/:product', checkKey, Product.showPricedProduct)
