@@ -24,11 +24,7 @@ const Request = new RequestController()
 routes.post('/login/client', AuthController.logInClient)
 routes.post('/login/seller', AuthController.logInSeller)
 
-routes.post(
-	'/companies',
-	[checkKey, upload.fields([{name: 'imagem', maxCount: 1}, {name: 'imagens_linhas'}, {name: 'imagens_produtos'}])],
-	Company.create
-)
+routes.post('/companies', [checkKey, upload.single('imagem')], Company.create)
 routes.put('/companies/:id', [checkKey, upload.single('imagem')], Company.update)
 routes.delete('/companies/:id', checkKey, Company.remove)
 routes.get('/companies', checkKey, Company.list)

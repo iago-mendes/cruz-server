@@ -13,88 +13,39 @@ interface ListInterface
     descricao_curta: string
 }
 
-interface Images
-{
-    imagem: Array<{filename: string}>,
-    imagens_linhas: Array<{originalname: string, filename: string}>,
-    imagens_produtos: Array<{originalname: string, filename: string}>
-}
-
-interface Line
-{
-    nome: string,
-    imagem: string,
-    produtos: Array<
-    {
-        imagem?: string
-        codigo: number
-        nome: string
-        ipi: number
-        st: number
-        unidade: string
-        comissao: number
-        tabelas: Array<{nome: string, preco: number}>
-    }>
-}
-
 export default class CompanyController
 {
     async create(req: Request, res: Response, next: NextFunction)
     {
-        try {
-            const {
-                razao_social, 
-                nome_fantasia,
-                cnpj,
-                telefones,
-                email,
-                comissao,
-                linhas,
-                descricao_curta,
-                descricao,
-                site
-            } = req.body
+			const {
+					razao_social, 
+					nome_fantasia,
+					cnpj,
+					telefones,
+					email,
+					comissao,
+					descricao_curta,
+					descricao,
+					site
+			} = req.body
 
-            const images = (req.files as unknown) as Images
-            const lines = (JSON.parse(linhas) as Line[]).map(linha => (
-                {
-                    nome: linha.nome,
-                    imagem: images.imagens_linhas && String(images.imagens_linhas
-                        .find(image => image.originalname === String(linha.imagem))?.filename),
-                    produtos: linha.produtos.map(produto => (
-                    {
-                        imagem: images.imagens_produtos && String(images.imagens_produtos
-                            .find(image => image.originalname === String(produto.imagem))?.filename),
-                        codigo: produto.codigo,
-                        nome: produto.nome,
-                        ipi: produto.ipi,
-                        st: produto.st,
-                        unidade: produto.unidade,
-                        comissao: produto.comissao,
-                        tabelas: produto.tabelas
-                    }
-                    ))
-                }
-            ))
-            
-            Company.create(
-            {
-                imagem: images.imagem && images.imagem[0].filename,
-                razao_social,
-                nome_fantasia,
-                cnpj,
-                telefones: JSON.parse(telefones),
-                email,
-                comissao: JSON.parse(comissao),
-                linhas: lines,
-                descricao_curta,
-                descricao,
-                site
-            })
-            return res.status(201).send()
-        } catch (error) {
-            next(error)
-        }
+			const image = req.file
+			
+			Company.create(
+			{
+					imagem: image && image.filename,
+					razao_social,
+					nome_fantasia,
+					cnpj,
+					telefones: JSON.parse(telefones),
+					email,
+					comissao: JSON.parse(comissao),
+					descricao_curta,
+					descricao,
+					site,
+					linhas: []
+			})
+			return res.status(201).send()
     }
 
     async update(req: Request, res: Response, next: NextFunction)
