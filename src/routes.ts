@@ -41,11 +41,13 @@ routes.put('/companies/:id/lines/:line', [checkKey, upload.single('imagem')], Li
 routes.delete('/companies/:id/lines/:line', checkKey, Line.remove)
 routes.get('/companies/:id/lines', checkKey, Line.list)
 
-routes.get('/companies/:id/products/:line', checkKey, Product.listProducts)
-routes.get('/companies/:id/products-priced/:line', checkKey, Product.listPricedProducts)
-routes.get('/companies/:id/products-priced/:line/:product', checkKey, Product.showPricedProduct)
-routes.get('/companies/:id/products/:line/:product', checkKey, Product.showProduct)
-routes.put('/companies/:id/products/:line/:product', [checkKey, upload.single('imagem')], Product.updateProduct)
+routes.post('/companies/:id/lines/:line/products', [checkKey, upload.single('imagem')], Product.create)
+routes.put('/companies/:id/lines/:line/products/:product', [checkKey, upload.single('imagem')], Product.update)
+routes.delete('/companies/:id/lines/:line/products/:product', checkKey, Product.remove)
+routes.get('/companies/:id/lines/:line/products', checkKey, Product.list)
+routes.get('/companies/:id/lines/:line/products-priced', checkKey, Product.listPriced)
+routes.get('/companies/:id/lines/:line/products-priced/:product', checkKey, Product.showPriced)
+routes.get('/companies/:id/lines/:line/products/:product', checkKey, Product.show)
 
 routes.post('/sellers', [checkKey, upload.single('imagem')], Seller.create)
 routes.put('/sellers/:id', [checkKey, upload.single('imagem')], Seller.update)
