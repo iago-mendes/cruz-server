@@ -37,8 +37,9 @@ routes.get('/companies-all', checkKey, Company.all)
 routes.get('/companies-all/:id', checkKey, Company.allOne)
 
 routes.post('/companies/:id/lines', [checkKey, upload.single('imagem')], Line.create)
-routes.get('/companies/:id/lines', checkKey, Line.list)
 routes.put('/companies/:id/lines/:line', [checkKey, upload.single('imagem')], Line.update)
+routes.delete('/companies/:id/lines/:line', checkKey, Line.remove)
+routes.get('/companies/:id/lines', checkKey, Line.list)
 
 routes.get('/companies/:id/products/:line', checkKey, Product.listProducts)
 routes.get('/companies/:id/products-priced/:line', checkKey, Product.listPricedProducts)
