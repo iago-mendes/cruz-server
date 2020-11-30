@@ -104,7 +104,11 @@ export default class CompanyController
             const {id} = req.params
 
             const company = await Company.findById(id)
-            fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(company?.imagem)))
+						if (!company)
+							return res.status(404).json({message: 'company not found!'})
+						
+						if(company.imagem)
+							fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', company.imagem))
 
             const tmp = Company.findByIdAndDelete(id)
             res.status(200).send()
@@ -125,7 +129,9 @@ export default class CompanyController
                 list.push(
                 {
                     id: company._id,
-                    imagem: `${baseUrl}/uploads/${String(company.imagem)}`,
+                    imagem: company.imagem
+											? `${baseUrl}/uploads/${company.imagem}`
+											: `${baseUrl}/uploads/assets/no-image.png`,
                     nome_fantasia: company.nome_fantasia,
                     descricao_curta: String(company.descricao_curta)
                 })
@@ -141,14 +147,20 @@ export default class CompanyController
     async show(req: Request, res: Response, next: NextFunction)
     {
         try {
-            const company = await Company.findById(req.params.id)
+						const company = await Company.findById(req.params.id)
+						
+						if (!company)
+							return res.status(404).json({message: 'company not found!'})
+
             return res.json(
             {
-                id: company?._id,
-                imagem: `${baseUrl}/uploads/${String(company?.imagem)}`,
-                nome_fantasia: company?.nome_fantasia,
-                descricao: company?.descricao,
-                site: company?.site
+                id: company._id,
+								imagem: company.imagem
+									? `${baseUrl}/uploads/${company.imagem}`
+									: `${baseUrl}/uploads/assets/no-image.png`,
+                nome_fantasia: company.nome_fantasia,
+                descricao: company.descricao,
+                site: company.site
             })
         } catch (error) {
             next(error)
