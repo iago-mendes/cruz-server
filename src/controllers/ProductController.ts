@@ -249,4 +249,20 @@ export default class ProductController
 					next(error)
 			}
 	}
+
+	async raw(req: Request, res: Response, next: NextFunction)
+	{
+		const {id: companyId, line: lineId} = req.params
+
+		const company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'company not found!'})
+
+		const line = company.linhas.find(linha => linha._id == lineId)
+		if (!line)
+			return res.status(404).json({message: 'line not found!'})
+
+		const products = line.produtos
+		return res.json(products)
+	}
 }
