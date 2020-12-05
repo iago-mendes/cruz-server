@@ -263,6 +263,19 @@ export default class ProductController
 			return res.status(404).json({message: 'line not found!'})
 
 		const products = line.produtos
-		return res.json(products)
+		return res.json(products.map(product => (
+		{
+			_id: product._id,
+			imagem: product.imagem
+				? `${baseUrl}/uploads/${product.imagem}`
+				: `${baseUrl}/uploads/assets/no-image.png`,
+			nome: product.nome,
+			unidade: product.unidade,
+			st: product.st,
+			ipi: product.ipi,
+			codigo: product.codigo,
+			comissao: product.comissao,
+			tabelas: product.tabelas
+		})))
 	}
 }
