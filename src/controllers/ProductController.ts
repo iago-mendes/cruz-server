@@ -119,6 +119,7 @@ export default class ProductController
 
 		const lines = company.linhas.map(linha => (
 		{
+			_id: linha._id,
 			nome: linha.nome,
 			imagem: linha.imagem,
 			produtos: linha.produtos.filter(produto => produto._id != productId)
