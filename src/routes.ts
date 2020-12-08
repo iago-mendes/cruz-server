@@ -45,6 +45,7 @@ routes.get('/companies/:id/lines/:line/products-priced', checkKey, Product.listP
 routes.get('/companies/:id/lines/:line/products-priced/:product', checkKey, Product.showPriced)
 routes.get('/companies/:id/lines/:line/products/:product', checkKey, Product.show)
 routes.get('/companies/:id/lines/:line/products-raw', checkKey, Product.raw)
+routes.get('/companies/:id/lines/:line/products-raw/:product', checkKey, Product.rawOne)
 
 routes.post('/sellers', [checkKey, upload.single('imagem')], Seller.create)
 routes.put('/sellers/:id', [checkKey, upload.single('imagem')], Seller.update)

@@ -279,4 +279,23 @@ export default class ProductController
 			tabelas: product.tabelas
 		})))
 	}
+
+	async rawOne(req: Request, res: Response, next: NextFunction)
+	{
+		const {id: companyId, line: lineId, product: productId} = req.params
+
+		const company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'company not found!'})
+
+		const line = company.linhas.find(linha => linha._id == lineId)
+		if (!line)
+			return res.status(404).json({message: 'line not found!'})
+
+		const product = line.produtos.find(produto => produto._id == productId)
+		if (!product)
+			return res.status(404).json({message: 'product not found!'})
+
+		return res.json(product)
+	}
 }
