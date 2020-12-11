@@ -158,13 +158,41 @@ export default class SellerControler
         }
     }
 
-    async all(req: Request, res: Response, next: NextFunction)
+    async raw(req: Request, res: Response, next: NextFunction)
     {
         try {
             const sellers = await Seller.find()
-            return res.json(sellers)
+						return res.json(sellers.map(seller =>
+						{
+							let tmp = seller
+
+							tmp.imagem = tmp.imagem
+								? `${baseUrl}/uploads/${tmp.imagem}`
+								: `${baseUrl}/uploads/assets/no-image.png`
+
+							return tmp
+						}))
         } catch (error) {
             next(error)
         }
-    }
+		}
+		
+		async rawOne(req: Request, res: Response, next: NextFunction)
+		{
+			try {
+				const {id} = req.params
+				
+				let seller = await Seller.findById(id)
+				if (!seller)
+					return res.status(404).json({message: 'seller not found!'})
+
+				seller.imagem = seller.imagem
+					? `${baseUrl}/uploads/${seller.imagem}`
+					: `${baseUrl}/uploads/assets/no-image.png`
+
+				return res.json(seller)
+			} catch (error) {
+				
+			}
+		}
 }
