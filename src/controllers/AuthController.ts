@@ -1,4 +1,5 @@
-import { Request, Response } from 'express'
+import {Request, Response} from 'express'
+import bcrypt from 'bcrypt'
 
 import Client from '../models/Client'
 import Seller from '../models/Seller'
@@ -7,15 +8,17 @@ export default
 {
 	logInClient: async (req: Request, res: Response) =>
 	{
+		const {email, password} = req.body
 		let user = {email: '', password: '', id: '', role: ''}
 
-		const client = await Client.findOne({email: req.body.email})
+		const client = await Client.findOne({email})
 		if (client)
 			user = {email: client.email, password: client.senha, id: client._id, role: 'client'}
 		else
 			return res.status(404).json({ message: "Usuário de cliente não encontrado." })
 		
-		const isPasswordValid = String(req.body.password) === user.password
+		// const isPasswordValid = String(req.body.password) === user.password
+		const isPasswordValid = await bcrypt.compare(password, client.senha)
 		if (!isPasswordValid)
 			return res.status(401).json(
 			{

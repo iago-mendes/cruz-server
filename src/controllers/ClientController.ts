@@ -1,6 +1,7 @@
 import {Request, Response, NextFunction} from 'express'
 import fs from 'fs'
 import path from 'path'
+import bcrypt from 'bcrypt'
 
 import Client from '../models/Client'
 import Company from '../models/Company'
@@ -20,7 +21,6 @@ export default class ClientController
 	async create(req: Request, res: Response, next: NextFunction)
 	{
 		try {
-
 			const {
 				razao_social,
 				nome_fantasia,
@@ -36,6 +36,15 @@ export default class ClientController
 			} = req.body
 			const image = req.file
 
+			let password = ''
+			await bcrypt.hash(senha, 10, (err, hash) =>
+			{
+				if (err)
+					return res.json({message: 'error while encrypting password!'})
+				
+				password = hash
+			})
+
 			const client =
 			{
 				imagem: image && image.filename,
@@ -45,7 +54,7 @@ export default class ClientController
 				insc_estadual,
 				telefone,
 				email,
-				senha,
+				senha: password,
 				vendedores: JSON.parse(vendedores),
 				endereco: JSON.parse(endereco),
 				status: JSON.parse(status),
@@ -95,6 +104,16 @@ export default class ClientController
 					}
 			}
 
+			let password = ''
+			if (senha)
+				await bcrypt.hash(senha, 10, (err, hash) =>
+				{
+					if (err)
+						return res.json({message: 'error while encrypting password!'})
+					
+					password = hash
+				})
+
 			const client =
 			{
 				imagem,
@@ -104,7 +123,7 @@ export default class ClientController
 				insc_estadual,
 				telefone,
 				email,
-				senha,
+				senha: senha && password,
 				vendedores: JSON.parse(vendedores),
 				endereco: JSON.parse(endereco),
 				status: JSON.parse(status),
