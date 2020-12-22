@@ -155,70 +155,75 @@ export default class ProductController
 
 	async listPriced(req: Request, res: Response, next: NextFunction)
 	{
-			try {
-					const company = await Company.findById(req.params.id)
-					const line = company?.linhas.find(linha => linha._id == req.params.line)
-					if (!line) return res.json({message: 'line not found'})
+		try {
+			const company = await Company.findById(req.params.id)
+			if (!company)
+				return res.json({message: 'company not found'})
+			const line = company?.linhas.find(linha => linha._id == req.params.line)
+			if (!line)
+				return res.json({message: 'line not found'})
 
-					const {client: clientId} = req.query
-					const client = await Client.findById(clientId)
-					if (!client) return res.json({message: 'client not found'})
+			const {client: clientId} = req.query
+			const client = await Client.findById(clientId)
+			if (!client)
+				return res.json({message: 'client not found'})
 
-					const table = client.representadas.find(representada => representada.id == String(company?._id))?.tabela
-					if (!table) return res.json({message: 'table not found'})
+			const tableId = client.representadas.find(representada => representada.id == company._id)?.tabela
+			if (!tableId)
+				return res.json({message: 'table not found'})
 
-					const list = line.produtos.map(produto => (
-					{
-							id: produto._id,
-							imagem: produto.imagem
-									? `${baseUrl}/uploads/${produto.imagem}`
-									: `${baseUrl}/uploads/assets/no-image.png`,
-							nome: produto.nome,
-							unidade: produto.unidade,
-							preco: produto.tabelas.find(tabela => tabela.nome == table)?.preco
-					}))
-					await Promise.all(list)
+			const list = line.produtos.map(produto => (
+			{
+				id: produto._id,
+				imagem: produto.imagem
+					? `${baseUrl}/uploads/${produto.imagem}`
+					: `${baseUrl}/uploads/assets/no-image.png`,
+				nome: produto.nome,
+				unidade: produto.unidade,
+				preco: produto.tabelas.find(tabela => tabela.id == tableId)?.preco
+			}))
+			await Promise.all(list)
 
-					return res.json(list)
-			} catch (error) {
-					next(error)
-			}
+			return res.json(list)
+		} catch (error) {
+			next(error)
+		}
 	}
 
 	async showPriced(req: Request, res: Response, next: NextFunction)
 	{
-			try {
-					const company = await Company.findById(req.params.id)
-					if (!company) return res.json({message: 'company not found'})
-					const line = company?.linhas.find(linha => linha._id == req.params.line)
-					if (!line) return res.json({message: 'line not found'})
-					const product = line.produtos.find(produto => produto._id == req.params.product)
-					if (!product) return res.json({message: 'product not found'})
+		try {
+			const company = await Company.findById(req.params.id)
+			if (!company) return res.json({message: 'company not found'})
+			const line = company?.linhas.find(linha => linha._id == req.params.line)
+			if (!line) return res.json({message: 'line not found'})
+			const product = line.produtos.find(produto => produto._id == req.params.product)
+			if (!product) return res.json({message: 'product not found'})
 
-					const {client: clientId} = req.query
-					const client = await Client.findById(clientId)
-					if (!client) return res.json({message: 'client not found'})
+			const {client: clientId} = req.query
+			const client = await Client.findById(clientId)
+			if (!client) return res.json({message: 'client not found'})
 
-					const table = client.representadas.find(representada => representada.id == String(company?._id))?.tabela
-					if (!table) return res.json({message: 'table not found'})
+			const tableId = client.representadas.find(representada => representada.id == company._id)?.tabela
+			if (!tableId) return res.json({message: 'table not found'})
 
-					const show =
-					{
-							id: product._id,
-							imagem: product.imagem
-									? `${baseUrl}/uploads/${product.imagem}`
-									: `${baseUrl}/uploads/assets/no-image.png`,
-							nome: product.nome,
-							unidade: product.unidade,
-							ipi: product.ipi,
-							st: product.st,
-							preco: product.tabelas.find(tabela => tabela.nome == table)?.preco
-					}
-
-					return res.json(show)
-			} catch (error) {
-					next(error)
+			const show =
+			{
+				id: product._id,
+				imagem: product.imagem
+					? `${baseUrl}/uploads/${product.imagem}`
+					: `${baseUrl}/uploads/assets/no-image.png`,
+				nome: product.nome,
+				unidade: product.unidade,
+				ipi: product.ipi,
+				st: product.st,
+				preco: product.tabelas.find(tabela => tabela.id == tableId)?.preco
 			}
+
+			return res.json(show)
+		} catch (error) {
+			next(error)
+		}
 	}
 
 	async show(req: Request, res: Response, next: NextFunction)
