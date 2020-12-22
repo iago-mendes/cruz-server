@@ -74,14 +74,17 @@ export default class CompanyController
 				[letter: string]: any
 			}
 			let company: Update = {}
+
+			const previous = await Company.findById(id)
+			if (!previous)
+				return res.json({message: 'company not found'})
 			
 			company['_id'] = id
 			if(image)
 			{
 				company['imagem'] = image.filename
-				const previous = await Company.findById(id)
 				if (previous?.imagem)
-				fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
+					fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
 			}
 			if(razao_social) company['razao_social'] = razao_social
 			if(nome_fantasia) company['nome_fantasia'] = nome_fantasia
