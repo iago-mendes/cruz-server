@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt'
 import Client from '../models/Client'
 import Company from '../models/Company'
 import Seller from '../models/Seller'
+import formatImage from '../utils/formatImage'
 
 interface List
 {
@@ -79,7 +80,6 @@ export default class ClientController
 				insc_estadual,
 				telefone,
 				email,
-				senha,
 				vendedores,
 				endereco,
 				status,
@@ -104,16 +104,6 @@ export default class ClientController
 					}
 			}
 
-			let password = ''
-			if (senha)
-				await bcrypt.hash(senha, 10, (err, hash) =>
-				{
-					if (err)
-						return res.json({message: 'error while encrypting password!'})
-					
-					password = hash
-				})
-
 			const client =
 			{
 				imagem,
@@ -123,7 +113,6 @@ export default class ClientController
 				insc_estadual,
 				telefone,
 				email,
-				senha: senha && password,
 				vendedores: JSON.parse(vendedores),
 				endereco: JSON.parse(endereco),
 				status: JSON.parse(status),
@@ -166,40 +155,20 @@ export default class ClientController
 	async list(req: Request, res: Response, next: NextFunction)
 	{
 		try {
-			const {cidade} = req.query
-
-			let list: List[] = []
 			const clients = await Client.find()
 			
-			const promises = clients.map(client =>
+			let list: List[] = []
+			clients.map(client =>
 			{
-				if (cidade !== undefined && cidade !== '')
+				list.push(
 				{
-					if (client.endereco.cidade === cidade)
-					{
-						list.push(
-						{
-							id: client.id,
-							imagem: String(client.imagem),
-							nome_fantasia: client.nome_fantasia,
-							razao_social: client.razao_social,
-							status: client.status
-						})
-					}
-				}
-				else
-				{
-					list.push(
-					{
-						id: client.id,
-						imagem: String(client.imagem),
-						nome_fantasia: client.nome_fantasia,
-						razao_social: client.razao_social,
-						status: client.status
-					})
-				}
+					id: client.id,
+					imagem: formatImage(client.imagem),
+					nome_fantasia: client.nome_fantasia,
+					razao_social: client.razao_social,
+					status: client.status
+				})
 			})
-			await Promise.all(promises)
 
 			return res.json(list)
 		} catch (error) {
@@ -210,52 +179,54 @@ export default class ClientController
 	async show(req: Request, res: Response, next: NextFunction)
 	{
 		try {
-			const client = await Client.findById(req.params.id)
-			if (client !== null)
+			const {id} = req.params
+
+			const client = await Client.findById(id)
+			if (!client)
+				return res.status(404).json({message: 'client not found'})
+
+			let sellers: {id: string, nome: string}[] = []
+			const promises1 = client.vendedores.map(async sellerId =>
 			{
-				let sellers: {id: string, nome: string}[] = []
-				const promises1 = client.vendedores.map(async seller =>
+				const tmpSeller = await Seller.findById(sellerId)
+				sellers.push(
 				{
-					const tmpSeller = await Seller.findById(seller)
-					sellers.push(
-					{
-						id: seller,
-						nome: String(tmpSeller?.nome)
-					})
+					id: sellerId,
+					nome: tmpSeller ? tmpSeller.nome : 'not found'
 				})
-				await Promise.all(promises1)
+			})
+			await Promise.all(promises1)
 
-				let companies: {id: string, nome_fantasia: string, tabela: string}[] = []
-				const promises2 = client.representadas.map(async company =>
+			let companies: {id: string, nome_fantasia: string, tabela: string}[] = []
+			const promises2 = client.representadas.map(async company =>
+			{
+				const tmpCompany = await Company.findById(company.id)
+				companies.push(
 				{
-					const tmpCompany = await Company.findById(company.id)
-					companies.push(
-					{
-						id: company.id,
-						nome_fantasia: String(tmpCompany?.nome_fantasia),
-						tabela: company.tabela
-					})
+					id: company.id,
+					nome_fantasia: tmpCompany ? tmpCompany.nome_fantasia : 'not found',
+					tabela: company.tabela
 				})
-				await Promise.all(promises2)
+			})
+			await Promise.all(promises2)
 
-				return res.json(
-				{
-					id: client.id,
-					imagem: client.imagem,
-					razao_social: client.razao_social,
-					nome_fantasia: client.nome_fantasia,
-					cnpj: client.cnpj,
-					insc_estadual: client.insc_estadual,
-					telefone: client.telefone,
-					email: client.email,
-					endereco: client.endereco,
-					status: client.status,
-					vendedores: sellers,
-					representadas: companies
-				})
-			}
+			return res.json(
+			{
+				id: client.id,
+				imagem: formatImage(client.imagem),
+				razao_social: client.razao_social,
+				nome_fantasia: client.nome_fantasia,
+				cnpj: client.cnpj,
+				insc_estadual: client.insc_estadual,
+				telefone: client.telefone,
+				email: client.email,
+				endereco: client.endereco,
+				status: client.status,
+				vendedores: sellers,
+				representadas: companies
+			})
 		} catch (error) {
-				next(error)
+			next(error)
 		}
 	}
 
