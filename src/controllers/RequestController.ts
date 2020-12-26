@@ -225,13 +225,28 @@ export default class RequestController
 		}
 	}
 
-	async all(req: Request, res: Response, next: NextFunction)
+	async raw(req: Request, res: Response, next: NextFunction)
 	{
-			try {
-					const requests = await RequestModel.find()
-					return res.json(requests)
-			} catch (error) {
-					next(error)
-			}
+		try {
+			const requests = await RequestModel.find()
+			return res.json(requests)
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	async rawOne(req: Request, res: Response, next: NextFunction)
+	{
+		try {
+			const {id} = req.params
+
+			const request = await RequestModel.findById(id)
+			if (!request)
+				return res.status(404).json({message: 'request not found'})
+
+			return res.json(request)
+		} catch (error) {
+			next(error)
+		}
 	}
 }

@@ -67,6 +67,7 @@ routes.put('/requests/:id', checkKey, Request.update)
 routes.delete('/requests/:id', checkKey, Request.remove)
 routes.get('/requests', checkKey, Request.list)
 routes.get('/requests/:id', checkKey, Request.show)
-routes.get('/requests-all', checkKey, Request.all)
+routes.get('/requests-raw', checkKey, Request.raw)
+routes.get('/requests-raw/:id', checkKey, Request.rawOne)
 
 export default routes
