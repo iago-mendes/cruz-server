@@ -230,11 +230,35 @@ export default class ClientController
 		}
 	}
 
-	async all(req: Request, res: Response, next: NextFunction)
+	async raw(req: Request, res: Response, next: NextFunction)
 	{
 		try {
 			const clients = await Client.find()
-			return res.json(clients)
+			const list = clients.map(client =>
+			{
+				let tmp = client
+				tmp.imagem = formatImage(tmp.imagem)
+				return tmp
+			})
+
+			return res.json(list)
+		} catch (error) {
+			next(error)
+		}
+	}
+
+	async rawOne(req: Request, res: Response, next: NextFunction)
+	{
+		try {
+			const {id} = req.params
+			
+			let client = await Client.findById(id)
+			if (!client)
+				return res.status(404).json({message: 'client not found!'})
+
+			client.imagem = formatImage(client.imagem)
+
+			return res.json(client)
 		} catch (error) {
 			next(error)
 		}
