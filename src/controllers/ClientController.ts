@@ -37,14 +37,9 @@ export default class ClientController
 			} = req.body
 			const image = req.file
 
-			let password = ''
-			await bcrypt.hash(senha, 10, (err, hash) =>
-			{
-				if (err)
-					return res.json({message: 'error while encrypting password!'})
-				
-				password = hash
-			})
+			let password = bcrypt.hashSync(senha, 10)
+			if (!password)
+				return res.status(500).json({message: 'error while encrypting password!'})
 
 			const client =
 			{

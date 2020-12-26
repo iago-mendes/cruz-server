@@ -7,7 +7,7 @@ type ClientType = mongoose.Document &
 	nome_fantasia: string
 	cnpj: string
 	insc_estadual: string
-	telefone: number
+	telefone?: number
 	email: string
 	senha: string
 	vendedores: Array<string>
@@ -15,6 +15,7 @@ type ClientType = mongoose.Document &
 	{
 		rua?: string
 		numero?: number
+		complemento?: string
 		bairro?: string
 		cep?: number
 		cidade?: string
@@ -31,7 +32,7 @@ const ClientSchema = new mongoose.Schema(
 	nome_fantasia: {type: String, required: true},
 	cnpj: {type: String, required: true},
 	insc_estadual: {type: String, required: true},
-	telefone: {type: Number, required: true},
+	telefone: {type: Number, required: false},
 	email: {type: String, required: true},
 	senha: {type: String, required: true},
 	vendedores: [{type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor'}],
