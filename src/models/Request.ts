@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 type RequestType = mongoose.Document &
 {
-	data: Date
+	data?: Date
 	condicao: string
 	digitado_por?: string
 	cliente: string

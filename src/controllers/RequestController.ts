@@ -8,7 +8,7 @@ import Seller from '../models/Seller'
 interface ListInterface
 {
 	id: string
-	data: Date
+	data?: Date
 	cliente: string
 	vendedor: string
 	representada: string
@@ -32,7 +32,7 @@ interface Product
 interface ShowInterface
 {
 	id: string
-	data: Date
+	data?: Date
 	condicao: string
 	digitado_por?: string
 	peso?: number
@@ -53,7 +53,34 @@ export default class RequestController
 	async create(req: Request, res: Response, next: NextFunction)
 	{
 		try {
-			const request = req.body
+			const
+			{
+				condicao,
+				digitado_por,
+				cliente,
+				vendedor,
+				representada,
+				linha,
+				peso,
+				tipo,
+				status,
+				produtos
+			} = req.body
+
+			const request =
+			{
+				condicao,
+				digitado_por,
+				cliente,
+				vendedor,
+				representada,
+				linha,
+				peso,
+				tipo: JSON.parse(tipo),
+				status: JSON.parse(status),
+				produtos: JSON.parse(produtos),
+			}
+
 			await RequestModel.create(request)
 			return res.status(201).send()
 		} catch (error) {
@@ -64,8 +91,36 @@ export default class RequestController
 	async update(req: Request, res: Response, next: NextFunction)
 	{
 		try {
-			const request = req.body
-			const tmp = await RequestModel.findByIdAndUpdate(req.params.id, request, {new: true})
+			const {id} = req.params
+			const
+			{
+				condicao,
+				digitado_por,
+				cliente,
+				vendedor,
+				representada,
+				linha,
+				peso,
+				tipo,
+				status,
+				produtos
+			} = req.body
+
+			const request =
+			{
+				condicao,
+				digitado_por,
+				cliente,
+				vendedor,
+				representada,
+				linha,
+				peso,
+				tipo: JSON.parse(tipo),
+				status: JSON.parse(status),
+				produtos: JSON.parse(produtos),
+			}
+
+			const tmp = await RequestModel.findByIdAndUpdate(id, request, {new: true})
 			res.status(200).send()
 			return tmp
 		} catch (error) {
@@ -76,7 +131,8 @@ export default class RequestController
 	async remove(req: Request, res: Response, next: NextFunction)
 	{
 		try {
-			const tmp = await RequestModel.findByIdAndDelete(req.params.id)
+			const {id} = req.params
+			const tmp = await RequestModel.findByIdAndDelete(id)
 			res.status(200).send()
 			return tmp
 		} catch (error) {
@@ -99,9 +155,9 @@ export default class RequestController
 				{
 					id: request._id,
 					data: request.data,
-					cliente: String(client?.nome_fantasia),
-					vendedor: String(seller?.nome),
-					representada: String(company?.nome_fantasia),
+					cliente: client ? client.nome_fantasia : 'not found',
+					vendedor: seller ? seller.nome : 'not found',
+					representada: company ? company.nome_fantasia : 'not found',
 					tipo: request.tipo,
 					status: request.status
 				}
@@ -199,10 +255,10 @@ export default class RequestController
 				peso: request.peso,
 				tipo: request.tipo,
 				status: request.status,
-				cliente: {id: request.cliente, nome: client !== null ? client.nome_fantasia : ''},
-				vendedor: {id: request.vendedor, nome: seller !== null ? seller.nome : ''},
-				representada: {id: request.representada, nome: company !== null ? company.nome_fantasia : ''},
-				linha: {id: request.linha, nome: line !== undefined ? line.nome : ''},
+				cliente: {id: request.cliente, nome: client ? client.nome_fantasia : ''},
+				vendedor: {id: request.vendedor, nome: seller ? seller.nome : ''},
+				representada: {id: request.representada, nome: company ? company.nome_fantasia : ''},
+				linha: {id: request.linha, nome: line ? line.nome : ''},
 				produtos: products,
 				descontoTotal: totalDiscount,
 				valorTotalProdutos: totalProductsValue,
