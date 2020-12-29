@@ -76,9 +76,9 @@ export default class RequestController
 				representada,
 				linha,
 				peso,
-				tipo: JSON.parse(tipo),
-				status: JSON.parse(status),
-				produtos: JSON.parse(produtos),
+				tipo,
+				status,
+				produtos
 			}
 
 			await RequestModel.create(request)
@@ -115,9 +115,9 @@ export default class RequestController
 				representada,
 				linha,
 				peso,
-				tipo: JSON.parse(tipo),
-				status: JSON.parse(status),
-				produtos: JSON.parse(produtos),
+				tipo,
+				status,
+				produtos
 			}
 
 			const tmp = await RequestModel.findByIdAndUpdate(id, request, {new: true})
