@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-type RequestType = mongoose.Document &
+export type RequestType = mongoose.Document &
 {
 	data?: Date
 	condicao: string

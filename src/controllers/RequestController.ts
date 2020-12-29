@@ -1,8 +1,8 @@
 import {Request, Response, NextFunction} from 'express'
 
-import RequestModel from '../models/Request'
-import Company from '../models/Company'
-import Client from '../models/Client'
+import RequestModel, {RequestType} from '../models/Request'
+import Company, {CompanyType, Line} from '../models/Company'
+import Client, {ClientType} from '../models/Client'
 import Seller from '../models/Seller'
 import formatImage from '../utils/formatImage'
 
@@ -10,9 +10,23 @@ interface ListInterface
 {
 	id: string
 	data?: Date
-	cliente: string
-	vendedor: string
-	representada: string
+	cliente:
+	{
+		imagem: string
+		nome_fantasia: string
+		razao_social: string
+	}
+	vendedor:
+	{
+		imagem: string
+		nome: string
+	}
+	representada:
+	{
+		imagem: string
+		nome_fantasia: string
+		razao_social: string
+	}
 	tipo: {venda: boolean, troca: boolean}
 	status: {concluido: boolean, enviado: boolean, faturado: boolean}
 }
@@ -28,6 +42,61 @@ interface Product
 	ipi: number
 	st: number
 	subtotal: number
+}
+
+function getPricedProducts(request: RequestType, company: CompanyType, client: ClientType, line: Line, res: Response)
+{
+	let totalValue = 0
+	let totalProductsValue = 0
+	let totalDiscount = 0
+
+	let products: Product[] = []
+	request.produtos.map(productSold =>
+	{
+		const product = line.produtos.find(product => String(product._id) === String(productSold.id))
+		if (!product)
+			return res.status(404).json({message: 'product not found'})
+
+		const clientCompany = client.representadas.find(tmpCompany => String(tmpCompany.id) === String(company._id))
+		if (!clientCompany)
+			return res.status(404).json({message: 'client company not found'})
+
+		const tableId = clientCompany.tabela
+
+		const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) === String(product._id))
+		if (!clientProduct)
+			return res.status(404).json({message: 'client product not found'})
+
+		const table = clientProduct.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
+		if (!table)
+			return res.status(404).json({message: 'table not found'})
+		
+		const tablePrice = table.preco
+		
+		const subtotal = productSold.quantidade*productSold.preco
+			+productSold.quantidade*productSold.preco*product.ipi/100
+			+productSold.quantidade*productSold.preco*product.st/100
+
+		totalProductsValue += productSold.quantidade*productSold.preco
+		totalValue += subtotal
+		totalDiscount += (tablePrice-productSold.preco)*productSold.quantidade
+
+		const tmp =
+		{
+			id: String(product._id),
+			nome: product.nome,
+			imagem: formatImage(product.imagem),
+			quantidade: productSold.quantidade, 
+			preco: productSold.preco, 
+			precoTabela: tablePrice,
+			ipi: product.ipi,
+			st: product.st,
+			subtotal
+		}
+		products.push(tmp)
+	})
+
+	return {totalValue, totalProductsValue, totalDiscount, products}
 }
 
 export default class RequestController
@@ -131,17 +200,47 @@ export default class RequestController
 			const promises = requests.map(async request =>
 			{
 				const client = await Client.findById(request.cliente)
+				if (!client)
+					return res.status(404).json({message: 'client not found'})
+
 				const seller = await Seller.findById(request.vendedor)
+				if (!seller)
+					return res.status(404).json({message: 'seller not found'})
+
 				const company = await Company.findById(request.representada)
+				if (!company)
+					return res.status(404).json({message: 'company not found'})
+
+				const line = company.linhas.find(linha => String(linha._id) == request.linha)
+				if (!line)
+					return res.status(404).json({message: 'line not found'})
+
+				const {totalValue} = getPricedProducts(request, company, client, line, res)
+
 				const tmp =
 				{
 					id: request._id,
 					data: request.data,
-					cliente: client ? client.nome_fantasia : 'not found',
-					vendedor: seller ? seller.nome : 'not found',
-					representada: company ? company.nome_fantasia : 'not found',
+					cliente:
+					{
+						imagem: formatImage(client.imagem),
+						nome_fantasia: client.nome_fantasia,
+						razao_social: client.razao_social
+					},
+					vendedor:
+					{
+						imagem: formatImage(seller.imagem),
+						nome: seller.nome
+					},
+					representada:
+					{
+						imagem: formatImage(company.imagem),
+						nome_fantasia: company.nome_fantasia,
+						razao_social: company.razao_social
+					},
 					tipo: request.tipo,
-					status: request.status
+					status: request.status,
+					valorTotal: totalValue
 				}
 				list.push(tmp)
 			})
@@ -160,73 +259,25 @@ export default class RequestController
 
 			const request = await RequestModel.findById(id)
 			if (!request)
-				return res.json({message: 'request not found'})
+				return res.status(404).json({message: 'request not found'})
 
 			const client = await Client.findById(request.cliente)
 			if (!client)
-				return res.json({message: 'client not found'})
+				return res.status(404).json({message: 'client not found'})
 
 			const seller = await Seller.findById(request.vendedor)
 			if (!seller)
-				return res.json({message: 'seller not found'})
+				return res.status(404).json({message: 'seller not found'})
 
 			const company = await Company.findById(request.representada)
 			if (!company)
-				return res.json({message: 'company not found'})
+				return res.status(404).json({message: 'company not found'})
 
 			const line = company.linhas.find(linha => String(linha._id) == request.linha)
 			if (!line)
-				return res.json({message: 'line not found'})
+				return res.status(404).json({message: 'line not found'})
 
-			let totalValue = 0
-			let totalProductsValue = 0
-			let totalDiscount = 0
-
-			let products: Product[] = []
-			request.produtos.map(productSold =>
-			{
-				const product = line.produtos.find(product => String(product._id) === String(productSold.id))
-				if (!product)
-					return res.status(404).json({message: 'product not found'})
-
-				const clientCompany = client.representadas.find(tmpCompany => String(tmpCompany.id) === String(company._id))
-				if (!clientCompany)
-					return res.status(404).json({message: 'client company not found'})
-
-				const tableId = clientCompany.tabela
-
-				const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) === String(product._id))
-				if (!clientProduct)
-					return res.status(404).json({message: 'client product not found'})
-
-				const table = clientProduct.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
-				if (!table)
-					return res.status(404).json({message: 'table not found'})
-				
-				const tablePrice = table.preco
-				
-				const subtotal = productSold.quantidade*productSold.preco
-					+productSold.quantidade*productSold.preco*product.ipi/100
-					+productSold.quantidade*productSold.preco*product.st/100
-
-				totalProductsValue += productSold.quantidade*productSold.preco
-				totalValue += subtotal
-				totalDiscount += (tablePrice-productSold.preco)*productSold.quantidade
-
-				const tmp =
-				{
-					id: String(product._id),
-					nome: product.nome,
-					imagem: formatImage(product.imagem),
-					quantidade: productSold.quantidade, 
-					preco: productSold.preco, 
-					precoTabela: tablePrice,
-					ipi: product.ipi,
-					st: product.st,
-					subtotal
-				}
-				products.push(tmp)
-			})
+			const {products, totalValue, totalProductsValue, totalDiscount} = getPricedProducts(request, company, client, line, res)
 
 			const show =
 			{

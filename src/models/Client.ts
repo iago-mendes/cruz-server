@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-type ClientType = mongoose.Document &
+export type ClientType = mongoose.Document &
 {
 	imagem?: string
 	razao_social: string

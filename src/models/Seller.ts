@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 
-type SellerType = mongoose.Document &
+export type SellerType = mongoose.Document &
 {
     nome: string
     imagem?: string

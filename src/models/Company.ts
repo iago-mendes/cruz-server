@@ -1,6 +1,25 @@
 import mongoose from 'mongoose'
 
-type CompanyType = mongoose.Document &
+export interface Line
+{
+	_id?: string
+	nome: string
+	imagem?: string
+	produtos: Array<
+	{
+		_id?: string
+		imagem?: string
+		codigo: number
+		nome: string
+		ipi: number
+		st: number
+		unidade: string
+		comissao: number
+		tabelas: Array<{id: string, preco: number}>
+	}>
+}
+
+export type CompanyType = mongoose.Document &
 {
 	_id: string
 	imagem?: string
@@ -14,23 +33,7 @@ type CompanyType = mongoose.Document &
 	site?: string
 	comissao: {porcentagem: number, obs: Array<string>}
 	tabelas: Array<{_id?: string, nome: string}>
-	linhas: Array<
-	{
-		_id?: string
-		nome: string
-		imagem?: string
-		produtos: Array<
-		{
-			_id?: string
-			imagem?: string
-			codigo: number
-			nome: string
-			ipi: number
-			st: number
-			unidade: string
-			comissao: number
-			tabelas: Array<{id: string, preco: number}>
-		}>}>
+	linhas: Line[]
 }
 
 const CompanySchema = new mongoose.Schema(
