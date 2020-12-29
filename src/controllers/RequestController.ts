@@ -4,6 +4,7 @@ import RequestModel from '../models/Request'
 import Company from '../models/Company'
 import Client from '../models/Client'
 import Seller from '../models/Seller'
+import formatImage from '../utils/formatImage'
 
 interface ListInterface
 {
@@ -27,25 +28,6 @@ interface Product
 	ipi: number
 	st: number
 	subtotal: number
-}
-
-interface ShowInterface
-{
-	id: string
-	data?: Date
-	condicao: string
-	digitado_por?: string
-	peso?: number
-	tipo: {venda: boolean, troca: boolean}
-	status: {concluido: boolean, enviado: boolean, faturado: boolean}
-	cliente: {id: string, nome: string}
-	vendedor: {id: string, nome: string}
-	representada: {id: string, nome: string}
-	linha: {id: string, nome: string}
-	produtos: Array<Product>
-	descontoTotal: number
-	valorTotalProdutos: number
-	valorTotal: number
 }
 
 export default class RequestController
@@ -203,23 +185,23 @@ export default class RequestController
 			let products: Product[] = []
 			request.produtos.map(productSold =>
 			{
-				const product = line.produtos.find(product => product._id == productSold.id)
+				const product = line.produtos.find(product => String(product._id) === String(productSold.id))
 				if (!product)
 					return res.status(404).json({message: 'product not found'})
 
-				const clientCompany = client.representadas.find(tmpCompany => tmpCompany.id == company._id)
+				const clientCompany = client.representadas.find(tmpCompany => String(tmpCompany.id) === String(company._id))
 				if (!clientCompany)
-					return res.json({message: 'client company not found'})
+					return res.status(404).json({message: 'client company not found'})
 
-				const tableId = clientCompany.id
+				const tableId = clientCompany.tabela
 
-				const clientProduct = line.produtos.find(tmpProduct => tmpProduct._id == product._id)
+				const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) === String(product._id))
 				if (!clientProduct)
-					return res.json({message: 'client product not found'})
+					return res.status(404).json({message: 'client product not found'})
 
-				const table = clientProduct.tabelas.find(tmpTable => tmpTable.id == tableId)
+				const table = clientProduct.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
 				if (!table)
-					return res.json({message: 'table not found'})
+					return res.status(404).json({message: 'table not found'})
 				
 				const tablePrice = table.preco
 				
@@ -235,18 +217,18 @@ export default class RequestController
 				{
 					id: String(product._id),
 					nome: product.nome,
-					imagem: String(product.imagem),
+					imagem: formatImage(product.imagem),
 					quantidade: productSold.quantidade, 
 					preco: productSold.preco, 
 					precoTabela: tablePrice,
 					ipi: product.ipi,
 					st: product.st,
-					subtotal: subtotal
+					subtotal
 				}
 				products.push(tmp)
 			})
 
-			const show: ShowInterface =
+			const show =
 			{
 				id: request._id,
 				data: request.data,
@@ -255,10 +237,33 @@ export default class RequestController
 				peso: request.peso,
 				tipo: request.tipo,
 				status: request.status,
-				cliente: {id: request.cliente, nome: client ? client.nome_fantasia : ''},
-				vendedor: {id: request.vendedor, nome: seller ? seller.nome : ''},
-				representada: {id: request.representada, nome: company ? company.nome_fantasia : ''},
-				linha: {id: request.linha, nome: line ? line.nome : ''},
+				cliente:
+				{
+					id: request.cliente,
+					nome_fantasia: client.nome_fantasia,
+					razao_social: client.razao_social,
+					imagem: formatImage(client.imagem),
+					endereco: client.endereco
+				},
+				vendedor:
+				{
+					id: request.vendedor,
+					nome: seller.nome,
+					imagem: formatImage(seller.imagem)
+				},
+				representada:
+				{
+					id: request.representada,
+					razao_social: company.razao_social,
+					nome_fantasia: company.nome_fantasia,
+					imagem: formatImage(company.imagem)
+				},
+				linha:
+				{
+					id: request.linha,
+					nome: line.nome,
+					imagem: formatImage(line.imagem)
+				},
 				produtos: products,
 				descontoTotal: totalDiscount,
 				valorTotalProdutos: totalProductsValue,
