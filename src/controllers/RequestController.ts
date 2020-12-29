@@ -48,17 +48,6 @@ interface ShowInterface
 	valorTotal: number
 }
 
-const defaultList =
-{
-	id: '',
-	data: new Date(),
-	cliente: '',
-	vendedor: '',
-	representada: '',
-	tipo: {venda: false, troca: false},
-	status: {concluido: false, enviado: false, faturado: false}
-}
-
 export default class RequestController
 {
 	async create(req: Request, res: Response, next: NextFunction)
