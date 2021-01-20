@@ -168,7 +168,7 @@ export default class ProductController
 			if (!client)
 				return res.json({message: 'client not found'})
 
-			const tableId = client.representadas.find(representada => representada.id == company._id)?.tabela
+			const tableId = client.representadas.find(representada => String(representada.id) == String(company._id))?.tabela
 			if (!tableId)
 				return res.json({message: 'table not found'})
 
@@ -180,7 +180,7 @@ export default class ProductController
 					: `${baseUrl}/uploads/assets/no-image.png`,
 				nome: produto.nome,
 				unidade: produto.unidade,
-				preco: produto.tabelas.find(tabela => tabela.id == tableId)?.preco
+				preco: produto.tabelas.find(tabela => String(tabela.id) == String(tableId))?.preco
 			}))
 			await Promise.all(list)
 
