@@ -9,7 +9,7 @@ import formatImage from '../utils/formatImage'
 interface ListInterface
 {
 	id: string
-	data?: Date
+	data: string
 	cliente:
 	{
 		imagem: string
@@ -106,6 +106,7 @@ export default class RequestController
 		try {
 			const
 			{
+				data,
 				condicao,
 				digitado_por,
 				cliente,
@@ -120,6 +121,7 @@ export default class RequestController
 
 			const request =
 			{
+				data,
 				condicao,
 				digitado_por,
 				cliente,
@@ -145,6 +147,7 @@ export default class RequestController
 			const {id} = req.params
 			const
 			{
+				data,
 				condicao,
 				digitado_por,
 				cliente,
@@ -159,6 +162,7 @@ export default class RequestController
 
 			const request =
 			{
+				data,
 				condicao,
 				digitado_por,
 				cliente,

@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 
 export type RequestType = mongoose.Document &
 {
-	data?: Date
+	data: string
 	condicao: string
 	digitado_por?: string
 	cliente: string
@@ -17,7 +17,7 @@ export type RequestType = mongoose.Document &
 
 const RequestSchema = new mongoose.Schema(
 {
-	data: {type: Date, default: Date.now(), required: true},
+	data: {type: String, required: true},
 	condicao: {type: String, required: true},
 	digitado_por: {type: String, required: false},
 	cliente: {type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true},
