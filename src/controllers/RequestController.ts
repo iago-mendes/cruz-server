@@ -44,7 +44,7 @@ interface Product
 	subtotal: number
 }
 
-function getPricedProducts(request: RequestType, company: CompanyType, client: ClientType, line: Line, res: Response)
+function getPricedProducts(request: RequestType, company: CompanyType, client: ClientType, res: Response)
 {
 	let totalValue = 0
 	let totalProductsValue = 0
@@ -53,6 +53,10 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 	let products: Product[] = []
 	request.produtos.map(productSold =>
 	{
+		const line = company.linhas.find(({_id}) => String(_id) === String(productSold.linhaId))
+		if (!line)
+			return res.status(404).json({message: 'line not found'})
+
 		const product = line.produtos.find(product => String(product._id) === String(productSold.id))
 		if (!product)
 			return res.status(404).json({message: 'product not found'})
@@ -112,7 +116,6 @@ export default class RequestController
 				cliente,
 				vendedor,
 				representada,
-				linha,
 				peso,
 				tipo,
 				status,
@@ -127,7 +130,6 @@ export default class RequestController
 				cliente,
 				vendedor,
 				representada,
-				linha,
 				peso,
 				tipo,
 				status,
@@ -153,7 +155,6 @@ export default class RequestController
 				cliente,
 				vendedor,
 				representada,
-				linha,
 				peso,
 				tipo,
 				status,
@@ -168,7 +169,6 @@ export default class RequestController
 				cliente,
 				vendedor,
 				representada,
-				linha,
 				peso,
 				tipo,
 				status,
@@ -215,11 +215,7 @@ export default class RequestController
 				if (!company)
 					return res.status(404).json({message: 'company not found'})
 
-				const line = company.linhas.find(linha => String(linha._id) == request.linha)
-				if (!line)
-					return res.status(404).json({message: 'line not found'})
-
-				const {totalValue} = getPricedProducts(request, company, client, line, res)
+				const {totalValue} = getPricedProducts(request, company, client, res)
 
 				const tmp =
 				{
@@ -277,11 +273,7 @@ export default class RequestController
 			if (!company)
 				return res.status(404).json({message: 'company not found'})
 
-			const line = company.linhas.find(linha => String(linha._id) == request.linha)
-			if (!line)
-				return res.status(404).json({message: 'line not found'})
-
-			const {products, totalValue, totalProductsValue, totalDiscount} = getPricedProducts(request, company, client, line, res)
+			const {products, totalValue, totalProductsValue, totalDiscount} = getPricedProducts(request, company, client, res)
 
 			const show =
 			{
@@ -312,12 +304,6 @@ export default class RequestController
 					razao_social: company.razao_social,
 					nome_fantasia: company.nome_fantasia,
 					imagem: formatImage(company.imagem)
-				},
-				linha:
-				{
-					id: request.linha,
-					nome: line.nome,
-					imagem: formatImage(line.imagem)
 				},
 				produtos: products,
 				descontoTotal: totalDiscount,

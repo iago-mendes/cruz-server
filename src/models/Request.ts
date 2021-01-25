@@ -8,11 +8,10 @@ export type RequestType = mongoose.Document &
 	cliente: string
 	vendedor: string
 	representada: string
-	linha: string
 	peso?: number
 	tipo: {venda: boolean, troca: boolean}
 	status: {concluido: boolean, enviado: boolean, faturado: boolean}
-	produtos: Array<{id: string, quantidade: number, preco: number}>
+	produtos: Array<{id: string, quantidade: number, preco: number, linhaId: string}>
 }
 
 const RequestSchema = new mongoose.Schema(
@@ -23,7 +22,6 @@ const RequestSchema = new mongoose.Schema(
 	cliente: {type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true},
 	vendedor: {type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor', required: true},
 	representada: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
-	linha: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.linhas', required: true},
 	peso: {type: Number, required: false},
 	tipo:
 	{
@@ -40,7 +38,8 @@ const RequestSchema = new mongoose.Schema(
 	[{
 		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.linhas.produtos', required: true},
 		quantidade: {type: Number, required: true},
-		preco: {type: Number, required: true}
+		preco: {type: Number, required: true},
+		linhaId: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.linhas', required: true}
 	}]
 })
 
