@@ -5,6 +5,7 @@ import path from 'path'
 import Company from '../models/Company'
 import Client from '../models/Client'
 import baseUrl from '../config/baseUrl'
+import formatImage from '../utils/formatImage'
 
 export default class ProductController
 {
@@ -156,14 +157,13 @@ export default class ProductController
 	async listPriced(req: Request, res: Response, next: NextFunction)
 	{
 		try {
-			const company = await Company.findById(req.params.id)
+			const {id: companyId} = req.params
+			const {client: clientId} = req.query
+
+			const company = await Company.findById(companyId)
 			if (!company)
 				return res.json({message: 'company not found'})
-			const line = company?.linhas.find(linha => linha._id == req.params.line)
-			if (!line)
-				return res.json({message: 'line not found'})
 
-			const {client: clientId} = req.query
 			const client = await Client.findById(clientId)
 			if (!client)
 				return res.json({message: 'client not found'})
@@ -172,17 +172,28 @@ export default class ProductController
 			if (!tableId)
 				return res.json({message: 'table not found'})
 
-			const list = line.produtos.map(produto => (
+			let list:
 			{
-				id: produto._id,
-				imagem: produto.imagem
-					? `${baseUrl}/uploads/${produto.imagem}`
-					: `${baseUrl}/uploads/assets/no-image.png`,
-				nome: produto.nome,
-				unidade: produto.unidade,
-				preco: produto.tabelas.find(tabela => String(tabela.id) == String(tableId))?.preco
+				id?: string
+				imagem: string
+				nome: string
+				unidade: string
+				preco?: number
+				linhaId?: string
+			}[] = []
+
+			company.linhas.map(line => line.produtos.map(product =>
+			{
+				list.push(
+				{
+					id: product._id,
+					imagem: formatImage(product.imagem),
+					nome: product.nome,
+					unidade: product.unidade,
+					preco: product.tabelas.find(tabela => String(tabela.id) == String(tableId))?.preco,
+					linhaId: line._id
+				})
 			}))
-			await Promise.all(list)
 
 			return res.json(list)
 		} catch (error) {

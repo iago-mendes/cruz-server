@@ -41,7 +41,7 @@ routes.post('/companies/:id/lines/:line/products', [checkKey, upload.single('ima
 routes.put('/companies/:id/lines/:line/products/:product', [checkKey, upload.single('imagem')], Product.update)
 routes.delete('/companies/:id/lines/:line/products/:product', checkKey, Product.remove)
 routes.get('/companies/:id/lines/:line/products', checkKey, Product.list)
-routes.get('/companies/:id/lines/:line/products-priced', checkKey, Product.listPriced)
+routes.get('/companies/:id/products-priced', checkKey, Product.listPriced)
 routes.get('/companies/:id/lines/:line/products-priced/:product', checkKey, Product.showPriced)
 routes.get('/companies/:id/lines/:line/products/:product', checkKey, Product.show)
 routes.get('/companies/:id/lines/:line/products-raw', checkKey, Product.raw)
