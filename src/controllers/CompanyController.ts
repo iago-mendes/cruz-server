@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import {Request, Response, NextFunction} from 'express'
 import fs from 'fs'
 import path from 'path'
 
@@ -27,7 +27,8 @@ export default class CompanyController
 			descricao_curta,
 			descricao,
 			site,
-			tabelas
+			tabelas,
+			condicoes
 		} = req.body
 		
 		const image = req.file
@@ -45,6 +46,7 @@ export default class CompanyController
 			descricao,
 			site,
 			tabelas,
+			condicoes,
 			linhas: []
 		})
 		return res.status(201).send()
@@ -64,7 +66,8 @@ export default class CompanyController
 				descricao_curta,
 				descricao,
 				site,
-				tabelas
+				tabelas,
+				condicoes
 			} = req.body
 			
 			let image = req.file
@@ -86,16 +89,28 @@ export default class CompanyController
 				if (previous?.imagem)
 					fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
 			}
-			if(razao_social) company['razao_social'] = razao_social
-			if(nome_fantasia) company['nome_fantasia'] = nome_fantasia
-			if(cnpj) company['cnpj'] = cnpj
-			if(telefones) company['telefones'] = JSON.parse(telefones)
-			if(email) company['email'] = email
-			if(comissao) company['comissao'] = JSON.parse(comissao)
-			if(descricao_curta) company['descricao_curta'] = descricao_curta
-			if(descricao) company['descricao'] = descricao
-			if(site) company['site'] = site
-			if(tabelas) company['tabelas'] = JSON.parse(tabelas)
+			if(razao_social)
+				company['razao_social'] = razao_social
+			if(nome_fantasia)
+				company['nome_fantasia'] = nome_fantasia
+			if(cnpj)
+				company['cnpj'] = cnpj
+			if(telefones)
+				company['telefones'] = JSON.parse(telefones)
+			if(email)
+				company['email'] = email
+			if(comissao)
+				company['comissao'] = JSON.parse(comissao)
+			if(descricao_curta)
+				company['descricao_curta'] = descricao_curta
+			if(descricao)
+				company['descricao'] = descricao
+			if(site)
+				company['site'] = site
+			if(tabelas)
+				company['tabelas'] = JSON.parse(tabelas)
+			if(condicoes)
+				company['condicoes'] = JSON.parse(condicoes)
 			
 			const tmp = Company.findByIdAndUpdate(id, company)
 			res.status(200).send()

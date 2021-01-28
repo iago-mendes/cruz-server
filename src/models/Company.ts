@@ -33,6 +33,7 @@ export type CompanyType = mongoose.Document &
 	site?: string
 	comissao: {porcentagem: number, obs: Array<string>}
 	tabelas: Array<{_id?: string, nome: string}>
+	condicoes: Array<{_id?: string, nome: string}>
 	linhas: Line[]
 }
 
@@ -53,6 +54,10 @@ const CompanySchema = new mongoose.Schema(
 		obs: [{type: String, required: false}]
 	},
 	tabelas:
+	[{
+		nome: {type: String, required: true}
+	}],
+	condicoes:
 	[{
 		nome: {type: String, required: true}
 	}],
