@@ -2,16 +2,16 @@ import mongoose from 'mongoose'
 
 export type RequestType = mongoose.Document &
 {
+	cliente: string
+	vendedor?: string
+	representada: string
+	produtos: Array<{id: string, quantidade: number, preco: number, linhaId: string}>
 	data: string
 	condicao: string
 	digitado_por?: string
-	cliente: string
-	vendedor: string
-	representada: string
 	peso?: number
 	tipo: {venda: boolean, troca: boolean}
 	status: {concluido: boolean, enviado: boolean, faturado: boolean}
-	produtos: Array<{id: string, quantidade: number, preco: number, linhaId: string}>
 }
 
 const RequestSchema = new mongoose.Schema(
@@ -20,7 +20,7 @@ const RequestSchema = new mongoose.Schema(
 	condicao: {type: String, required: true},
 	digitado_por: {type: String, required: false},
 	cliente: {type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true},
-	vendedor: {type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor', required: true},
+	vendedor: {type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor', required: false},
 	representada: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
 	peso: {type: Number, required: false},
 	tipo:

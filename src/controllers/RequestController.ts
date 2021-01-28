@@ -208,7 +208,7 @@ export default class RequestController
 					return res.status(404).json({message: 'client not found'})
 
 				const seller = await Seller.findById(request.vendedor)
-				if (!seller)
+				if (request.vendedor && !seller)
 					return res.status(404).json({message: 'seller not found'})
 
 				const company = await Company.findById(request.representada)
@@ -229,8 +229,8 @@ export default class RequestController
 					},
 					vendedor:
 					{
-						imagem: formatImage(seller.imagem),
-						nome: seller.nome
+						imagem: formatImage(seller ? seller.imagem : undefined),
+						nome: seller ? seller.nome : 'E-Commerce'
 					},
 					representada:
 					{
@@ -266,7 +266,7 @@ export default class RequestController
 				return res.status(404).json({message: 'client not found'})
 
 			const seller = await Seller.findById(request.vendedor)
-			if (!seller)
+			if (seller && !seller)
 				return res.status(404).json({message: 'seller not found'})
 
 			const company = await Company.findById(request.representada)
@@ -295,8 +295,8 @@ export default class RequestController
 				vendedor:
 				{
 					id: request.vendedor,
-					nome: seller.nome,
-					imagem: formatImage(seller.imagem)
+					nome: seller ? seller.nome : 'E-Commerce',
+					imagem: formatImage(seller ? seller.imagem : undefined)
 				},
 				representada:
 				{
