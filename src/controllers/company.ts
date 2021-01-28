@@ -13,7 +13,7 @@ interface ListInterface
 	descricao_curta: string
 }
 
-export default class CompanyController
+export default
 {
 	async create(req: Request, res: Response, next: NextFunction)
 	{
@@ -50,7 +50,7 @@ export default class CompanyController
 			linhas: []
 		})
 		return res.status(201).send()
-	}
+	},
 		
 	async update(req: Request, res: Response, next: NextFunction)
 	{
@@ -118,7 +118,7 @@ export default class CompanyController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 		
 	async remove(req: Request, res: Response, next: NextFunction)
 	{
@@ -138,7 +138,7 @@ export default class CompanyController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 		
 	async list(req: Request, res: Response, next: NextFunction)
 	{
@@ -164,7 +164,7 @@ export default class CompanyController
 				} catch (error) {
 					next(error)
 				}
-	}
+	},
 				
 	async show(req: Request, res: Response, next: NextFunction)
 	{
@@ -187,7 +187,7 @@ export default class CompanyController
 			} catch (error) {
 				next(error)
 			}
-	}
+	},
 					
 	async all(req: Request, res: Response, next: NextFunction)
 	{
@@ -197,7 +197,7 @@ export default class CompanyController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 					
 	async allOne(req: Request, res: Response, next: NextFunction)
 	{

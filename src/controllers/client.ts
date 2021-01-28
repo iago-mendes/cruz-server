@@ -17,7 +17,7 @@ interface List
 	status: {ativo: boolean, aberto: boolean, nome_sujo: boolean}
 }
 
-export default class ClientController
+export default
 {
 	async create(req: Request, res: Response, next: NextFunction)
 	{
@@ -64,7 +64,7 @@ export default class ClientController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async update(req: Request, res: Response, next: NextFunction)
 	{
@@ -124,7 +124,7 @@ export default class ClientController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async remove(req: Request, res: Response, next: NextFunction)
 	{
@@ -149,7 +149,7 @@ export default class ClientController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async list(req: Request, res: Response, next: NextFunction)
 	{
@@ -173,7 +173,7 @@ export default class ClientController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async show(req: Request, res: Response, next: NextFunction)
 	{
@@ -232,7 +232,7 @@ export default class ClientController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async raw(req: Request, res: Response, next: NextFunction)
 	{
@@ -249,7 +249,7 @@ export default class ClientController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async rawOne(req: Request, res: Response, next: NextFunction)
 	{

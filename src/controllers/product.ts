@@ -1,4 +1,4 @@
-import { Request, Response, NextFunction } from 'express'
+import {Request, Response, NextFunction} from 'express'
 import fs from 'fs'
 import path from 'path'
 
@@ -7,7 +7,7 @@ import Client from '../models/Client'
 import baseUrl from '../config/baseUrl'
 import formatImage from '../utils/formatImage'
 
-export default class ProductController
+export default
 {
 	async create(req: Request, res: Response, next: NextFunction)
 	{
@@ -48,7 +48,7 @@ export default class ProductController
 		const tmp = await Company.findByIdAndUpdate(id, {linhas: lines})
 		res.status(200).send()
 		return tmp
-	}
+	},
 
 	async update(req: Request, res: Response, next: NextFunction)
 	{
@@ -100,7 +100,7 @@ export default class ProductController
 		const tmp = await Company.findByIdAndUpdate(req.params.id, {linhas: lines})
 		res.status(200).send()
 		return tmp
-	}
+	},
 
 	async remove(req: Request, res: Response, next: NextFunction)
 	{
@@ -128,7 +128,7 @@ export default class ProductController
 
 		await Company.findByIdAndUpdate(id, {linhas: lines})
 		return res.status(200).send()
-	}
+	},
 
 	async list(req: Request, res: Response, next: NextFunction)
 	{
@@ -152,7 +152,7 @@ export default class ProductController
 			} catch (error) {
 					next(error)
 			}
-	}
+	},
 
 	async listPriced(req: Request, res: Response, next: NextFunction)
 	{
@@ -199,7 +199,7 @@ export default class ProductController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async showPriced(req: Request, res: Response, next: NextFunction)
 	{
@@ -235,7 +235,7 @@ export default class ProductController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async show(req: Request, res: Response, next: NextFunction)
 	{
@@ -265,7 +265,7 @@ export default class ProductController
 			} catch (error) {
 					next(error)
 			}
-	}
+	},
 
 	async raw(req: Request, res: Response, next: NextFunction)
 	{
@@ -294,7 +294,7 @@ export default class ProductController
 			comissao: product.comissao,
 			tabelas: product.tabelas
 		})))
-	}
+	},
 
 	async rawOne(req: Request, res: Response, next: NextFunction)
 	{

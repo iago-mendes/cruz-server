@@ -15,9 +15,9 @@ interface List
 	funcao: string | undefined
 }
 
-export default class SellerControler
+export default
 {
-	async create(req: Request, res: Response, next: NextFunction)
+	create: async (req: Request, res: Response, next: NextFunction) =>
 	{
 		try {
 			const image = req.file
@@ -47,9 +47,9 @@ export default class SellerControler
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
-	async update(req: Request, res: Response, next: NextFunction)
+	update: async (req: Request, res: Response, next: NextFunction) =>
 	{
 		try {
 			const {id} = req.params
@@ -87,9 +87,9 @@ export default class SellerControler
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
-	async remove(req: Request, res: Response, next: NextFunction)
+	remove: async (req: Request, res: Response, next: NextFunction) =>
 	{
 			try {
 				const {id} = req.params
@@ -104,9 +104,9 @@ export default class SellerControler
 			} catch (error) {
 					next(error)
 			}
-	}
+	},
 
-	async list(req: Request, res: Response, next: NextFunction)
+	list: async (req: Request, res: Response, next: NextFunction) =>
 	{
 			try {
 					let list: List[] = []
@@ -130,9 +130,9 @@ export default class SellerControler
 			} catch (error) {
 					next(error)
 			}
-	}
+	},
 
-	async show(req: Request, res: Response, next: NextFunction)
+	show: async (req: Request, res: Response, next: NextFunction) =>
 	{
 			try {
 					const seller = await Seller.findById(req.params.id)
@@ -165,9 +165,9 @@ export default class SellerControler
 			} catch (error) {
 					next(error)
 			}
-	}
+	},
 
-	async raw(req: Request, res: Response, next: NextFunction)
+	raw: async (req: Request, res: Response, next: NextFunction) =>
 	{
 			try {
 					const sellers = await Seller.find()
@@ -184,9 +184,9 @@ export default class SellerControler
 			} catch (error) {
 					next(error)
 			}
-	}
+	},
 	
-	async rawOne(req: Request, res: Response, next: NextFunction)
+	rawOne: async (req: Request, res: Response, next: NextFunction) =>
 	{
 		try {
 			const {id} = req.params

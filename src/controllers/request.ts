@@ -103,7 +103,7 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 	return {totalValue, totalProductsValue, totalDiscount, products}
 }
 
-export default class RequestController
+export default
 {
 	async create(req: Request, res: Response, next: NextFunction)
 	{
@@ -141,7 +141,7 @@ export default class RequestController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async update(req: Request, res: Response, next: NextFunction)
 	{
@@ -181,7 +181,7 @@ export default class RequestController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async remove(req: Request, res: Response, next: NextFunction)
 	{
@@ -193,7 +193,7 @@ export default class RequestController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async list(req: Request, res: Response, next: NextFunction)
 	{
@@ -250,7 +250,7 @@ export default class RequestController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async show(req: Request, res: Response, next: NextFunction)
 	{
@@ -314,7 +314,7 @@ export default class RequestController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async raw(req: Request, res: Response, next: NextFunction)
 	{
@@ -324,7 +324,7 @@ export default class RequestController
 		} catch (error) {
 			next(error)
 		}
-	}
+	},
 
 	async rawOne(req: Request, res: Response, next: NextFunction)
 	{
