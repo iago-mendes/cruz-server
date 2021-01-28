@@ -22,7 +22,12 @@ export type ClientType = mongoose.Document &
 		uf?: string
 	}
 	status: {ativo: boolean, aberto: boolean, nome_sujo: boolean}
-	representadas: Array<{id: string, tabela: string}>
+	condicoes: {prazo: boolean, cheque: boolean, vista: boolean}
+	representadas: Array<
+	{
+		id: string
+		tabela: string
+	}>
 }
 
 const ClientSchema = new mongoose.Schema(
@@ -50,6 +55,12 @@ const ClientSchema = new mongoose.Schema(
 		ativo: {type: Boolean, required: true},
 		aberto: {type: Boolean, required: true},
 		nome_sujo: {type: Boolean, required: true}
+	},
+	condicoes:
+	{
+		prazo: {type: Boolean, required: true},
+		cheque: {type: Boolean, required: true},
+		vista: {type: Boolean, required: true}
 	},
 	representadas:
 	[{

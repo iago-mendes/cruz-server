@@ -33,6 +33,7 @@ export default class ClientController
 				vendedores,
 				endereco,
 				status,
+				condicoes,
 				representadas
 			} = req.body
 			const image = req.file
@@ -54,6 +55,7 @@ export default class ClientController
 				vendedores: JSON.parse(vendedores),
 				endereco: JSON.parse(endereco),
 				status: JSON.parse(status),
+				condicoes: JSON.parse(condicoes),
 				representadas: JSON.parse(representadas)
 			}
 
@@ -78,6 +80,7 @@ export default class ClientController
 				vendedores,
 				endereco,
 				status,
+				condicoes,
 				representadas
 			} = req.body
 			const image = req.file
@@ -111,6 +114,7 @@ export default class ClientController
 				vendedores: JSON.parse(vendedores),
 				endereco: JSON.parse(endereco),
 				status: JSON.parse(status),
+				condicoes: JSON.parse(condicoes),
 				representadas: JSON.parse(representadas)
 			}
 
@@ -192,7 +196,12 @@ export default class ClientController
 			})
 			await Promise.all(promises1)
 
-			let companies: {id: string, nome_fantasia: string, tabela: string}[] = []
+			let companies:
+			{
+				id: string
+				nome_fantasia: string
+				tabela: string
+			}[] = []
 			const promises2 = client.representadas.map(async company =>
 			{
 				const tmpCompany = await Company.findById(company.id)
