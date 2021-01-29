@@ -53,21 +53,21 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 	let products: Product[] = []
 	request.produtos.map(productSold =>
 	{
-		const line = company.linhas.find(({_id}) => String(_id) === String(productSold.linhaId))
+		const line = company.linhas.find(({_id}) => String(_id) == String(productSold.linhaId))
 		if (!line)
 			return res.status(404).json({message: 'line not found'})
 
-		const product = line.produtos.find(product => String(product._id) === String(productSold.id))
+		const product = line.produtos.find(product => String(product._id) == String(productSold.id))
 		if (!product)
 			return res.status(404).json({message: 'product not found'})
 
-		const clientCompany = client.representadas.find(tmpCompany => String(tmpCompany.id) === String(company._id))
+		const clientCompany = client.representadas.find(tmpCompany => String(tmpCompany.id) == String(company._id))
 		if (!clientCompany)
 			return res.status(404).json({message: 'client company not found'})
 
 		const tableId = clientCompany.tabela
 
-		const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) === String(product._id))
+		const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) == String(product._id))
 		if (!clientProduct)
 			return res.status(404).json({message: 'client product not found'})
 
