@@ -51,5 +51,25 @@ export default
 			})
 		else
 			return res.status(200).send({user: {id: user.id, role: user.role}})
+	},
+
+	changeClientPassword: async (req: Request, res: Response) =>
+	{
+		const {client: clientId} = req.params
+		const {senha}:{senha: string} = req.body
+
+		const clientExists = await Client.findById(clientId)
+		if (!clientExists)
+			return res.status(404).json({message: 'Cliente não encontrado!'})
+
+		if (!senha || senha === '')
+			return res.status(400).json({message: 'Senha fornecida é inválida!'})
+		
+		let password = bcrypt.hashSync(senha, 10)
+		if (!password)
+			return res.status(500).json({message: 'Algo de errado aconteceu durante a encriptação da senha!'})
+		
+		await Client.findByIdAndUpdate(clientId, {senha: password})
+		return res.send()
 	}
 }
