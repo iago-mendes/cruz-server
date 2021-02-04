@@ -38,9 +38,9 @@ export default
 			} = req.body
 			const image = req.file
 
-			let password = bcrypt.hashSync(senha, 10)
+			const password = bcrypt.hashSync(senha, 10)
 			if (!password)
-				return res.status(500).json({message: 'error while encrypting password!'})
+				return res.status(500).json({message: 'Algo de errado aconteceu durante a encriptação da senha!'})
 
 			const client =
 			{

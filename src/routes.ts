@@ -17,7 +17,8 @@ const upload = multer(multerConfig)
 
 routes.post('/login/client', auth.logInClient)
 routes.post('/login/seller', auth.logInSeller)
-routes.put('/change-password/client/:client', checkKey, auth.changeClientPassword)
+routes.put('/change-password/client/:client', checkKey, auth.changePasswordClient)
+routes.put('/change-password/seller/:seller', checkKey, auth.changePasswordSeller)
 
 routes.post('/companies', [checkKey, upload.single('imagem')], company.create)
 routes.put('/companies/:id', [checkKey, upload.single('imagem')], company.update)

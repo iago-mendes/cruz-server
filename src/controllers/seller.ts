@@ -23,14 +23,9 @@ export default
 			const image = req.file
 			const {nome, telefones, email, senha, funcao, admin, representadas} = req.body
 
-			let password = ''
-			await bcrypt.hash(senha, 10, (err, hash) =>
-			{
-				if (err)
-					return res.json({message: 'error while encrypting password!'})
-				
-				password = hash
-			})
+			const password = bcrypt.hashSync(senha, 10)
+			if (!password)
+				return res.status(500).json({message: 'Algo de errado aconteceu durante a encriptação da senha!'})
 			
 			await Seller.create(
 			{
