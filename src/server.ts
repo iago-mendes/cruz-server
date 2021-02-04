@@ -25,12 +25,14 @@ mongoose.connect(
 		}
 )
 mongoose.connection
-.once('open', () => console.log('connection has been made'))
-.on('error', error => console.log('[connection error]: ', error))
+.once('open', () => console.log('database connected'))
+.on('error', error => console.log('[database connection error]:', error))
 
 app.use(routes)
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
+app.use('/assets', express.static(path.join(__dirname, '..', 'assets')))
 
 app.use(errorHandler)
 
-app.listen(7373, () => console.log('server is running'))
+const port = 7373
+app.listen(port, () => console.log('server started at port', port))

@@ -1,7 +1,5 @@
-node_modules/*
-uploads/*
-!uploads/assets/
-src/config/auth.ts
-dist/*
+node_modules/
+uploads/
+dist/
 .env
 db/data/*/*.json
