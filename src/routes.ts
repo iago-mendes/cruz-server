@@ -23,8 +23,12 @@ routes.put('/companies/:id', [checkKey, upload.single('imagem')], company.update
 routes.delete('/companies/:id', checkKey, company.remove)
 routes.get('/companies', checkKey, company.list)
 routes.get('/companies/:id', checkKey, company.show)
-routes.get('/companies-all', checkKey, company.all)
-routes.get('/companies-all/:id', checkKey, company.allOne)
+routes.get('/companies-raw', checkKey, company.raw)
+routes.get('/companies-raw/:id', checkKey, company.rawOne)
+
+// deprecated
+routes.get('/companies-all', checkKey, company.raw)
+routes.get('/companies-all/:id', checkKey, company.rawOne)
 
 routes.post('/companies/:id/lines', [checkKey, upload.single('imagem')], line.create)
 routes.put('/companies/:id/lines/:line', [checkKey, upload.single('imagem')], line.update)

@@ -4,6 +4,7 @@ import path from 'path'
 
 import Company from '../models/Company'
 import baseUrl from '../config/baseUrl'
+import formatImage from '../utils/formatImage'
 
 interface ListInterface
 {
@@ -189,22 +190,61 @@ export default
 			}
 	},
 					
-	async all(req: Request, res: Response, next: NextFunction)
+	async raw(req: Request, res: Response, next: NextFunction)
 	{
 		try {
 			const companies = await Company.find()
-			return res.json(companies)
+
+			const raw = companies.map(company => (
+			{
+				imagem: formatImage(company.imagem),
+				_id: company._id,
+				razao_social: company.razao_social,
+				nome_fantasia: company.nome_fantasia,
+				cnpj: company.cnpj,
+				email: company.email,
+				telefones: company.telefones,
+				site: company.site,
+				descricao_curta: company.descricao_curta,
+				descricao: company.descricao,
+				comissao: company.comissao,
+				condicoes: company.condicoes,
+				tabelas: company.tabelas,
+				linhas: company.linhas
+			}))
+
+			return res.json(raw)
 		} catch (error) {
 			next(error)
 		}
 	},
 					
-	async allOne(req: Request, res: Response, next: NextFunction)
+	async rawOne(req: Request, res: Response, next: NextFunction)
 	{
 		try {
 			const {id} = req.params
+
 			const company = await Company.findById(id)
-			return res.json(company)
+			if (!company)
+				return res.status(404).json({message: 'Empresa não encontrada!'})
+
+			return res.json(
+			{
+				imagem: formatImage(company.imagem),
+				_id: company._id,
+				razao_social: company.razao_social,
+				nome_fantasia: company.nome_fantasia,
+				cnpj: company.cnpj,
+				email: company.email,
+				telefones: company.telefones,
+				site: company.site,
+				descricao_curta: company.descricao_curta,
+				descricao: company.descricao,
+				comissao: company.comissao,
+				condicoes: company.condicoes,
+				tabelas: company.tabelas,
+				linhas: company.linhas
+			})
 		} catch (error) {
 			next(error)
 		}
