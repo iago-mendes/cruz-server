@@ -101,6 +101,8 @@ export default
 							console.log('file not found!')
 					}
 			}
+			else if (previous.imagem)
+				imagem = previous.imagem
 
 			const client =
 			{
