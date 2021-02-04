@@ -3,7 +3,7 @@ import fs from 'fs'
 import path from 'path'
 
 import Company from '../models/Company'
-import baseUrl from '../config/baseUrl'
+import formatImage from '../utils/formatImage'
 
 export default
 {
@@ -94,9 +94,7 @@ export default
 			{
 				id: linha._id,
 				nome: linha.nome,
-				imagem: linha.imagem
-					? `${baseUrl}/uploads/${linha.imagem}`
-					: `${baseUrl}/uploads/assets/no-image.png`
+				imagem: formatImage(linha.imagem)
 			}))
 			await Promise.all(list)
 

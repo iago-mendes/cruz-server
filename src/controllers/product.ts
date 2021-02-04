@@ -4,7 +4,6 @@ import path from 'path'
 
 import Company from '../models/Company'
 import Client from '../models/Client'
-import baseUrl from '../config/baseUrl'
 import formatImage from '../utils/formatImage'
 
 export default
@@ -140,9 +139,7 @@ export default
 					const list = line.produtos.map(produto => (
 					{
 							id: produto._id,
-							imagem: produto.imagem
-									? `${baseUrl}/uploads/${produto.imagem}`
-									: `${baseUrl}/uploads/assets/no-image.png`,
+							imagem: formatImage(produto.imagem),
 							nome: produto.nome,
 							unidade: produto.unidade
 					}))
@@ -221,9 +218,7 @@ export default
 			const show =
 			{
 				id: product._id,
-				imagem: product.imagem
-					? `${baseUrl}/uploads/${product.imagem}`
-					: `${baseUrl}/uploads/assets/no-image.png`,
+				imagem: formatImage(product.imagem),
 				nome: product.nome,
 				unidade: product.unidade,
 				ipi: product.ipi,
@@ -250,9 +245,7 @@ export default
 					const show =
 					{
 							id: product._id,
-							imagem: product.imagem
-									? `${baseUrl}/uploads/${product.imagem}`
-									: `${baseUrl}/uploads/assets/no-image.png`,
+							imagem: formatImage(product.imagem),
 							nome: product.nome,
 							codigo: product.codigo,
 							unidade: product.unidade,
@@ -283,9 +276,7 @@ export default
 		return res.json(products.map(product => (
 		{
 			_id: product._id,
-			imagem: product.imagem
-				? `${baseUrl}/uploads/${product.imagem}`
-				: `${baseUrl}/uploads/assets/no-image.png`,
+			imagem: formatImage(product.imagem),
 			nome: product.nome,
 			unidade: product.unidade,
 			st: product.st,

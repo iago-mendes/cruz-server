@@ -5,7 +5,7 @@ import bcrypt from 'bcrypt'
 
 import Seller from '../models/Seller'
 import Company from '../models/Company'
-import baseUrl from '../config/baseUrl'
+import formatImage from '../utils/formatImage'
 
 interface List
 {
@@ -112,9 +112,7 @@ export default
 							list.push(
 							{
 									id: seller._id,
-									imagem: seller.imagem
-										? `${baseUrl}/uploads/${seller.imagem}`
-										: `${baseUrl}/uploads/assets/no-image.png`,
+									imagem: formatImage(seller.imagem),
 									nome: seller.nome,
 									funcao: seller.funcao
 							})
@@ -148,9 +146,7 @@ export default
 							return res.json(
 							{
 									id: seller._id,
-									imagem: seller.imagem
-										? `${baseUrl}/uploads/${seller.imagem}`
-										: `${baseUrl}/uploads/assets/no-image.png`,
+									imagem: formatImage(seller.imagem),
 									nome: seller.nome,
 									funcao: seller.funcao,
 									telefones: seller.telefones,
@@ -166,14 +162,11 @@ export default
 	{
 			try {
 					const sellers = await Seller.find()
+
 					return res.json(sellers.map(seller =>
 					{
 						let tmp = seller
-
-						tmp.imagem = tmp.imagem
-							? `${baseUrl}/uploads/${tmp.imagem}`
-							: `${baseUrl}/uploads/assets/no-image.png`
-
+						tmp.imagem = formatImage(tmp.imagem)
 						return tmp
 					}))
 			} catch (error) {
@@ -190,9 +183,7 @@ export default
 			if (!seller)
 				return res.status(404).json({message: 'seller not found!'})
 
-			seller.imagem = seller.imagem
-				? `${baseUrl}/uploads/${seller.imagem}`
-				: `${baseUrl}/uploads/assets/no-image.png`
+			seller.imagem = formatImage(seller.imagem)
 
 			return res.json(seller)
 		} catch (error) {

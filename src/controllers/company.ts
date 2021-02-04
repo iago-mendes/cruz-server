@@ -3,7 +3,6 @@ import fs from 'fs'
 import path from 'path'
 
 import Company from '../models/Company'
-import baseUrl from '../config/baseUrl'
 import formatImage from '../utils/formatImage'
 
 interface ListInterface
@@ -152,9 +151,7 @@ export default
 					list.push(
 						{
 							id: company._id,
-							imagem: company.imagem
-							? `${baseUrl}/uploads/${company.imagem}`
-							: `${baseUrl}/uploads/assets/no-image.png`,
+							imagem: formatImage(company.imagem),
 							nome_fantasia: company.nome_fantasia,
 							descricao_curta: String(company.descricao_curta)
 						})
@@ -178,9 +175,7 @@ export default
 			return res.json(
 				{
 					id: company._id,
-					imagem: company.imagem
-					? `${baseUrl}/uploads/${company.imagem}`
-					: `${baseUrl}/uploads/assets/no-image.png`,
+					imagem: formatImage(company.imagem),
 					nome_fantasia: company.nome_fantasia,
 					descricao: company.descricao,
 					site: company.site
