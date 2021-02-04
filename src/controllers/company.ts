@@ -190,23 +190,12 @@ export default
 		try {
 			const companies = await Company.find()
 
-			const raw = companies.map(company => (
+			const raw = companies.map(company =>
 			{
-				imagem: formatImage(company.imagem),
-				_id: company._id,
-				razao_social: company.razao_social,
-				nome_fantasia: company.nome_fantasia,
-				cnpj: company.cnpj,
-				email: company.email,
-				telefones: company.telefones,
-				site: company.site,
-				descricao_curta: company.descricao_curta,
-				descricao: company.descricao,
-				comissao: company.comissao,
-				condicoes: company.condicoes,
-				tabelas: company.tabelas,
-				linhas: company.linhas
-			}))
+				let tmpCompany = company
+				tmpCompany.imagem = formatImage(company.imagem)
+				return tmpCompany
+			})
 
 			return res.json(raw)
 		} catch (error) {
@@ -219,27 +208,13 @@ export default
 		try {
 			const {id} = req.params
 
-			const company = await Company.findById(id)
+			let company = await Company.findById(id)
 			if (!company)
 				return res.status(404).json({message: 'Empresa não encontrada!'})
 
-			return res.json(
-			{
-				imagem: formatImage(company.imagem),
-				_id: company._id,
-				razao_social: company.razao_social,
-				nome_fantasia: company.nome_fantasia,
-				cnpj: company.cnpj,
-				email: company.email,
-				telefones: company.telefones,
-				site: company.site,
-				descricao_curta: company.descricao_curta,
-				descricao: company.descricao,
-				comissao: company.comissao,
-				condicoes: company.condicoes,
-				tabelas: company.tabelas,
-				linhas: company.linhas
-			})
+			company.imagem = formatImage(company.imagem)
+
+			return res.json(company)
 		} catch (error) {
 			next(error)
 		}
