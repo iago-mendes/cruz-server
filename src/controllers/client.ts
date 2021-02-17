@@ -107,17 +107,17 @@ export default
 			const client =
 			{
 				imagem,
-				razao_social,
-				nome_fantasia,
-				cnpj,
-				insc_estadual,
-				telefone,
-				email,
-				vendedores: JSON.parse(vendedores),
-				endereco: JSON.parse(endereco),
-				status: JSON.parse(status),
-				condicoes: JSON.parse(condicoes),
-				representadas: JSON.parse(representadas)
+				razao_social: razao_social || previous.razao_social,
+				nome_fantasia: nome_fantasia || previous.nome_fantasia,
+				cnpj: cnpj || previous.cnpj,
+				insc_estadual: insc_estadual || previous.insc_estadual,
+				telefone: telefone || previous.telefone,
+				email: email || previous.email,
+				vendedores: vendedores ? JSON.parse(vendedores) : previous.vendedores,
+				endereco: endereco ? JSON.parse(endereco) : previous.endereco,
+				status: status ? JSON.parse(status) : previous.status,
+				condicoes: condicoes ? JSON.parse(condicoes) : previous.condicoes,
+				representadas: representadas ? JSON.parse(representadas) : previous.representadas
 			}
 
 			const tmp = await Client.findByIdAndUpdate(id, client)
