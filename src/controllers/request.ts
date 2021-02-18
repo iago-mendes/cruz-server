@@ -199,7 +199,10 @@ export default
 	{
 		try {
 			let list: ListInterface[] = []
-			const requests = await RequestModel.find()
+			const {client: clientId} = req.query
+
+			const filter = clientId ? {cliente: String(clientId)} : {}
+			const requests = await RequestModel.find(filter)
 
 			const promises = requests.map(async request =>
 			{
