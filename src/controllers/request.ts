@@ -199,10 +199,26 @@ export default
 	{
 		try {
 			let list: ListInterface[] = []
-			const {client: clientId} = req.query
+			const {client: clientId, page: requestedPage} = req.query
 
 			const filter = clientId ? {cliente: String(clientId)} : {}
-			const requests = await RequestModel.find(filter)
+			const requestsAll = await RequestModel.find(filter)
+
+			requestsAll.sort((a, b) => a.data < b.data ? 1 : -1)
+			const postsPerPage = 10
+			const totalPages = Math.ceil(requestsAll.length / postsPerPage)
+			res.setHeader('totalPages', totalPages)
+
+			let page = 1
+			if (requestedPage)
+				page = Number(requestedPage)
+
+			if (!(page > 0 && page <= totalPages))
+				return res.status(400).json({message: 'A página pedida é inválida!'})
+			res.setHeader('page', page)
+
+			const sliceStart = (page - 1) * postsPerPage
+			const requests = requestsAll.slice(sliceStart, sliceStart + postsPerPage)
 
 			const promises = requests.map(async request =>
 			{
