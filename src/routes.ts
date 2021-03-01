@@ -11,6 +11,7 @@ import client from './controllers/client'
 import request from './controllers/request'
 import auth from './controllers/auth'
 import line from './controllers/line'
+import mail from './controllers/mail'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -71,5 +72,7 @@ routes.get('/requests', checkKey, request.list)
 routes.get('/requests/:id', checkKey, request.show)
 routes.get('/requests-raw', checkKey, request.raw)
 routes.get('/requests-raw/:id', checkKey, request.rawOne)
+
+routes.post('/mail/requests/ecommerce', checkKey, mail.ecommerceRequest)
 
 export default routes
