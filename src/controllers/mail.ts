@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 
-import {send} from '../services/gmail'
+import {sendMail} from '../services/gmail'
 
 const mail =
 {
@@ -8,7 +8,25 @@ const mail =
 	{
 		const {to, text}:{to: string, text: string} = req.body
 
-		send('Pedido no E-commerce', text, to, 'e-commerce@cruzrepresentacoes.com.br')
+		sendMail('Pedido no E-commerce', text, to, 'e-commerce@cruzrepresentacoes.com.br')
+
+		return res.send()
+	},
+
+	systemRequest: async (req: Request, res: Response) =>
+	{
+		const {to, text}:{to: string, text: string} = req.body
+
+		sendMail('Pedido no Sistema', text, to, 'sistema@cruzrepresentacoes.com.br')
+
+		return res.send()
+	},
+
+	general: async (req: Request, res: Response) =>
+	{
+		const {to, subject, text}:{to: string, subject: string, text: string} = req.body
+
+		sendMail(subject, text, to)
 
 		return res.send()
 	}

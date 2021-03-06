@@ -74,5 +74,7 @@ routes.get('/requests-raw', checkKey, request.raw)
 routes.get('/requests-raw/:id', checkKey, request.rawOne)
 
 routes.post('/mail/requests/ecommerce', checkKey, mail.ecommerceRequest)
+routes.post('/mail/requests/system', checkKey, mail.systemRequest)
+routes.post('/mail', checkKey, mail.general)
 
 export default routes

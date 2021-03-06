@@ -8,7 +8,7 @@ const validFrom =
 	'e-commerce@cruzrepresentacoes.com.br',
 ]
 
-export function send(subject: string, text: string, to: string, from: string = validFrom[0])
+export function sendMail(subject: string, text: string, to: string, from: string = validFrom[0])
 {
 	const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`
 	const messageParts =
