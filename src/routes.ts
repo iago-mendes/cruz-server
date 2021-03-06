@@ -12,6 +12,7 @@ import request from './controllers/request'
 import auth from './controllers/auth'
 import line from './controllers/line'
 import mail from './controllers/mail'
+import pdf from './controllers/pdf'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -76,5 +77,7 @@ routes.get('/requests-raw/:id', checkKey, request.rawOne)
 routes.post('/mail/requests/ecommerce', checkKey, mail.ecommerceRequest)
 routes.post('/mail/requests/system', checkKey, mail.systemRequest)
 routes.post('/mail', checkKey, mail.general)
+
+routes.post('/pdf', checkKey, pdf.general)
 
 export default routes
