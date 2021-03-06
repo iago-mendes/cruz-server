@@ -15,7 +15,7 @@ export function send(subject: string, text: string, to: string, from: string = v
 	[
 		`From: Cruz Representacoes <${from}>`,
 		`To: ${to}`,
-		'Content-Type: text/html charset=utf-8',
+		'Content-Type: text/html; charset=utf-8',
 		'MIME-Version: 1.0',
 		`Subject: ${utf8Subject}`,
 		'',
