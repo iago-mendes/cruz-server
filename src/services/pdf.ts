@@ -1,5 +1,3 @@
-import fs from 'fs'
-import path from 'path'
 const PdfPrinter = require('pdfmake')
 
 const fonts =
@@ -14,12 +12,24 @@ const fonts =
 }
 const printer = new PdfPrinter(fonts)
 
-export function createPdf(filename: string, docDefinition = {}, options = {})
+export function createPdf(content: any, options = {})
 {
+	const docDefinition = {content}
+
 	const pdfDoc = printer.createPdfKitDocument(docDefinition, options)
 
-	const pdfPath = path.join(__dirname, '..', '..', 'tmp', filename)
-	pdfDoc.pipe(fs.createWriteStream(pdfPath))
-
-	pdfDoc.end()
+	return new Promise((resolve, reject) =>
+	{
+		try
+		{
+			let chunks: any[] = []
+			pdfDoc.on('data', (chunk: any) => chunks.push(chunk))
+			pdfDoc.on('end', () => resolve(Buffer.concat(chunks)))
+			pdfDoc.end()
+		}
+		catch(err)
+		{
+			reject(err)
+		}
+	})
 }

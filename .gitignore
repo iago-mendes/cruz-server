@@ -3,4 +3,3 @@ uploads/
 dist/
 .env
 db/data/*/*.json
-tmp/*.pdf
