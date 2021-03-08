@@ -1,10 +1,12 @@
-import {Request, Response, NextFunction} from 'express'
+import {Request, Response, NextFunction, request} from 'express'
 
-import RequestModel, {RequestType} from '../models/Request'
-import Company, {CompanyType, Line} from '../models/Company'
-import Client, {ClientType} from '../models/Client'
+import RequestModel from '../models/Request'
+import Company from '../models/Company'
+import Client from '../models/Client'
 import Seller from '../models/Seller'
 import formatImage from '../utils/formatImage'
+import getPricedProducts from '../utils/requests/getPricedProducts'
+import getRequest from '../utils/requests/getRequest'
 
 interface ListInterface
 {
@@ -29,78 +31,6 @@ interface ListInterface
 	}
 	tipo: {venda: boolean, troca: boolean}
 	status: {concluido: boolean, enviado: boolean, faturado: boolean}
-}
-
-interface Product
-{
-	id: string
-	nome: string
-	imagem: string
-	quantidade: number
-	preco: number
-	precoTabela: number
-	ipi: number
-	st: number
-	subtotal: number
-}
-
-function getPricedProducts(request: RequestType, company: CompanyType, client: ClientType, res: Response)
-{
-	let totalValue = 0
-	let totalProductsValue = 0
-	let totalDiscount = 0
-
-	let products: Product[] = []
-	request.produtos.map(productSold =>
-	{
-		const line = company.linhas.find(({_id}) => String(_id) == String(productSold.linhaId))
-		if (!line)
-			return res.status(404).json({message: 'line not found'})
-
-		const product = line.produtos.find(product => String(product._id) == String(productSold.id))
-		if (!product)
-			return res.status(404).json({message: 'product not found'})
-
-		const clientCompany = client.representadas.find(tmpCompany => String(tmpCompany.id) == String(company._id))
-		if (!clientCompany)
-			return res.status(404).json({message: 'client company not found'})
-
-		const tableId = clientCompany.tabela
-
-		const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) == String(product._id))
-		if (!clientProduct)
-			return res.status(404).json({message: 'client product not found'})
-
-		const table = clientProduct.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
-		if (!table)
-			return res.status(404).json({message: 'table not found'})
-		
-		const tablePrice = table.preco
-		
-		const subtotal = productSold.quantidade*productSold.preco
-			+productSold.quantidade*productSold.preco*product.ipi/100
-			+productSold.quantidade*productSold.preco*product.st/100
-
-		totalProductsValue += productSold.quantidade*productSold.preco
-		totalValue += subtotal
-		totalDiscount += (tablePrice-productSold.preco)*productSold.quantidade
-
-		const tmp =
-		{
-			id: String(product._id),
-			nome: product.nome,
-			imagem: formatImage(product.imagem),
-			quantidade: productSold.quantidade, 
-			preco: productSold.preco, 
-			precoTabela: tablePrice,
-			ipi: product.ipi,
-			st: product.st,
-			subtotal
-		}
-		products.push(tmp)
-	})
-
-	return {totalValue, totalProductsValue, totalDiscount, products}
 }
 
 export default
@@ -234,7 +164,7 @@ export default
 				if (!company)
 					return res.status(404).json({message: 'company not found'})
 
-				const {totalValue} = getPricedProducts(request, company, client, res)
+				const {totalValue} = getPricedProducts(request, company, client)
 
 				const tmp =
 				{
@@ -273,66 +203,11 @@ export default
 
 	async show(req: Request, res: Response, next: NextFunction)
 	{
-		try {
-			const {id} = req.params
+		const {id} = req.params
 
-			const request = await RequestModel.findById(id)
-			if (!request)
-				return res.status(404).json({message: 'request not found'})
+		const request = await getRequest(id)
 
-			const client = await Client.findById(request.cliente)
-			if (!client)
-				return res.status(404).json({message: 'client not found'})
-
-			const seller = await Seller.findById(request.vendedor)
-			if (seller && !seller)
-				return res.status(404).json({message: 'seller not found'})
-
-			const company = await Company.findById(request.representada)
-			if (!company)
-				return res.status(404).json({message: 'company not found'})
-
-			const {products, totalValue, totalProductsValue, totalDiscount} = getPricedProducts(request, company, client, res)
-
-			const show =
-			{
-				id: request._id,
-				data: request.data,
-				condicao: request.condicao,
-				digitado_por: request.digitado_por,
-				peso: request.peso,
-				tipo: request.tipo,
-				status: request.status,
-				cliente:
-				{
-					id: request.cliente,
-					nome_fantasia: client.nome_fantasia,
-					razao_social: client.razao_social,
-					imagem: formatImage(client.imagem),
-					endereco: client.endereco
-				},
-				vendedor:
-				{
-					id: request.vendedor,
-					nome: seller ? seller.nome : 'E-Commerce',
-					imagem: formatImage(seller ? seller.imagem : undefined)
-				},
-				representada:
-				{
-					id: request.representada,
-					razao_social: company.razao_social,
-					nome_fantasia: company.nome_fantasia,
-					imagem: formatImage(company.imagem)
-				},
-				produtos: products,
-				descontoTotal: totalDiscount,
-				valorTotalProdutos: totalProductsValue,
-				valorTotal: totalValue
-			}
-			return res.json(show)
-		} catch (error) {
-			next(error)
-		}
+		return res.json(request)
 	},
 
 	async raw(req: Request, res: Response, next: NextFunction)
