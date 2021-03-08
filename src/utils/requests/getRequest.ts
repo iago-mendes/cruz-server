@@ -16,8 +16,6 @@ const getRequest = async (id: string) =>
 		return {error: 'Cliente não encontrado!'}
 
 	const seller = await Seller.findById(rawRequest.vendedor)
-	if (!seller)
-		return {error: 'Vendedor não encontrado!'}
 
 	const company = await Company.findById(rawRequest.representada)
 	if (!company)
@@ -44,7 +42,7 @@ const getRequest = async (id: string) =>
 		},
 		vendedor:
 		{
-			id: rawRequest.vendedor,
+			id: seller ? rawRequest.vendedor : 'ecommerceId',
 			nome: seller ? seller.nome : 'E-Commerce',
 			imagem: formatImage(seller ? seller.imagem : undefined)
 		},
@@ -60,7 +58,7 @@ const getRequest = async (id: string) =>
 		valorTotalProdutos: totalProductsValue,
 		valorTotal: totalValue
 	}
-	return request
+	return {request}
 }
 
 export default getRequest

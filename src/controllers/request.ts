@@ -205,7 +205,9 @@ export default
 	{
 		const {id} = req.params
 
-		const request = await getRequest(id)
+		const {request, error} = await getRequest(id)
+		if (!request)
+			return res.status(404).json({message: error})
 
 		return res.json(request)
 	},

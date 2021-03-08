@@ -1,8 +1,8 @@
 import {Request, Response} from 'express'
 import path from 'path'
 
-import RequestModel from '../models/Request'
 import {createPdf} from '../services/pdf'
+import getRequest from '../utils/requests/getRequest'
 
 const pdf =
 {
@@ -10,9 +10,9 @@ const pdf =
 	{
 		const {requestId} = req.params
 
-		const request = await RequestModel.findById(requestId)
+		const {request, error} = await getRequest(requestId)
 		if (!request)
-			return res.status(404).json({message: 'Pedido não encontrado!'})
+			return res.status(404).json({message: error})
 		
 		const logoPath = path.join(__dirname, '..', '..', 'assets', 'logo.png')
 		
@@ -23,7 +23,7 @@ const pdf =
 				width: 150,
 				height: 150
 			},
-			`Id do cliente: ${request.cliente}`
+			`Cliente: ${request.cliente.nome_fantasia}`
 		]
 
 		const pdf = await createPdf(content)
