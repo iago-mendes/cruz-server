@@ -38,7 +38,11 @@ const getRequest = async (id: string) =>
 			nome_fantasia: client.nome_fantasia,
 			razao_social: client.razao_social,
 			imagem: formatImage(client.imagem),
-			endereco: client.endereco
+			endereco: client.endereco,
+			cnpj: client.cnpj,
+			insc_estadual: client.insc_estadual,
+			telefone: client.telefone,
+			email: client.email,
 		},
 		vendedor:
 		{

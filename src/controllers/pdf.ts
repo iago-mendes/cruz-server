@@ -22,28 +22,93 @@ const pdf =
 		const content =
 		[
 			{
-				columns:
-				[
-					{
-						width: 100,
-						image: logoPath
-					},
-					{
-						width: '*',
-						alignment: 'center',
-						text: [
-							{text: 'Cruz representações\n', fontSize: 20, bold: true},
-							'contato@cruzrepresentacoes.com.br\n',
-							'(38) 99986-6208 (38) 99985-6208 (38) 99166-5923\n',
-							`\nID do pedido: ${request.id}`
-						]
-					},
-					{
-						width: 100,
-						image: companyPath
-					}
-				],
-				columnGap: 10
+				table:
+				{
+					body:
+					[
+						[{ // header
+							columns:
+							[
+								{
+									width: 100,
+									image: logoPath
+								},
+								{
+									width: '*',
+									alignment: 'center',
+									text:
+									[
+										{text: 'Cruz representações\n', fontSize: 20, bold: true},
+										'contato@cruzrepresentacoes.com.br\n',
+										'(38) 99986-6208 (38) 99985-6208 (38) 99166-5923\n',
+										'\nID do pedido: ',
+										String(request.id)
+									]
+								},
+								{
+									width: 100,
+									image: companyPath
+								}
+							],
+							columnGap: 10
+						}],
+						[{ // company
+							text:
+							[
+								{text: 'Representada: ', bold: true},
+								request.representada.nome_fantasia,
+								' / ',
+								request.representada.razao_social
+							]
+						}],
+						[{ // info
+							columns:
+							[
+								{
+									width: '*',
+									text:
+									[
+										{text: 'Cliente: ', bold: true},
+										request.cliente.razao_social,
+										{text: '\nCNPJ: ', bold: true},
+										request.cliente.cnpj,
+										{text: '\nRua: ', bold: true},
+										request.cliente.endereco.rua,
+										{text: '\nBairro: ', bold: true},
+										request.cliente.endereco.bairro,
+										{text: '\nCidade: ', bold: true},
+										request.cliente.endereco.cidade,
+										{text: '\nTelefone: ', bold: true},
+										request.cliente.telefone
+									]
+								},
+								{
+									width: '*',
+									text:
+									[
+										{text: 'Nome Fantasia: ', bold: true},
+										request.cliente.nome_fantasia,
+										{text: '\nInscrição Estadual: ', bold: true},
+										request.cliente.insc_estadual,
+										{text: '\nNúmero: ', bold: true},
+										request.cliente.endereco.numero,
+										{text: '\nCEP: ', bold: true},
+										request.cliente.endereco.cep,
+										{text: '\nUF: ', bold: true},
+										request.cliente.endereco.uf,
+										{text: '\nE-mail: ', bold: true},
+										request.cliente.email
+									]
+								}
+							],
+							columnGap: 25
+						}],
+						[{ // slogan
+							text: 'Excelência em Representação Comercial!',
+							alignment: 'center'
+						}]
+					]
+				}
 			}
 		]
 
