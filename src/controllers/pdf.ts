@@ -1,4 +1,5 @@
 import {Request, Response} from 'express'
+import path from 'path'
 
 import RequestModel from '../models/Request'
 import {createPdf} from '../services/pdf'
@@ -13,7 +14,17 @@ const pdf =
 		if (!request)
 			return res.status(404).json({message: 'Pedido não encontrado!'})
 		
-		const content = `Id do cliente: ${request.cliente}`
+		const logoPath = path.join(__dirname, '..', '..', 'assets', 'logo.png')
+		
+		const content =
+		[
+			{
+				image: logoPath,
+				width: 150,
+				height: 150
+			},
+			`Id do cliente: ${request.cliente}`
+		]
 
 		const pdf = await createPdf(content)
 		return res.contentType('application/pdf').send(pdf)
