@@ -79,6 +79,6 @@ routes.post('/mail/requests/system', checkKey, mail.systemRequest)
 routes.post('/mail', checkKey, mail.general)
 
 routes.post('/pdf', checkKey, pdf.general)
-routes.get('/pdf/requests/:requestId', checkKey, pdf.request)
+routes.get('/pdf/requests/:requestId', pdf.request)
 
 export default routes
