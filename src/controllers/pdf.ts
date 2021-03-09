@@ -3,6 +3,8 @@ import path from 'path'
 
 import {createPdf} from '../services/pdf'
 import baseUrl from '../utils/baseUrl'
+import formatDate from '../utils/formatDate'
+import formatNumber from '../utils/formatNumber'
 import getRequest from '../utils/requests/getRequest'
 
 const pdf =
@@ -102,6 +104,88 @@ const pdf =
 								}
 							],
 							columnGap: 25
+						}],
+						[{ // details
+							layout: 'lightHorizontalLines',
+							alignment: 'right',
+							table:
+							{
+								widths: ['*', 100],
+								body:
+								[
+									[ // total quantity
+										{text: 'Quantidade Total:', bold: true},
+										request.produtos.length
+									],
+									// [ // total volume
+									// 	{text: 'Quantidade Total:', bold: true},
+									// 	request.produtos.length
+									// ],
+									[ // weight
+										{text: 'Peso:', bold: true},
+										formatNumber(request.peso) + ' kg'
+									],
+									[ // total product values
+										{text: 'Total (Preço Tabela):', bold: true},
+										'R$ ' + formatNumber(request.valorTotalProdutos + request.descontoTotal)
+									],
+									[ // total product values
+										{text: 'Total de Descontos:', bold: true},
+										'R$ ' + formatNumber(request.descontoTotal)
+									],
+									[ // total product values
+										{text: 'Valor total em produtos:', bold: true},
+										'R$ ' + formatNumber(request.valorTotalProdutos)
+									],
+									[ // total value
+										{text: 'Valor total:', bold: true},
+										'R$ ' + formatNumber(request.valorTotal)
+									],
+								]
+							}
+						}],
+						[{ // condition & date
+							columns:
+							[
+								{
+									width: '*',
+									text:
+									[
+										{text: 'Condição de Pagamento: ', bold: true},
+										request.condicao
+									]
+								},
+								{
+									width: 200,
+									text:
+									[
+										{text: 'Data de Emissão: ', bold: true},
+										formatDate(request.data)
+									]
+								}
+							]
+						}],
+						[{ // seller & type
+							columns:
+							[
+								{
+									width: '*',
+									text:
+									[
+										{text: 'Vendedor: ', bold: true},
+										request.vendedor.nome
+									]
+								},
+								{
+									width: 200,
+									text:
+									[
+										{text: 'Tipo de pedido: ', bold: true},
+										request.tipo.venda ? 'Venda' : '',
+										request.tipo.troca ? 'Troca' : ''
+									]
+								}
+							]
 						}],
 						[{ // slogan
 							text: 'Excelência em Representação Comercial!',
