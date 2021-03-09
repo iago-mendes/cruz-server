@@ -1,4 +1,4 @@
-import {Request, Response} from 'express'
+import {Request, Response, text} from 'express'
 import path from 'path'
 
 import {createPdf} from '../services/pdf'
@@ -104,6 +104,50 @@ const pdf =
 								}
 							],
 							columnGap: 25
+						}],
+						[{ // products
+							alignment: 'center',
+							table:
+							{
+								widths: ['*', 40, 75, 75, 40, 40, 75],
+								body:
+								[
+									[ // header
+										{text: 'Produto', bold: true},
+										{text: 'Qtde.', bold: true},
+										{text: 'Preço Tabela', bold: true},
+										{text: 'Preço Líquido', bold: true},
+										{text: 'ST', bold: true},
+										{text: 'IPI', bold: true},
+										{text: 'Subtotal', bold: true},
+									],
+									...request.produtos.map(product =>
+									{
+										const imageParts = product.imagem.replace(baseUrl, '').split('/').filter(part => part != '')
+										const imagePath = path.join(__dirname, '..', '..', ...imageParts)
+
+										return [
+											{ // image & name
+												columns:
+												[
+													{
+
+														width: 50,
+														image: imagePath
+													},
+													product.codigo + ' — ' + product.nome
+												]
+											},
+											product.quantidade,
+											'R$ ' + formatNumber(product.precoTabela),
+											'R$ ' + formatNumber(product.preco),
+											formatNumber(product.st) + ' %',
+											formatNumber(product.ipi) + ' %',
+											'R$ ' + formatNumber(product.subtotal)
+										]
+									})
+								]
+							}
 						}],
 						[{ // details
 							layout: 'lightHorizontalLines',

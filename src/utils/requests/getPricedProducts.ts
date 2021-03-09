@@ -13,6 +13,7 @@ interface Product
 	precoTabela: number
 	ipi: number
 	st: number
+	codigo: number
 	subtotal: number
 }
 
@@ -67,6 +68,7 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 			precoTabela: tablePrice,
 			ipi: product.ipi,
 			st: product.st,
+			codigo: product.codigo,
 			subtotal
 		}
 		products.push(tmpProduct)
