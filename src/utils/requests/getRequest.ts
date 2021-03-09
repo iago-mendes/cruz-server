@@ -21,7 +21,7 @@ const getRequest = async (id: string) =>
 	if (!company)
 		return {error: 'Representada não encontrada!'}
 
-	const {products, totalValue, totalProductsValue, totalDiscount} = getPricedProducts(rawRequest, company, client)
+	const {products, totalValue, totalProductsValue, totalDiscount, totalQuantity} = getPricedProducts(rawRequest, company, client)
 
 	const request =
 	{
@@ -60,7 +60,8 @@ const getRequest = async (id: string) =>
 		produtos: products,
 		descontoTotal: totalDiscount,
 		valorTotalProdutos: totalProductsValue,
-		valorTotal: totalValue
+		valorTotal: totalValue,
+		quantidadeTotal: totalQuantity
 	}
 	return {request}
 }

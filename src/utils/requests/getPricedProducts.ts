@@ -22,6 +22,7 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 	let totalValue = 0
 	let totalProductsValue = 0
 	let totalDiscount = 0
+	let totalQuantity = 0
 
 	let products: Product[] = []
 	request.produtos.map(productSold =>
@@ -58,6 +59,8 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 		totalValue += subtotal
 		totalDiscount += (tablePrice-productSold.preco)*productSold.quantidade
 
+		totalQuantity += productSold.quantidade
+
 		const tmpProduct =
 		{
 			id: String(product._id),
@@ -74,7 +77,7 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 		products.push(tmpProduct)
 	})
 
-	return {totalValue, totalProductsValue, totalDiscount, products}
+	return {totalValue, totalProductsValue, totalDiscount, products, totalQuantity}
 }
 
 export default getPricedProducts

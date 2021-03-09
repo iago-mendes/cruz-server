@@ -159,7 +159,7 @@ const pdf =
 								[
 									[ // total quantity
 										{text: 'Quantidade Total:', bold: true},
-										request.produtos.length
+										request.quantidadeTotal
 									],
 									// [ // total volume
 									// 	{text: 'Quantidade Total:', bold: true},
