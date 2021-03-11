@@ -81,30 +81,25 @@ const product =
 
 	remove: async (req: Request, res: Response) =>
 	{
-		const {id, line: lineId, product: productId} = req.params
+		const {company: companyId, product: productId} = req.params
 
-		const company = await Company.findById(req.params.id)
-		if (!company) return res.status(404).json({message: 'company not found'})
+		let company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
+		let products = company.produtos
 
-		const line = company.linhas.find(linha => linha._id == lineId)
-		if (!line) return res.status(404).json({message: 'line not found'})
+		const index = company.produtos.findIndex(product => String(product._id) == String(productId))
+		if (index < 0)
+			return res.status(404).json({message: 'Produto não encontrado'})
+		const removed = products[index]
 
-		const product = line.produtos.find(produto => produto._id == productId)
-		if (!product) return res.status(404).json({message: 'product not found'})
+		if (removed.imagem)
+			fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', removed.imagem))
+		
+		products.splice(index, 1)
 
-		if (product.imagem)
-			fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', product.imagem))
-
-		const lines = company.linhas.map(linha => (
-		{
-			_id: linha._id,
-			nome: linha.nome,
-			imagem: linha.imagem,
-			produtos: linha.produtos.filter(produto => produto._id != productId)
-		}))
-
-		await Company.findByIdAndUpdate(id, {linhas: lines})
-		return res.status(200).send()
+		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		return res.send()
 	},
 
 	list: async (req: Request, res: Response) =>
