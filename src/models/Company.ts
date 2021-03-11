@@ -1,22 +1,18 @@
 import mongoose from 'mongoose'
 
-export interface Line
+export interface Product
 {
 	_id?: string
-	nome: string
 	imagem?: string
-	produtos: Array<
-	{
-		_id?: string
-		imagem?: string
-		codigo: number
-		nome: string
-		ipi: number
-		st: number
-		unidade: string
-		comissao: number
-		tabelas: Array<{id: string, preco: number}>
-	}>
+	codigo: number
+	nome: string
+	ipi: number
+	st: number
+	unidade: string
+	comissao: number
+	peso?: number
+	volume?: number
+	tabelas: Array<{id: string, preco: number}>
 }
 
 export type CompanyType = mongoose.Document &
@@ -34,7 +30,7 @@ export type CompanyType = mongoose.Document &
 	comissao: {porcentagem: number, obs: Array<string>}
 	tabelas: Array<{_id?: string, nome: string}>
 	condicoes: Array<{_id?: string, nome: string, precoMin: number}>
-	linhas: Line[]
+	produtos: Product[]
 }
 
 const CompanySchema = new mongoose.Schema(
@@ -62,24 +58,21 @@ const CompanySchema = new mongoose.Schema(
 		nome: {type: String, required: true},
 		precoMin: {type: Number, required: true}
 	}],
-	linhas:
+	produtos:
 	[{
-		nome: {type: String, required: true},
 		imagem: {type: String, required: false},
-		produtos:
+		codigo: {type: Number, required: true},
+		nome: {type: String, required: true},
+		ipi: {type: Number, required: true},
+		st: {type: Number, required: true},
+		unidade: {type: String, required: true},
+		comissao: {type: Number, required: true},
+		peso: {type: Number, required: false},
+		volume: {type: Number, required: false},
+		tabelas:
 		[{
-			imagem: {type: String, required: false},
-			codigo: {type: Number, required: true},
-			nome: {type: String, required: true},
-			ipi: {type: Number, required: true},
-			st: {type: Number, required: true},
-			unidade: {type: String, required: true},
-			comissao: {type: Number, required: true},
-			tabelas:
-			[{
-				id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.tabelas', required: true},
-				preco: {type: Number, required: true}
-			}]
+			id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.tabelas', required: true},
+			preco: {type: Number, required: true}
 		}]
 	}]
 })

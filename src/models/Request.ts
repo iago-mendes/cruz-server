@@ -10,6 +10,7 @@ export type RequestType = mongoose.Document &
 	condicao: string
 	digitado_por?: string
 	peso?: number
+	volume?: number
 	tipo: {venda: boolean, troca: boolean}
 	status: {concluido: boolean, enviado: boolean, faturado: boolean}
 }
@@ -23,6 +24,7 @@ const RequestSchema = new mongoose.Schema(
 	vendedor: {type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor', required: false},
 	representada: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
 	peso: {type: Number, required: false},
+	volume: {type: Number, required: false},
 	tipo:
 	{
 		venda: {type: Boolean, required: true},
@@ -36,10 +38,9 @@ const RequestSchema = new mongoose.Schema(
 	},
 	produtos:
 	[{
-		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.linhas.produtos', required: true},
+		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.produtos', required: true},
 		quantidade: {type: Number, required: true},
-		preco: {type: Number, required: true},
-		linhaId: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.linhas', required: true}
+		preco: {type: Number, required: true}
 	}]
 })
 
