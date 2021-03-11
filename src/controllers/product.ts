@@ -104,24 +104,21 @@ const product =
 
 	list: async (req: Request, res: Response) =>
 	{
-			try {
-					const company = await Company.findById(req.params.id)
-					const line = company?.linhas.find(linha => linha._id == req.params.line)
-					if (!line) return res.json({message: 'line not found'})
+		const {company: companyId} = req.params
 
-					const list = line.produtos.map(produto => (
-					{
-							id: produto._id,
-							imagem: formatImage(produto.imagem),
-							nome: produto.nome,
-							unidade: produto.unidade
-					}))
-					await Promise.all(list)
+		let company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
 
-					return res.json(list)
-			} catch (error) {
-					next(error)
-			}
+		const products = company.produtos.map(product => (
+		{
+			id: product._id,
+			imagem: formatImage(product.imagem),
+			nome: product.nome,
+			unidade: product.unidade
+		}))
+
+		return res.json(products)
 	},
 
 	listPriced: async (req: Request, res: Response) =>
