@@ -123,53 +123,48 @@ const product =
 
 	listPriced: async (req: Request, res: Response) =>
 	{
-		try {
-			const {id: companyId} = req.params
-			const {client: clientId} = req.query
+		const {company: companyId} = req.params
+		const {client: clientId} = req.query
 
-			const company = await Company.findById(companyId)
-			if (!company)
-				return res.json({message: 'company not found'})
+		let company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
 
-			const client = await Client.findById(clientId)
-			if (!client)
-				return res.json({message: 'client not found'})
+		const client = await Client.findById(clientId)
+		if (!client)
+			return res.json({message: 'Cliente não encontrado!'})
 
-			const tableId = client.representadas.find(representada => String(representada.id) == String(company._id))?.tabela
-			if (!tableId)
-				return res.json({message: 'table not found'})
+		const tableId = client.representadas.find(representada => String(representada.id) == String(company?._id))?.tabela
+		if (!tableId)
+			return res.json({message: 'table not found'})
 
-			let list:
+		let products:
+		{
+			id?: string
+			imagem: string
+			nome: string
+			unidade: string
+			st: number
+			ipi: number
+			preco?: number
+			linhaId?: string
+		}[] = []
+
+		company.produtos.map(product =>
+		{
+			products.push(
 			{
-				id?: string
-				imagem: string
-				nome: string
-				unidade: string
-				st: number
-				ipi: number
-				preco?: number
-				linhaId?: string
-			}[] = []
+				id: product._id,
+				imagem: formatImage(product.imagem),
+				nome: product.nome,
+				unidade: product.unidade,
+				st: product.st,
+				ipi: product.ipi,
+				preco: product.tabelas.find(tabela => String(tabela.id) == String(tableId))?.preco,
+			})
+		})
 
-			company.linhas.map(line => line.produtos.map(product =>
-			{
-				list.push(
-				{
-					id: product._id,
-					imagem: formatImage(product.imagem),
-					nome: product.nome,
-					unidade: product.unidade,
-					st: product.st,
-					ipi: product.ipi,
-					preco: product.tabelas.find(tabela => String(tabela.id) == String(tableId))?.preco,
-					linhaId: line._id
-				})
-			}))
-
-			return res.json(list)
-		} catch (error) {
-			next(error)
-		}
+		return res.json(products)
 	},
 
 	showPriced: async (req: Request, res: Response) =>
