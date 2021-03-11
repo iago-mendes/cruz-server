@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from 'express'
+import {Request, Response} from 'express'
 import fs from 'fs'
 import path from 'path'
 
@@ -6,21 +6,19 @@ import Company from '../models/Company'
 import Client from '../models/Client'
 import formatImage from '../utils/formatImage'
 
-export default
+const product =
 {
-	async create(req: Request, res: Response, next: NextFunction)
+	create: async (req: Request, res: Response) =>
 	{
-		const {id, line: lineId} = req.params
-		const {nome, unidade, ipi, st, tabelas, codigo, comissao} = req.body
+		const {company: companyId} = req.params
+		const {nome, unidade, ipi, st, tabelas, codigo, comissao, peso, volume} = req.body
 		let image = req.file
 
-		let company = await Company.findById(id)
-		if (!company) return res.status(404).json({message: 'company not found'})
+		let company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
 
-		const line = company.linhas.find(linha => linha._id == lineId)
-		if (!line) return res.status(404).json({message: 'line not found'})
-
-		let products = line.produtos
+		let products = company.produtos
 		products.push(
 		{
 			imagem: image && image.filename,
@@ -33,23 +31,11 @@ export default
 			comissao
 		})
 
-		const lines = company.linhas.map(linha =>
-		{
-			if (linha._id != lineId) return linha
-			else return {
-				_id: linha._id,
-				nome: linha.nome,
-				imagem: linha.imagem,
-				produtos: products
-			}
-		})
-
-		const tmp = await Company.findByIdAndUpdate(id, {linhas: lines})
-		res.status(200).send()
-		return tmp
+		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		return res.send()
 	},
 
-	async update(req: Request, res: Response, next: NextFunction)
+	update: async (req: Request, res: Response) =>
 	{
 		const {nome, unidade, ipi, st, tabelas, codigo, comissao} = req.body
 		let image = req.file
@@ -101,7 +87,7 @@ export default
 		return tmp
 	},
 
-	async remove(req: Request, res: Response, next: NextFunction)
+	remove: async (req: Request, res: Response) =>
 	{
 		const {id, line: lineId, product: productId} = req.params
 
@@ -129,7 +115,7 @@ export default
 		return res.status(200).send()
 	},
 
-	async list(req: Request, res: Response, next: NextFunction)
+	list: async (req: Request, res: Response) =>
 	{
 			try {
 					const company = await Company.findById(req.params.id)
@@ -151,7 +137,7 @@ export default
 			}
 	},
 
-	async listPriced(req: Request, res: Response, next: NextFunction)
+	listPriced: async (req: Request, res: Response) =>
 	{
 		try {
 			const {id: companyId} = req.params
@@ -202,7 +188,7 @@ export default
 		}
 	},
 
-	async showPriced(req: Request, res: Response, next: NextFunction)
+	showPriced: async (req: Request, res: Response) =>
 	{
 		try {
 			const company = await Company.findById(req.params.id)
@@ -236,7 +222,7 @@ export default
 		}
 	},
 
-	async show(req: Request, res: Response, next: NextFunction)
+	show: async (req: Request, res: Response) =>
 	{
 			try {
 					const company = await Company.findById(req.params.id)
@@ -264,7 +250,7 @@ export default
 			}
 	},
 
-	async raw(req: Request, res: Response, next: NextFunction)
+	raw: async (req: Request, res: Response) =>
 	{
 		const {id: companyId, line: lineId} = req.params
 
@@ -291,7 +277,7 @@ export default
 		})))
 	},
 
-	async rawOne(req: Request, res: Response, next: NextFunction)
+	rawOne: async (req: Request, res: Response) =>
 	{
 		const {id: companyId, line: lineId, product: productId} = req.params
 
@@ -310,3 +296,5 @@ export default
 		return res.json(product)
 	}
 }
+
+export default product
