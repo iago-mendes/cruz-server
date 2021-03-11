@@ -25,7 +25,7 @@
   },
   "scripts": {
     "dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts",
-    "build": "tsc",
+    "build": "export NODE_OPTIONS=--max_old_space_size=2048 && tsc",
     "start": "node dist/server.js",
     "seed": "node db/helper.js"
   }
