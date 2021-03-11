@@ -37,15 +37,20 @@ const product =
 
 	update: async (req: Request, res: Response) =>
 	{
-		const {nome, unidade, ipi, st, tabelas, codigo, comissao} = req.body
+		const {company: companyId, product: productId} = req.params
+
+		const {nome, unidade, ipi, st, tabelas, codigo, comissao, peso, volume} = req.body
 		let image = req.file
 
-		let previousCompany = await Company.findById(req.params.id)
-		if (!previousCompany) return res.status(404).json({message: 'company not found'})
-		const previousLine = previousCompany.linhas.find(linha => linha._id == req.params.line)
-		if (!previousLine) return res.status(404).json({message: 'line not found'})
-		const previous = previousLine.produtos.find(produto => produto._id == req.params.product)
-		if (!previous) return res.status(404).json({message: 'product not found'})
+		let company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
+		let products = company.produtos
+
+		const index = company.produtos.findIndex(product => String(product._id) == String(productId))
+		if (index < 0)
+			return res.status(404).json({message: 'Produto não encontrado'})
+		const previous = products[index]
 
 		let imagem: string | undefined
 		if (image)
@@ -56,35 +61,22 @@ const product =
 		}
 		else if (previous.imagem)
 			imagem = previous.imagem
-
-		const lines = previousCompany.linhas.map(linha =>
+		
+		products[index] =
 		{
-			if (linha._id != req.params.line) return linha
-			else return {
-				_id: linha._id,
-				nome: linha.nome,
-				imagem: linha.imagem,
-				produtos: linha.produtos.map(produto =>
-				{
-					if (produto._id != req.params.product) return produto
-					else return {
-						_id: produto._id,
-						imagem,
-						codigo,
-						nome,
-						ipi,
-						st,
-						unidade,
-						comissao,
-						tabelas: JSON.parse(tabelas)
-					}
-				})
-			}
-		})
+			_id: previous._id,
+			imagem,
+			codigo : codigo || previous.codigo,
+			nome : nome || previous.nome,
+			ipi : ipi || previous.ipi,
+			st : st || previous.st,
+			unidade : unidade || previous.unidade,
+			comissao : comissao || previous.comissao,
+			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas
+		}
 
-		const tmp = await Company.findByIdAndUpdate(req.params.id, {linhas: lines})
-		res.status(200).send()
-		return tmp
+		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		return res.send()
 	},
 
 	remove: async (req: Request, res: Response) =>
