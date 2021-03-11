@@ -10,7 +10,6 @@ import seller from './controllers/seller'
 import client from './controllers/client'
 import request from './controllers/request'
 import auth from './controllers/auth'
-import line from './controllers/line'
 import mail from './controllers/mail'
 import pdf from './controllers/pdf'
 
@@ -27,27 +26,18 @@ routes.put('/companies/:id', [checkKey, upload.single('imagem')], company.update
 routes.delete('/companies/:id', checkKey, company.remove)
 routes.get('/companies', checkKey, company.list)
 routes.get('/companies/:id', checkKey, company.show)
-routes.get('/companies-raw', checkKey, company.raw)
-routes.get('/companies-raw/:id', checkKey, company.rawOne)
+routes.get('/companies/raw', checkKey, company.raw)
+routes.get('/companies/:id/raw', checkKey, company.rawOne)
 
-// deprecated
-routes.get('/companies-all', checkKey, company.raw)
-routes.get('/companies-all/:id', checkKey, company.rawOne)
-
-routes.post('/companies/:id/lines', [checkKey, upload.single('imagem')], line.create)
-routes.put('/companies/:id/lines/:line', [checkKey, upload.single('imagem')], line.update)
-routes.delete('/companies/:id/lines/:line', checkKey, line.remove)
-routes.get('/companies/:id/lines', checkKey, line.list)
-
-routes.post('/companies/:id/lines/:line/products', [checkKey, upload.single('imagem')], product.create)
-routes.put('/companies/:id/lines/:line/products/:product', [checkKey, upload.single('imagem')], product.update)
-routes.delete('/companies/:id/lines/:line/products/:product', checkKey, product.remove)
-routes.get('/companies/:id/lines/:line/products', checkKey, product.list)
-routes.get('/companies/:id/products-priced', checkKey, product.listPriced)
-routes.get('/companies/:id/lines/:line/products-priced/:product', checkKey, product.showPriced)
-routes.get('/companies/:id/lines/:line/products/:product', checkKey, product.show)
-routes.get('/companies/:id/lines/:line/products-raw', checkKey, product.raw)
-routes.get('/companies/:id/lines/:line/products-raw/:product', checkKey, product.rawOne)
+routes.post('/companies/:company/products', [checkKey, upload.single('imagem')], product.create)
+routes.get('/companies/:company/products', checkKey, product.list)
+routes.get('/companies/:company/products/priced', checkKey, product.listPriced)
+routes.put('/companies/:company/products/:product', [checkKey, upload.single('imagem')], product.update)
+routes.delete('/companies/:company/products/:product', checkKey, product.remove)
+routes.get('/companies/:company/products/:product', checkKey, product.show)
+routes.get('/companies/:company/products/:product/priced', checkKey, product.showPriced)
+routes.get('/companies/:company/products/raw', checkKey, product.raw)
+routes.get('/companies/:company/products/:product/raw', checkKey, product.rawOne)
 
 routes.post('/sellers', [checkKey, upload.single('imagem')], seller.create)
 routes.put('/sellers/:id', [checkKey, upload.single('imagem')], seller.update)
