@@ -28,7 +28,9 @@ const product =
 			st,
 			tabelas: JSON.parse(tabelas),
 			codigo,
-			comissao
+			comissao,
+			peso,
+			volume
 		})
 
 		await Company.findByIdAndUpdate(company._id, {produtos: products})
@@ -109,7 +111,7 @@ const product =
 		let company = await Company.findById(companyId)
 		if (!company)
 			return res.status(404).json({message: 'Representada não encontrada!'})
-
+		
 		const products = company.produtos.map(product => (
 		{
 			id: product._id,
@@ -169,36 +171,38 @@ const product =
 
 	showPriced: async (req: Request, res: Response) =>
 	{
-		try {
-			const company = await Company.findById(req.params.id)
-			if (!company) return res.json({message: 'company not found'})
-			const line = company?.linhas.find(linha => linha._id == req.params.line)
-			if (!line) return res.json({message: 'line not found'})
-			const product = line.produtos.find(produto => produto._id == req.params.product)
-			if (!product) return res.json({message: 'product not found'})
+		const {company: companyId, product: productId} = req.params
+		const {client: clientId} = req.query
 
-			const {client: clientId} = req.query
-			const client = await Client.findById(clientId)
-			if (!client) return res.json({message: 'client not found'})
+		const company = await Company.findById(companyId)
+		if (!company)
+			return res.json({message: 'Representada não encontrada!'})
 
-			const tableId = client.representadas.find(representada => representada.id == company._id)?.tabela
-			if (!tableId) return res.json({message: 'table not found'})
+		const product = company.produtos.find(produto => String(produto._id) == String(productId))
+		if (!product)
+			return res.json({message: 'Produto não encontrado!'})
 
-			const show =
-			{
-				id: product._id,
-				imagem: formatImage(product.imagem),
-				nome: product.nome,
-				unidade: product.unidade,
-				ipi: product.ipi,
-				st: product.st,
-				preco: product.tabelas.find(tabela => tabela.id == tableId)?.preco
-			}
+		const client = await Client.findById(clientId)
+		if (!client)
+			return res.json({message: 'Cliente não encontrado!'})
 
-			return res.json(show)
-		} catch (error) {
-			next(error)
+		const tableId = client.representadas.find(representada => representada.id == company._id)?.tabela
+		const table = product.tabelas.find(tabela => tabela.id == tableId)
+		if (!tableId || !table)
+			return res.json({message: 'Tabela não encontrada!'})
+
+		const show =
+		{
+			id: product._id,
+			imagem: formatImage(product.imagem),
+			nome: product.nome,
+			unidade: product.unidade,
+			ipi: product.ipi,
+			st: product.st,
+			preco: table.preco
 		}
+
+		return res.json(show)
 	},
 
 	show: async (req: Request, res: Response) =>

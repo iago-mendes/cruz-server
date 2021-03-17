@@ -27,11 +27,7 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 	let products: Product[] = []
 	request.produtos.map(productSold =>
 	{
-		const line = company.linhas.find(({_id}) => String(_id) == String(productSold.linhaId))
-		if (!line)
-			return
-
-		const product = line.produtos.find(product => String(product._id) == String(productSold.id))
+		const product = company.produtos.find(product => String(product._id) == String(productSold.id))
 		if (!product)
 			return
 
@@ -41,11 +37,12 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 
 		const tableId = clientCompany.tabela
 
-		const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) == String(product._id))
-		if (!clientProduct)
-			return
+		// const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) == String(product._id))
+		// if (!clientProduct)
+		// 	return
 
-		const table = clientProduct.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
+		// const table = clientProduct.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
+		const table = product.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
 		if (!table)
 			return
 		
