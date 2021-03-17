@@ -207,30 +207,29 @@ const product =
 
 	show: async (req: Request, res: Response) =>
 	{
-			try {
-					const company = await Company.findById(req.params.id)
-					if (!company) return res.json({message: 'company not found'})
-					const line = company?.linhas.find(linha => linha._id == req.params.line)
-					if (!line) return res.json({message: 'line not found'})
-					const product = line.produtos.find(produto => produto._id == req.params.product)
-					if (!product) return res.json({message: 'product not found'})
+		const {company: companyId, product: productId} = req.params
 
-					const show =
-					{
-							id: product._id,
-							imagem: formatImage(product.imagem),
-							nome: product.nome,
-							codigo: product.codigo,
-							unidade: product.unidade,
-							ipi: product.ipi,
-							st: product.st,
-							tabelas: product.tabelas
-					}
+		const company = await Company.findById(companyId)
+		if (!company)
+			return res.json({message: 'Representada não encontrada!'})
 
-					return res.json(show)
-			} catch (error) {
-					next(error)
-			}
+		const product = company.produtos.find(produto => String(produto._id) == String(productId))
+		if (!product)
+			return res.json({message: 'Produto não encontrado!'})
+
+		const show =
+		{
+			id: product._id,
+			imagem: formatImage(product.imagem),
+			nome: product.nome,
+			codigo: product.codigo,
+			unidade: product.unidade,
+			ipi: product.ipi,
+			st: product.st,
+			tabelas: product.tabelas
+		}
+
+		return res.json(show)
 	},
 
 	raw: async (req: Request, res: Response) =>
