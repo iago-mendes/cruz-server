@@ -136,7 +136,9 @@ export default
 
 			requestsAll.sort((a, b) => a.data < b.data ? 1 : -1)
 			const postsPerPage = 10
-			const totalPages = Math.ceil(requestsAll.length / postsPerPage)
+			const totalPages = requestsAll.length !== 0
+				? Math.ceil(requestsAll.length / postsPerPage)
+				: 1
 			res.setHeader('totalPages', totalPages)
 
 			let page = 1
