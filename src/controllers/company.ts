@@ -32,8 +32,8 @@ const company =
 		} = req.body
 		
 		const image = req.file
-		
-		Company.create(
+
+		const company =
 		{
 			imagem: image && image.filename,
 			razao_social,
@@ -45,10 +45,12 @@ const company =
 			descricao_curta,
 			descricao,
 			site,
-			tabelas,
-			condicoes,
+			tabelas: JSON.parse(tabelas),
+			condicoes: JSON.parse(condicoes),
 			produtos: []
-		})
+		}
+		
+		await Company.create(company)
 		return res.status(201).send()
 	},
 		
