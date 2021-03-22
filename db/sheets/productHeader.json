@@ -1,0 +1,34 @@
+[
+	{
+		"name": "Código",
+		"field": "codigo"
+	},
+	{
+		"name": "Nome",
+		"field": "nome"
+	},
+	{
+		"name": "Comissão",
+		"field": "comissao"
+	},
+	{
+		"name": "Unidade",
+		"field": "unidade"
+	},
+	{
+		"name": "Peso",
+		"field": "peso"
+	},
+	{
+		"name": "Volume",
+		"field": "volume"
+	},
+	{
+		"name": "IPI",
+		"field": "ipi"
+	},
+	{
+		"name": "ST",
+		"field": "st"
+	}
+]
