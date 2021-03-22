@@ -186,9 +186,13 @@ const product =
 		if (!client)
 			return res.json({message: 'Cliente não encontrado!'})
 
-		const tableId = client.representadas.find(representada => representada.id == company._id)?.tabela
-		const table = product.tabelas.find(tabela => tabela.id == tableId)
-		if (!tableId || !table)
+		const clientCompany = client.representadas.find(representada => String(representada.id) == String(company._id))
+		if (!clientCompany)
+			return res.json({message: 'Representada não disponível para o cliente!'})
+
+		const tableId = clientCompany.tabela
+		const table = product.tabelas.find(tabela => String(tabela.id) == String(tableId))
+		if (!table)
 			return res.json({message: 'Tabela não encontrada!'})
 
 		const show =
