@@ -2,9 +2,9 @@ import {Request, Response} from 'express'
 import fs from 'fs'
 import path from 'path'
 
-import Company from '../models/Company'
-import Client from '../models/Client'
-import formatImage from '../utils/formatImage'
+import Company from '../../models/Company'
+import Client from '../../models/Client'
+import formatImage from '../../utils/formatImage'
 
 const product =
 {
@@ -59,7 +59,7 @@ const product =
 		{
 			imagem = image.filename
 			if (previous.imagem)
-				fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', previous.imagem))
+				fs.unlinkSync(path.resolve('uploads', previous.imagem))
 		}
 		else if (previous.imagem)
 			imagem = previous.imagem
@@ -68,12 +68,12 @@ const product =
 		{
 			_id: previous._id,
 			imagem,
-			codigo : codigo || previous.codigo,
-			nome : nome || previous.nome,
-			ipi : ipi || previous.ipi,
-			st : st || previous.st,
-			unidade : unidade || previous.unidade,
-			comissao : comissao || previous.comissao,
+			codigo: codigo ? codigo : previous.codigo,
+			nome: nome ? nome : previous.nome,
+			ipi: ipi ? ipi : previous.ipi,
+			st: st ? st : previous.st,
+			unidade: unidade ? unidade : previous.unidade,
+			comissao: comissao ? comissao : previous.comissao,
 			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas
 		}
 
@@ -96,7 +96,7 @@ const product =
 		const removed = products[index]
 
 		if (removed.imagem)
-			fs.unlinkSync(path.join(__dirname, '..', '..', 'uploads', removed.imagem))
+			fs.unlinkSync(path.resolve('uploads', removed.imagem))
 		
 		products.splice(index, 1)
 
