@@ -138,7 +138,7 @@ const product =
 
 		const tableId = client.representadas.find(representada => String(representada.id) == String(company?._id))?.tabela
 		if (!tableId)
-			return res.json({message: 'table not found'})
+			return res.json({message: 'Tabela não encontrada!'})
 
 		let products:
 		{
@@ -238,12 +238,11 @@ const product =
 
 	raw: async (req: Request, res: Response) =>
 	{
-		const {id: companyId} = req.params
+		const {company: companyId} = req.params
 
 		const company = await Company.findById(companyId)
 		if (!company)
 			return res.status(404).json({message: 'Representada não encontrada!'})
-
 
 		let products = company.produtos.map(product => (
 		{
