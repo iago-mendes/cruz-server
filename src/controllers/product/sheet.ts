@@ -58,7 +58,7 @@ const productSheet =
 	setProducts: async (req: Request, res: Response) =>
 	{
 		const {company: companyId} = req.params
-		const {header, products: sheetProducts}:
+		const {header, data: sheetProducts}:
 		{
 			header: string[]
 			products: Array<
