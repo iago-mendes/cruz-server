@@ -61,7 +61,7 @@ const productSheet =
 		const {header, data: sheetProducts}:
 		{
 			header: string[]
-			products: Array<
+			data: Array<
 			{
 				[fieldName: string]: string | number
 			}>
