@@ -268,9 +268,11 @@ const product =
 		if (!company)
 			return res.json({message: 'Representada não encontrada!'})
 
-		const product = company.produtos.find(produto => String(produto._id) == String(productId))
+		let product = company.produtos.find(produto => String(produto._id) == String(productId))
 		if (!product)
 			return res.json({message: 'Produto não encontrado!'})
+		
+		product.imagem = formatImage(product.imagem)
 
 		return res.json(product)
 	}
