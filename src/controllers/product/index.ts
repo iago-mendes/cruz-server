@@ -72,6 +72,8 @@ const product =
 			nome: nome ? nome : previous.nome,
 			ipi: ipi ? ipi : previous.ipi,
 			st: st ? st : previous.st,
+			peso: peso ? peso : previous.peso,
+			volume: volume ? volume : previous.volume,
 			unidade: unidade ? unidade : previous.unidade,
 			comissao: comissao ? comissao : previous.comissao,
 			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas
