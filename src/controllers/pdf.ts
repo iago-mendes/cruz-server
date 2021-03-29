@@ -40,9 +40,9 @@ const pdf =
 									alignment: 'center',
 									text:
 									[
-										{text: 'Cruz representações\n', fontSize: 20, bold: true},
+										{text: 'Cruz representações\n', fontSize: 15, bold: true},
 										'contato@cruzrepresentacoes.com.br\n',
-										'(38) 99986-6208 (38) 99985-6208 (38) 99166-5923\n',
+										'(38) 99985-6208 (38) 99986-6208 (38) 99166-5923\n',
 										'\nID do pedido: ',
 										String(request.id)
 									]
@@ -123,7 +123,9 @@ const pdf =
 									],
 									...request.produtos.map(product =>
 									{
-										const imageParts = product.imagem.replace(baseUrl, '').split('/').filter(part => part != '')
+										const imageParts = product.imagem
+											.replace(baseUrl, '').replace('.svg', '.png')
+											.split('/').filter(part => part != '')
 										const imagePath = path.join(__dirname, '..', '..', ...imageParts)
 
 										return [
@@ -132,8 +134,9 @@ const pdf =
 												[
 													{
 
-														width: 50,
-														image: imagePath
+														// width: 50,
+														image: imagePath,
+														fit: [25, 25]
 													},
 													product.codigo + ' — ' + product.nome
 												]
@@ -150,13 +153,36 @@ const pdf =
 							}
 						}],
 						[{ // details
-							layout: 'lightHorizontalLines',
+							layout:
+							{
+								hLineWidth: function ()
+								{
+									return 1
+								},
+								vLineWidth: function ()
+								{
+									return 0
+								},
+								hLineColor: function ()
+								{
+									return '#aaa'
+								},
+								paddingLeft: function (i: any)
+								{
+									return i === 0 ? 0 : 8
+								},
+								paddingRight: function (i: any, node: any)
+								{
+									return (i === node.table.widths.length - 1) ? 0 : 8
+								}
+							},
 							alignment: 'right',
 							table:
 							{
 								widths: ['*', 100],
 								body:
 								[
+									// [{text: ''}, {text: ''}],
 									[ // total quantity
 										{text: 'Quantidade Total:', bold: true},
 										request.quantidadeTotal

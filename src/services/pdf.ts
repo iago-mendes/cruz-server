@@ -17,7 +17,11 @@ export function createPdf(content: any, options = {})
 	const docDefinition =
 	{
 		content,
-		pageMargins: 10
+		pageMargins: 15,
+		defaultStyle:
+		{
+			fontSize: 10
+		}
 	}
 
 	const pdfDoc = printer.createPdfKitDocument(docDefinition, options)
