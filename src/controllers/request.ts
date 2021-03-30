@@ -46,10 +46,10 @@ export default
 				cliente,
 				vendedor,
 				representada,
-				peso,
+				contato,
 				tipo,
 				status,
-				produtos
+				produtos,
 			} = req.body
 
 			const request =
@@ -60,7 +60,7 @@ export default
 				cliente,
 				vendedor,
 				representada,
-				peso,
+				contato,
 				tipo,
 				status,
 				produtos

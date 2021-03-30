@@ -11,7 +11,7 @@ export type RequestType = mongoose.Document &
 	digitado_por?: string
 	peso?: number
 	volume?: number
-	contato?: string,
+	contato?: {nome: string, telefone: string},
 	frete?: string,
 	tipo: {venda: boolean, troca: boolean}
 	status: {concluido: boolean, enviado: boolean, faturado: boolean}
@@ -27,7 +27,11 @@ const RequestSchema = new mongoose.Schema(
 	representada: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
 	peso: {type: Number, required: false},
 	volume: {type: Number, required: false},
-	contato: {type: String, required: false},
+	contato:
+	{
+		nome: {type: String, required: false},
+		telefone: {type: String, required: false}
+	},
 	frete: {type: String, required: false},
 	tipo:
 	{
