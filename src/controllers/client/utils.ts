@@ -17,13 +17,7 @@ const clientUtils =
 		if (!company)
 			return res.status(404).json({message: 'Representada não encontrada!'})
 
-		const conditions =
-		{
-			vista: client.condicoes.vista,
-			cheque: client.condicoes.cheque,
-			prazo: client.condicoes.prazo,
-			prazoOpcoes: company.condicoes
-		}
+		const conditions = company.condicoes
 
 		return res.json(conditions)
 	},
