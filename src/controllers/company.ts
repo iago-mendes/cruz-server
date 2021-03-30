@@ -28,7 +28,8 @@ const company =
 			descricao,
 			site,
 			tabelas,
-			condicoes
+			condicoes,
+			contatos
 		} = req.body
 		
 		const image = req.file
@@ -47,6 +48,7 @@ const company =
 			site,
 			tabelas: JSON.parse(tabelas),
 			condicoes: JSON.parse(condicoes),
+			contatos: JSON.parse(contatos),
 			produtos: []
 		}
 		
@@ -68,7 +70,8 @@ const company =
 			descricao,
 			site,
 			tabelas,
-			condicoes
+			condicoes,
+			contatos
 		} = req.body
 		
 		let image = req.file
@@ -112,6 +115,8 @@ const company =
 			company['tabelas'] = JSON.parse(tabelas)
 		if(condicoes)
 			company['condicoes'] = JSON.parse(condicoes)
+		if(contatos)
+			company['contatos'] = JSON.parse(contatos)
 		
 		const tmp = Company.findByIdAndUpdate(id, company)
 		res.status(200).send()
