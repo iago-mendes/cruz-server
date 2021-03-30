@@ -3,10 +3,10 @@ import fs from 'fs'
 import path from 'path'
 import bcrypt from 'bcrypt'
 
-import Client from '../models/Client'
-import Company from '../models/Company'
-import Seller from '../models/Seller'
-import formatImage from '../utils/formatImage'
+import Client from '../../models/Client'
+import Company from '../../models/Company'
+import Seller from '../../models/Seller'
+import formatImage from '../../utils/formatImage'
 
 interface List
 {

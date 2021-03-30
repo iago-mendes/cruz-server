@@ -13,7 +13,7 @@ import auth from './controllers/auth'
 import mail from './controllers/mail'
 import pdf from './controllers/pdf'
 import productSheet from './controllers/product/sheet'
-import companyUtils from './controllers/company/utils'
+import clientUtils from './controllers/client/utils'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -39,8 +39,6 @@ routes.post('/companies/:company/products/sheet', checkKey, productSheet.setProd
 routes.get('/companies/:company/products/sheet/header', checkKey, productSheet.getHeader)
 routes.get('/companies/:company/products/raw', checkKey, product.raw)
 
-routes.post('/companies/:company/contacts', checkKey, companyUtils.addContact)
-
 routes.put('/companies/:company/products/:product', [checkKey, upload.single('imagem')], product.update)
 routes.delete('/companies/:company/products/:product', checkKey, product.remove)
 routes.get('/companies/:company/products/:product', checkKey, product.show)
@@ -64,6 +62,8 @@ routes.get('/clients/:id', checkKey, client.show)
 routes.get('/clients-raw', checkKey, client.raw)
 routes.get('/clients-raw/:id', checkKey, client.rawOne)
 routes.get('/clients/:client/conditions/:company', checkKey, client.getConditions)
+
+routes.post('/clients/:client/contacts', checkKey, clientUtils.addContact)
 
 routes.post('/requests', checkKey, request.create)
 routes.put('/requests/:id', checkKey, request.update)
