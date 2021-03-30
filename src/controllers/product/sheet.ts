@@ -105,9 +105,8 @@ const productSheet =
 					})
 			})
 
-			products.push(
+			const product =
 			{
-				imagem: undefined,
 				codigo: Number(sheetProduct[getFieldName('codigo')]),
 				nome: String(sheetProduct[getFieldName('nome')]),
 				comissao: Number(sheetProduct[getFieldName('comissao')]),
@@ -117,7 +116,21 @@ const productSheet =
 				ipi: Number(sheetProduct[getFieldName('ipi')]),
 				st: Number(sheetProduct[getFieldName('st')]),
 				tabelas: tables
-			})
+			}
+
+			const previousIndex = products.findIndex(({codigo}) => codigo === product.codigo)
+			if (previousIndex < 0)
+				products.push(
+				{
+					imagem: undefined,
+					...product
+				})
+			else
+				products[previousIndex] =
+				{
+					imagem: products[previousIndex].imagem,
+					...product
+				}
 		})
 
 		await Company.findByIdAndUpdate(company._id, {produtos: products})
