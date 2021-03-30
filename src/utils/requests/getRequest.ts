@@ -39,6 +39,8 @@ const getRequest = async (id: string) =>
 		digitado_por: rawRequest.digitado_por,
 		peso: weight,
 		volume: volume,
+		contato: rawRequest.contato?.nome ? rawRequest.contato : {nome: '', telefone: ''},
+		frete: rawRequest.frete ? rawRequest.frete : '',
 		tipo: rawRequest.tipo,
 		status: rawRequest.status,
 		cliente:

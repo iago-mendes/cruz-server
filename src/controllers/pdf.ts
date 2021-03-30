@@ -261,6 +261,27 @@ const pdf =
 								}
 							]
 						}],
+						[{ // contact & shipping
+							columns:
+							[
+								{
+									width: '*',
+									text:
+									[
+										{text: 'Contato: ', bold: true},
+										request.contato.nome + ' / ' + request.contato.telefone
+									]
+								},
+								{
+									width: 200,
+									text:
+									[
+										{text: 'Frete: ', bold: true},
+										request.frete
+									]
+								}
+							]
+						}],
 						[{ // slogan
 							text: 'Excelência em Representação Comercial!',
 							alignment: 'center'
