@@ -130,15 +130,17 @@ const pdf =
 
 										return [
 											{ // image & name
+												alignment: 'left',
 												columns:
 												[
 													{
-
-														// width: 50,
 														image: imagePath,
-														fit: [25, 25]
+														fit: [10, 10]
 													},
-													product.codigo + ' — ' + product.nome
+													{
+														text: product.codigo + ' — ' + product.nome,
+														fontSize: 8,
+													}
 												]
 											},
 											product.quantidade,
