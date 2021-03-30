@@ -46,6 +46,7 @@ const request =
 			vendedor,
 			representada,
 			contato,
+			frete,
 			tipo,
 			status,
 			produtos,
@@ -60,6 +61,7 @@ const request =
 			vendedor,
 			representada,
 			contato,
+			frete,
 			tipo,
 			status,
 			produtos
@@ -80,7 +82,8 @@ const request =
 			cliente,
 			vendedor,
 			representada,
-			peso,
+			contato,
+			frete,
 			tipo,
 			status,
 			produtos
@@ -94,7 +97,8 @@ const request =
 			cliente,
 			vendedor,
 			representada,
-			peso,
+			contato,
+			frete,
 			tipo,
 			status,
 			produtos
