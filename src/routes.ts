@@ -64,6 +64,7 @@ routes.get('/clients-raw/:id', checkKey, client.rawOne)
 
 routes.get('/clients/:client/conditions/:company', checkKey, clientUtils.getConditions)
 routes.post('/clients/:client/contacts', checkKey, clientUtils.addContact)
+routes.get('/clients/:client/contacts', checkKey, clientUtils.getContacts)
 
 routes.post('/requests', checkKey, request.create)
 routes.put('/requests/:id', checkKey, request.update)

@@ -47,6 +47,18 @@ const clientUtils =
 
 		await Client.findByIdAndUpdate(client._id, {contatos: contacts})
 		return res.send()
+	},
+
+	getContacts: async (req: Request, res: Response) =>
+	{
+		const {client: clientId} = req.params
+
+		const client = await Client.findById(clientId)
+		if (!client)
+			return res.status(404).json({message: 'Cliente não encontrado!'})
+		
+		const contacts = client.contatos ? client.contatos : []
+		return res.json(contacts)
 	}
 }
 
