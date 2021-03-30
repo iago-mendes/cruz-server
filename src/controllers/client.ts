@@ -34,6 +34,7 @@ export default
 				endereco,
 				status,
 				condicoes,
+				contatos,
 				representadas
 			} = req.body
 			const image = req.file
@@ -56,6 +57,7 @@ export default
 				endereco: JSON.parse(endereco),
 				status: JSON.parse(status),
 				condicoes: JSON.parse(condicoes),
+				contatos: JSON.parse(contatos),
 				representadas: JSON.parse(representadas)
 			}
 
@@ -81,6 +83,7 @@ export default
 				endereco,
 				status,
 				condicoes,
+				contatos,
 				representadas
 			} = req.body
 			const image = req.file
@@ -117,6 +120,7 @@ export default
 				endereco: endereco ? JSON.parse(endereco) : previous.endereco,
 				status: status ? JSON.parse(status) : previous.status,
 				condicoes: condicoes ? JSON.parse(condicoes) : previous.condicoes,
+				contatos: contatos ? JSON.parse(contatos) : previous.contatos,
 				representadas: representadas ? JSON.parse(representadas) : previous.representadas
 			}
 

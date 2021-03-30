@@ -23,6 +23,7 @@ export type ClientType = mongoose.Document &
 	}
 	status: {ativo: boolean, aberto: boolean, nome_sujo: boolean}
 	condicoes: {prazo: boolean, cheque: boolean, vista: boolean}
+	contatos: Array<{_id?: string, nome: string, telefone: string}>
 	representadas: Array<
 	{
 		id: string
@@ -62,6 +63,11 @@ const ClientSchema = new mongoose.Schema(
 		cheque: {type: Boolean, required: true},
 		vista: {type: Boolean, required: true}
 	},
+	contatos:
+	[{
+		nome: {type: String, required: true},
+		telefone: {type: String, required: true}
+	}],
 	representadas:
 	[{
 		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
