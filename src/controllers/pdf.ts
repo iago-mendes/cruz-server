@@ -26,6 +26,7 @@ const pdf =
 			{
 				table:
 				{
+					widths: ['*'],
 					body:
 					[
 						[{ // header
@@ -131,15 +132,17 @@ const pdf =
 										return [
 											{ // image & name
 												alignment: 'left',
+												columnGap: 5,
 												columns:
 												[
 													{
+														width: 15,
 														image: imagePath,
-														fit: [10, 10]
+														fit: [15, 15]
 													},
 													{
+														width: '*',
 														text: product.codigo + ' — ' + product.nome,
-														fontSize: 8,
 													}
 												]
 											},
