@@ -21,7 +21,15 @@ const getRequest = async (id: string) =>
 	if (!company)
 		return {error: 'Representada não encontrada!'}
 
-	const {products, totalValue, totalProductsValue, totalDiscount, totalQuantity} = getPricedProducts(rawRequest, company, client)
+	const {
+		products,
+		totalValue,
+		totalProductsValue,
+		totalDiscount,
+		totalQuantity,
+		weight,
+		volume
+	} = getPricedProducts(rawRequest, company, client)
 
 	const request =
 	{
@@ -29,7 +37,8 @@ const getRequest = async (id: string) =>
 		data: rawRequest.data,
 		condicao: rawRequest.condicao,
 		digitado_por: rawRequest.digitado_por,
-		peso: rawRequest.peso,
+		peso: weight,
+		volume: volume,
 		tipo: rawRequest.tipo,
 		status: rawRequest.status,
 		cliente:

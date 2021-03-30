@@ -187,15 +187,14 @@ const pdf =
 								widths: ['*', 100],
 								body:
 								[
-									// [{text: ''}, {text: ''}],
 									[ // total quantity
 										{text: 'Quantidade Total:', bold: true},
 										request.quantidadeTotal
 									],
-									// [ // total volume
-									// 	{text: 'Quantidade Total:', bold: true},
-									// 	request.produtos.length
-									// ],
+									[ // total volume
+										{text: 'Volume:', bold: true},
+										formatNumber(request.volume, 3) + ' m³'
+									],
 									[ // weight
 										{text: 'Peso:', bold: true},
 										formatNumber(request.peso) + ' kg'
