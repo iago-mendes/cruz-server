@@ -2,8 +2,8 @@ import {Request, Response} from 'express'
 import fs from 'fs'
 import path from 'path'
 
-import Company from '../models/Company'
-import formatImage from '../utils/formatImage'
+import Company from '../../models/Company'
+import formatImage from '../../utils/formatImage'
 
 interface ListInterface
 {
