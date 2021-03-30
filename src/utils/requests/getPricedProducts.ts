@@ -24,6 +24,9 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 	let totalDiscount = 0
 	let totalQuantity = 0
 
+	let weight = 0
+	let volume = 0
+
 	let products: Product[] = []
 	request.produtos.map(productSold =>
 	{
@@ -37,11 +40,6 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 
 		const tableId = clientCompany.tabela
 
-		// const clientProduct = line.produtos.find(tmpProduct => String(tmpProduct._id) == String(product._id))
-		// if (!clientProduct)
-		// 	return
-
-		// const table = clientProduct.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
 		const table = product.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
 		if (!table)
 			return
@@ -57,6 +55,11 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 		totalDiscount += (tablePrice-productSold.preco)*productSold.quantidade
 
 		totalQuantity += productSold.quantidade
+
+		if (product.peso)
+			weight += product.peso
+		if (product.volume)
+			volume += product.volume
 
 		const tmpProduct =
 		{
@@ -74,7 +77,7 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 		products.push(tmpProduct)
 	})
 
-	return {totalValue, totalProductsValue, totalDiscount, products, totalQuantity}
+	return {totalValue, totalProductsValue, totalDiscount, products, totalQuantity, weight, volume}
 }
 
 export default getPricedProducts
