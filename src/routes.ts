@@ -61,8 +61,8 @@ routes.get('/clients', checkKey, client.list)
 routes.get('/clients/:id', checkKey, client.show)
 routes.get('/clients-raw', checkKey, client.raw)
 routes.get('/clients-raw/:id', checkKey, client.rawOne)
-routes.get('/clients/:client/conditions/:company', checkKey, client.getConditions)
 
+routes.get('/clients/:client/conditions/:company', checkKey, clientUtils.getConditions)
 routes.post('/clients/:client/contacts', checkKey, clientUtils.addContact)
 
 routes.post('/requests', checkKey, request.create)
