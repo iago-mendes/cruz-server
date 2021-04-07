@@ -5,14 +5,6 @@ import path from 'path'
 import Company from '../../models/Company'
 import formatImage from '../../utils/formatImage'
 
-interface ListInterface
-{
-	id: string
-	imagem: string
-	nome_fantasia: string
-	descricao_curta: string
-}
-
 const company =
 {
 	create: async (req: Request, res: Response) =>
@@ -136,20 +128,16 @@ const company =
 		
 	list: async (req: Request, res: Response) =>
 	{
-		let list: ListInterface[] = []
 		const companies = await Company.find()
 		
-		const promises = companies.map(company =>
+		const list = companies.map(company => (
 		{
-			list.push(
-			{
-				id: company._id,
-				imagem: formatImage(company.imagem),
-				nome_fantasia: company.nome_fantasia,
-				descricao_curta: String(company.descricao_curta)
-			})
-		})
-		await Promise.all(promises)
+			id: company._id,
+			imagem: formatImage(company.imagem),
+			nome_fantasia: company.nome_fantasia,
+			descricao_curta: String(company.descricao_curta)
+		}))
+		list.sort((a,b) => a.nome_fantasia < b.nome_fantasia ? -1 : 1)
 		
 		return res.json(list)
 	},

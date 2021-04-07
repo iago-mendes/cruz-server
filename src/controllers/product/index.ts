@@ -121,6 +121,7 @@ const product =
 			nome: product.nome,
 			unidade: product.unidade
 		}))
+		products.sort((a, b) => a.nome < b.nome ? -1 : 1)
 
 		return res.json(products)
 	},
@@ -142,31 +143,17 @@ const product =
 		if (!tableId)
 			return res.json({message: 'Tabela não encontrada!'})
 
-		let products:
+		const products = company.produtos.map(product => (
 		{
-			id?: string
-			imagem: string
-			nome: string
-			unidade: string
-			st: number
-			ipi: number
-			preco?: number
-			linhaId?: string
-		}[] = []
-
-		company.produtos.map(product =>
-		{
-			products.push(
-			{
-				id: product._id,
-				imagem: formatImage(product.imagem),
-				nome: product.nome,
-				unidade: product.unidade,
-				st: product.st,
-				ipi: product.ipi,
-				preco: product.tabelas.find(tabela => String(tabela.id) == String(tableId))?.preco,
-			})
-		})
+			id: product._id,
+			imagem: formatImage(product.imagem),
+			nome: product.nome,
+			unidade: product.unidade,
+			st: product.st,
+			ipi: product.ipi,
+			preco: product.tabelas.find(tabela => String(tabela.id) == String(tableId))?.preco,
+		}))
+		products.sort((a, b) => a.nome < b.nome ? -1 : 1)
 
 		return res.json(products)
 	},
