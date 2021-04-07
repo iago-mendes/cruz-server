@@ -14,6 +14,7 @@ import mail from './controllers/mail'
 import pdf from './controllers/pdf'
 import productSheet from './controllers/product/sheet'
 import clientUtils from './controllers/client/utils'
+import {getBanners} from './controllers'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -80,5 +81,7 @@ routes.post('/mail', checkKey, mail.general)
 
 routes.post('/pdf', checkKey, pdf.general)
 routes.get('/pdf/requests/:requestId', pdf.request)
+
+routes.get('/banners', getBanners)
 
 export default routes
