@@ -107,7 +107,7 @@ const productSheet =
 
 			const product =
 			{
-				codigo: Number(sheetProduct[getFieldName('codigo')]),
+				codigo: sheetProduct[getFieldName('codigo')],
 				nome: String(sheetProduct[getFieldName('nome')]),
 				comissao: Number(sheetProduct[getFieldName('comissao')]),
 				unidade: String(sheetProduct[getFieldName('unidade')]),

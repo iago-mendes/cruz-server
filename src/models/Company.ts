@@ -4,7 +4,7 @@ export interface Product
 {
 	_id?: string
 	imagem?: string
-	codigo: number
+	codigo: string | number
 	nome: string
 	ipi: number
 	st: number
