@@ -13,7 +13,7 @@ interface Product
 	precoTabela: number
 	ipi: number
 	st: number
-	codigo: number
+	codigo: number | string
 	subtotal: number
 }
 
