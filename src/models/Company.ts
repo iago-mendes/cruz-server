@@ -4,7 +4,7 @@ export interface Product
 {
 	_id?: string
 	imagem?: string
-	codigo: string | number
+	codigo: string
 	nome: string
 	ipi: number
 	st: number
@@ -61,7 +61,7 @@ const CompanySchema = new mongoose.Schema(
 	produtos:
 	[{
 		imagem: {type: String, required: false},
-		codigo: {type: Number, required: true},
+		codigo: {type: String, required: true},
 		nome: {type: String, required: true},
 		ipi: {type: Number, required: true},
 		st: {type: Number, required: true},

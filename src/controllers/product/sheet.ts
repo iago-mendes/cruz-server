@@ -107,7 +107,7 @@ const productSheet =
 
 			const product =
 			{
-				codigo: sheetProduct[getFieldName('codigo')],
+				codigo: String(sheetProduct[getFieldName('codigo')]),
 				nome: String(sheetProduct[getFieldName('nome')]),
 				comissao: Number(sheetProduct[getFieldName('comissao')]),
 				unidade: String(sheetProduct[getFieldName('unidade')]),
@@ -118,7 +118,7 @@ const productSheet =
 				tabelas: tables
 			}
 
-			const previousIndex = products.findIndex(({codigo}) => codigo === product.codigo)
+			const previousIndex = products.findIndex(({codigo}) => String(codigo) === String(product.codigo))
 			if (previousIndex < 0)
 				products.push(
 				{
