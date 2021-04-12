@@ -2,6 +2,7 @@ import {Request, Response} from 'express'
 import path from 'path'
 import Client from '../../models/Client'
 import Company from '../../models/Company'
+import getRandomNumber from '../../utils/getRandomNumber'
 
 const clientHeader: Array<
 {
@@ -88,7 +89,7 @@ const clientSheet =
 					cnpj: String(sheetClient[getFieldName('cnpj')]),
 					insc_estadual: String(sheetClient[getFieldName('insc_estadual')]),
 					email: email,
-					senha: '123',
+					senha: String(getRandomNumber(4)),
 					vendedores: [],
 					endereco:
 					{
