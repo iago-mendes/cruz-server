@@ -1,0 +1,42 @@
+[
+	{
+		"name": "Razão social",
+		"field": "razao_social"
+	},
+	{
+		"name": "Nome fantasia",
+		"field": "nome_fantasia"
+	},
+	{
+		"name": "CNPJ",
+		"field": "cnpj"
+	},
+	{
+		"name": "Inscrição estadual",
+		"field": "insc_estadual"
+	},
+	{
+		"name": "E-mail",
+		"field": "email"
+	},
+	{
+		"name": "Endereço",
+		"field": "rua"
+	},
+	{
+		"name": "Bairro",
+		"field": "bairro"
+	},
+	{
+		"name": "Cidade",
+		"field": "cidade"
+	},
+	{
+		"name": "UF",
+		"field": "uf"
+	},
+	{
+		"name": "CEP",
+		"field": "cep"
+	}
+]

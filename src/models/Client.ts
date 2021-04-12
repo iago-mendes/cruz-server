@@ -17,7 +17,7 @@ export type ClientType = mongoose.Document &
 		numero?: number
 		complemento?: string
 		bairro?: string
-		cep?: number
+		cep?: string
 		cidade?: string
 		uf?: string
 	}
@@ -47,7 +47,7 @@ const ClientSchema = new mongoose.Schema(
 		rua: {type: String, required: false},
 		numero: {type: Number, required: false},
 		bairro: {type: String, required: false},
-		cep: {type: Number, required: false},
+		cep: {type: String, required: false},
 		cidade: {type: String, required: false},
 		uf: {type: String, required: false}
 	},
