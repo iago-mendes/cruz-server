@@ -1,12 +1,12 @@
 import {Request, Response, NextFunction} from 'express'
 import fs from 'fs'
 import path from 'path'
-import bcrypt from 'bcrypt'
 
 import Client from '../../models/Client'
 import Company from '../../models/Company'
 import Seller from '../../models/Seller'
 import formatImage from '../../utils/formatImage'
+import encryptPwd from '../../utils/encryptPwd'
 
 interface List
 {
@@ -38,7 +38,7 @@ const client =
 		} = req.body
 		const image = req.file
 
-		const password = bcrypt.hashSync(senha, 10)
+		const password = encryptPwd(senha)
 		if (!password)
 			return res.status(500).json({message: 'Algo de errado aconteceu durante a encriptação da senha!'})
 

@@ -15,6 +15,7 @@ import pdf from './controllers/pdf'
 import productSheet from './controllers/product/sheet'
 import clientUtils from './controllers/client/utils'
 import {getBanners} from './controllers'
+import clientSheet from './controllers/client/sheet'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -66,6 +67,9 @@ routes.get('/clients-raw/:id', checkKey, client.rawOne)
 routes.get('/clients/:client/conditions/:company', checkKey, clientUtils.getConditions)
 routes.post('/clients/:client/contacts', checkKey, clientUtils.addContact)
 routes.get('/clients/:client/contacts', checkKey, clientUtils.getContacts)
+
+routes.get('/clients/sheet/header', checkKey, clientSheet.getHeader)
+routes.post('/clients/sheet', checkKey, clientSheet.setClients)
 
 routes.post('/requests', checkKey, request.create)
 routes.put('/requests/:id', checkKey, request.update)
