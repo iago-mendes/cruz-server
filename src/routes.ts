@@ -36,9 +36,6 @@ routes.get('/companies/:id/raw', checkKey, company.rawOne)
 routes.post('/companies/:company/products', [checkKey, upload.single('imagem')], product.create)
 routes.get('/companies/:company/products', checkKey, product.list)
 routes.get('/companies/:company/products/priced', checkKey, product.listPriced)
-routes.get('/companies/:company/products/sheet', checkKey, productSheet.getProducts)
-routes.post('/companies/:company/products/sheet', checkKey, productSheet.setProducts)
-routes.get('/companies/:company/products/sheet/header', checkKey, productSheet.getHeader)
 routes.get('/companies/:company/products/raw', checkKey, product.raw)
 
 routes.put('/companies/:company/products/:product', [checkKey, upload.single('imagem')], product.update)
@@ -46,7 +43,6 @@ routes.delete('/companies/:company/products/:product', checkKey, product.remove)
 routes.get('/companies/:company/products/:product', checkKey, product.show)
 routes.get('/companies/:company/products/:product/priced', checkKey, product.showPriced)
 routes.get('/companies/:company/products/:product/raw', checkKey, product.rawOne)
-
 
 routes.post('/sellers', [checkKey, upload.single('imagem')], seller.create)
 routes.put('/sellers/:id', [checkKey, upload.single('imagem')], seller.update)
@@ -68,9 +64,6 @@ routes.get('/clients/:client/conditions/:company', checkKey, clientUtils.getCond
 routes.post('/clients/:client/contacts', checkKey, clientUtils.addContact)
 routes.get('/clients/:client/contacts', checkKey, clientUtils.getContacts)
 
-routes.get('/clients/sheet/header', checkKey, clientSheet.getHeader)
-routes.post('/clients/sheet', checkKey, clientSheet.setClients)
-
 routes.post('/requests', checkKey, request.create)
 routes.put('/requests/:id', checkKey, request.update)
 routes.delete('/requests/:id', checkKey, request.remove)
@@ -85,6 +78,12 @@ routes.post('/mail', checkKey, mail.general)
 
 routes.post('/pdf', checkKey, pdf.general)
 routes.get('/pdf/requests/:requestId', pdf.request)
+
+routes.get('/sheet/companies/:company/products', checkKey, productSheet.getProducts)
+routes.post('/sheet/companies/:company/products', checkKey, productSheet.setProducts)
+routes.get('/sheet/companies/:company/products/header', checkKey, productSheet.getHeader)
+routes.get('/sheet/clients/header', checkKey, clientSheet.getHeader)
+routes.post('/sheet/clients', checkKey, clientSheet.setClients)
 
 routes.get('/banners', getBanners)
 
