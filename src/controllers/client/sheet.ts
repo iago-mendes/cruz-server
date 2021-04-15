@@ -54,7 +54,7 @@ const clientSheet =
 		
 		const companies = await Company.find()
 
-		await Promise.all(sheetClients.map(async sheetClient =>
+		Promise.all(sheetClients.map(async sheetClient =>
 		{
 			const email = String(sheetClient[getFieldName('email')])
 				.trim().split(' ')[0]
@@ -103,7 +103,7 @@ const clientSheet =
 					status: {ativo: true, aberto: true, nome_sujo: false},
 					condicoes: {prazo: true, cheque: true, vista: true},
 					contatos: [],
-					representadas: companies.map(company => (
+					representadas: companies.filter(company => company.tabelas.length !== 0).map(company => (
 						{
 							id: String(company._id),
 							tabela: String(company.tabelas[0]._id)
