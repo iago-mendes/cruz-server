@@ -22,7 +22,8 @@ mongoose.connect(
 			pass: process.env.DB_PWD,
 			useNewUrlParser: true,
 			useUnifiedTopology: true,
-			useFindAndModify: false
+			useFindAndModify: false,
+			useCreateIndex: true
 		}
 )
 mongoose.connection

@@ -74,5 +74,6 @@ const ClientSchema = new mongoose.Schema(
 		tabela: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.tabelas', required: true}
 	}]
 })
+ClientSchema.index({razao_social: 'text', nome_fantasia: 'text', 'endereco.cidade': 'text'})
 
 export default mongoose.model<ClientType>('Cliente', ClientSchema)

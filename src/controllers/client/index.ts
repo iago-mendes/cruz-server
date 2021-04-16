@@ -1,4 +1,4 @@
-import {Request, Response, NextFunction} from 'express'
+import {Request, Response} from 'express'
 import fs from 'fs'
 import path from 'path'
 
@@ -147,22 +147,35 @@ const client =
 
 	list: async (req: Request, res: Response) =>
 	{
-		const clients = await Client.find()
-		
-		let list: List[] = []
-		clients.map(client =>
-		{
-			list.push(
+		const {search: searchString, page: requestedPage} = req.query
+
+		const filter = searchString ? {$text: {$search: String(searchString)}} : {}
+		const rawClients = await Client.find(filter)
+
+		const clientsPerPage = 15
+		const totalPages = rawClients.length > 0
+			? Math.ceil(rawClients.length / clientsPerPage)
+			: 1
+		res.setHeader('total-pages', totalPages)
+
+		let page = requestedPage ? Number(requestedPage) : 1
+		if (!(page > 0 && page <= totalPages) || Number.isNaN(page))
+			return res.status(400).json({message: 'Página requisitada é inválida!'})
+		res.setHeader('page', page)
+
+		const sliceStart = (page - 1) * clientsPerPage
+		const clients = rawClients
+			.slice(sliceStart, sliceStart + clientsPerPage)
+			.map(client => (
 			{
-				id: client.id,
+				id: client._id,
 				imagem: formatImage(client.imagem),
 				nome_fantasia: client.nome_fantasia,
 				razao_social: client.razao_social,
 				status: client.status
-			})
-		})
-
-		return res.json(list)
+			}))
+		
+		return res.json(clients)
 	},
 
 	show: async (req: Request, res: Response) =>
