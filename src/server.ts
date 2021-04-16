@@ -15,15 +15,15 @@ app.use(express.json({limit: '1mb'}))
 app.use(express.urlencoded({extended: true, limit: '1mb'}))
 
 mongoose.connect(
-    `mongodb://localhost:27017/${process.env.DB_NAME}?authSource=admin`,
-    {
-			user: process.env.DB_USER,
-			pass: process.env.DB_PWD,
-			useNewUrlParser: true,
-			useUnifiedTopology: true,
-			useFindAndModify: false,
-			useCreateIndex: true
-		}
+	`mongodb://localhost:27017/${process.env.DB_NAME}?authSource=admin`,
+	{
+		user: process.env.DB_USER,
+		pass: process.env.DB_PWD,
+		useNewUrlParser: true,
+		useUnifiedTopology: true,
+		useFindAndModify: false,
+		useCreateIndex: true
+	}
 )
 mongoose.connection
 .once('open', () => console.log('database connected'))
