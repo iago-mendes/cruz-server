@@ -236,15 +236,33 @@ const client =
 
 	raw: async (req: Request, res: Response) =>
 	{
-		const clients = await Client.find()
-		const list = clients.map(client =>
-		{
-			let tmp = client
-			tmp.imagem = formatImage(tmp.imagem)
-			return tmp
-		})
+		const {search: searchString, page: requestedPage} = req.query
 
-		return res.json(list)
+		const filter = searchString ? {$text: {$search: String(searchString)}} : {}
+		const rawClients = await Client.find(filter)
+
+		const clientsPerPage = 15
+		const totalPages = rawClients.length > 0
+			? Math.ceil(rawClients.length / clientsPerPage)
+			: 1
+		res.setHeader('total-pages', totalPages)
+
+		let page = requestedPage ? Number(requestedPage) : 1
+		if (!(page > 0 && page <= totalPages) || Number.isNaN(page))
+			return res.status(400).json({message: 'Página requisitada é inválida!'})
+		res.setHeader('page', page)
+
+		const sliceStart = (page - 1) * clientsPerPage
+		const clients = rawClients
+			.slice(sliceStart, sliceStart + clientsPerPage)
+			.map(client =>
+			{
+				let tmpClient = client
+				tmpClient.imagem = formatImage(client.imagem)
+				return tmpClient
+			})
+		
+		return res.json(clients)
 	},
 
 	rawOne: async (req: Request, res: Response) =>
