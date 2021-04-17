@@ -3,8 +3,9 @@ import bcrypt from 'bcrypt'
 
 import Client from '../models/Client'
 import Seller from '../models/Seller'
+import encryptPwd from '../utils/encryptPwd'
 
-export default
+const auth =
 {
 	logInClient: async (req: Request, res: Response) =>
 	{
@@ -58,18 +59,18 @@ export default
 		const {client: clientId} = req.params
 		const {senha}:{senha: string} = req.body
 
-		const clientExists = await Client.findById(clientId)
-		if (!clientExists)
+		const client = await Client.findById(clientId)
+		if (!client)
 			return res.status(404).json({message: 'Cliente não encontrado!'})
 
 		if (!senha || senha === '')
 			return res.status(400).json({message: 'Senha fornecida é inválida!'})
 		
-		const password = bcrypt.hashSync(senha, 10)
+		const password = encryptPwd(senha)
 		if (!password)
 			return res.status(500).json({message: 'Algo de errado aconteceu durante a encriptação da senha!'})
 		
-		await Client.findByIdAndUpdate(clientId, {senha: password})
+		await Client.findByIdAndUpdate(client._id, {senha: password})
 		return res.send()
 	},
 
@@ -93,3 +94,5 @@ export default
 		return res.send()
 	}
 }
+
+export default auth
