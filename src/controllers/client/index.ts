@@ -151,6 +151,7 @@ const client =
 
 		const filter = searchString ? {$text: {$search: String(searchString)}} : {}
 		const rawClients = await Client.find(filter)
+		rawClients.sort((a, b) => a.nome_fantasia < b.nome_fantasia ? -1 : 1)
 
 		const clientsPerPage = 15
 		const totalPages = rawClients.length > 0
