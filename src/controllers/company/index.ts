@@ -79,8 +79,8 @@ const company =
 		if(image)
 		{
 			company['imagem'] = image.filename
-			if (previous?.imagem)
-				fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
+			if (previous && previous.imagem)
+				fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous.imagem)))
 		}
 		if(razao_social)
 			company['razao_social'] = razao_social
