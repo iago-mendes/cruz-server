@@ -80,7 +80,17 @@ const company =
 		{
 			company['imagem'] = image.filename
 			if (previous && previous.imagem)
-				fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous.imagem)))
+			{
+				try
+				{
+					fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous.imagem)))
+				}
+				catch (error)
+				{
+					console.error('[error while removing file]', error)
+				}
+			}
+				
 		}
 		if(razao_social)
 			company['razao_social'] = razao_social
