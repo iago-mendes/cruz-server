@@ -1,4 +1,5 @@
 import {google} from 'googleapis'
+import MailComposer from 'nodemailer/lib/mail-composer'
 
 import connect from './connect'
 
@@ -8,41 +9,53 @@ const validFrom =
 	'e-commerce@cruzrepresentacoes.com.br',
 ]
 
-export function sendMail(subject: string, text: string, to: string[], from: string = validFrom[0])
+export function sendMail
+(subject: string, text: string, to: string[], from: string = validFrom[0], attachment?: {name: string, file: any})
 {
-	const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`
-	const messageParts =
-	[
-		`From: Cruz Representacoes <${from}>`,
-		`To: ${to.join(', ')}`,
-		'Content-Type: text/html; charset=utf-8',
-		'MIME-Version: 1.0',
-		`Subject: ${utf8Subject}`,
-		'',
-		text,
-	]
-	const message = messageParts.join('\n')
-	const encodedMessage = Buffer.from(message)
-		.toString('base64')
-		.replace(/\+/g, '-')
-		.replace(/\//g, '_')
-		.replace(/=+$/, '')
-
-	async function callback(auth: any)
+	const mail = new MailComposer(
 	{
-		const gmail = google.gmail({version: 'v1', auth})
+		from: `Cruz Representacoes <${from}>`,
+		to: to.join(', '),
+		text: text,
+		html: text,
+		subject: subject,
+		textEncoding: 'base64',
+		attachments: attachment
+		? [{
+				filename: attachment.name,
+				content: attachment.file,
+				encoding: 'base64'
+			}]
+		: []
+	})
 
-		await gmail.users.messages.send(
-			{
-				userId: 'me',
-				requestBody:
+	mail.compile().build((error, msg) =>
+	{
+		if (error)
+			console.error('[error compiling mail]', error)
+		
+		const encodedMessage = Buffer.from(msg)
+			.toString('base64')
+			.replace(/\+/g, '-')
+			.replace(/\//g, '_')
+			.replace(/=+$/, '')
+		
+		async function callback(auth: any)
+		{
+			const gmail = google.gmail({version: 'v1', auth})
+	
+			await gmail.users.messages.send(
 				{
-					raw: encodedMessage,
-				}
-			})
-			.then(res => console.log('[res.data]', res.data))
-			.catch(error => console.error('[erro while sending message]', error))
-	}
-
-	connect(callback)
+					userId: 'me',
+					requestBody:
+					{
+						raw: encodedMessage,
+					},
+				})
+				.then(res => console.log('[res.data]', res.data))
+				.catch(error => console.error('[erro while sending message]', error))
+		}
+	
+		connect(callback)
+	})
 }

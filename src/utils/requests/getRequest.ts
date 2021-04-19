@@ -4,6 +4,73 @@ import Client from '../../models/Client'
 import Seller from '../../models/Seller'
 import formatImage from '../formatImage'
 import getPricedProducts from './getPricedProducts'
+import {Product} from './getPricedProducts'
+
+export interface RequestFormated
+{
+	id: string
+	data: string
+	condicao: string
+	digitado_por?: string
+	peso: number
+	volume: number
+	contato:
+	{
+		nome: string
+		telefone: string
+	}
+	frete: string
+	tipo:
+	{
+    venda: boolean
+    troca: boolean
+	}
+	status:
+	{
+    concluido: boolean
+    enviado: boolean
+    faturado: boolean
+	}
+	cliente:
+	{
+		id: string
+		nome_fantasia: string
+		razao_social: string
+		imagem: string
+		endereco:
+		{
+			rua?: string | undefined
+			numero?: number | undefined
+			complemento?: string | undefined
+			bairro?: string | undefined
+			cep?: string | undefined
+			cidade?: string | undefined
+			uf?: string | undefined
+		}
+		cnpj: string
+		insc_estadual: string
+		telefone?: number | undefined
+		email: string
+	}
+	vendedor:
+	{
+		id: string
+		nome: string
+		imagem: string
+	}
+	representada:
+	{
+		id: string
+		razao_social: string
+		nome_fantasia: string
+		imagem: string
+	}
+	produtos: Product[]
+	descontoTotal: number
+	valorTotalProdutos: number
+	valorTotal: number
+	quantidadeTotal: number
+}
 
 const getRequest = async (id: string) =>
 {
@@ -31,7 +98,7 @@ const getRequest = async (id: string) =>
 		volume
 	} = getPricedProducts(rawRequest, company, client)
 
-	const request =
+	const request: RequestFormated =
 	{
 		id: rawRequest._id,
 		data: rawRequest.data,
@@ -57,7 +124,7 @@ const getRequest = async (id: string) =>
 		},
 		vendedor:
 		{
-			id: seller ? rawRequest.vendedor : 'ecommerceId',
+			id: seller ? String(rawRequest.vendedor) : 'ecommerceId',
 			nome: seller ? seller.nome : 'E-Commerce',
 			imagem: formatImage(seller ? seller.imagem : undefined)
 		},

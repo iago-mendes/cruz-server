@@ -3,7 +3,7 @@ import {CompanyType} from '../../models/Company'
 import {ClientType} from '../../models/Client'
 import formatImage from '../formatImage'
 
-interface Product
+export interface Product
 {
 	id: string
 	nome: string
