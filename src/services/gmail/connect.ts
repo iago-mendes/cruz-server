@@ -10,7 +10,7 @@ function connect(callback: Function)
 	fs.readFile('google/credentials.json', (err, content) =>
 	{
 		if (err)
-			return console.log('Error loading client secret file:', err)
+			return console.log('[Error loading client secret file]', err)
 		authorize(JSON.parse(String(content)))
 	})
 

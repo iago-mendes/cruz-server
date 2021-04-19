@@ -8,13 +8,13 @@ const validFrom =
 	'e-commerce@cruzrepresentacoes.com.br',
 ]
 
-export function sendMail(subject: string, text: string, to: string, from: string = validFrom[0])
+export function sendMail(subject: string, text: string, to: string[], from: string = validFrom[0])
 {
 	const utf8Subject = `=?utf-8?B?${Buffer.from(subject).toString('base64')}?=`
 	const messageParts =
 	[
 		`From: Cruz Representacoes <${from}>`,
-		`To: ${to}`,
+		`To: ${to.join(', ')}`,
 		'Content-Type: text/html; charset=utf-8',
 		'MIME-Version: 1.0',
 		`Subject: ${utf8Subject}`,
@@ -32,16 +32,16 @@ export function sendMail(subject: string, text: string, to: string, from: string
 	{
 		const gmail = google.gmail({version: 'v1', auth})
 
-		const res = await gmail.users.messages.send(
-		{
-			userId: 'me',
-			requestBody:
+		await gmail.users.messages.send(
 			{
-				raw: encodedMessage,
-			}
-		})
-
-		console.log('[res.data]', res.data)
+				userId: 'me',
+				requestBody:
+				{
+					raw: encodedMessage,
+				}
+			})
+			.then(res => console.log('[res.data]', res.data))
+			.catch(error => console.error('[erro while sending message]', error))
 	}
 
 	connect(callback)

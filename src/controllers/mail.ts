@@ -6,7 +6,8 @@ const mail =
 {
 	ecommerceRequest: async (req: Request, res: Response) =>
 	{
-		const {to, text}:{to: string, text: string} = req.body
+		const {id} = req.params
+		const {to, text}:{to: string[], text: string} = req.body
 
 		sendMail('Pedido no E-commerce', text, to, 'e-commerce@cruzrepresentacoes.com.br')
 
@@ -15,7 +16,7 @@ const mail =
 
 	systemRequest: async (req: Request, res: Response) =>
 	{
-		const {to, text}:{to: string, text: string} = req.body
+		const {to, text}:{to: string[], text: string} = req.body
 
 		sendMail('Pedido no Sistema', text, to, 'sistema@cruzrepresentacoes.com.br')
 
@@ -24,7 +25,7 @@ const mail =
 
 	general: async (req: Request, res: Response) =>
 	{
-		const {to, subject, text}:{to: string, subject: string, text: string} = req.body
+		const {to, subject, text}:{to: string[], subject: string, text: string} = req.body
 
 		sendMail(subject, text, to)
 
