@@ -32,7 +32,7 @@ export function sendMail
 	mail.compile().build((error, msg) =>
 	{
 		if (error)
-			console.error('[error compiling mail]', error)
+			console.error('<< error compiling mail >>', error)
 		
 		const encodedMessage = Buffer.from(msg)
 			.toString('base64')
@@ -52,8 +52,8 @@ export function sendMail
 						raw: encodedMessage,
 					},
 				})
-				.then(res => console.log('[res.data]', res.data))
-				.catch(error => console.error('[erro while sending message]', error))
+				.then(res => console.log('<< res.data >>', res.data))
+				.catch(error => console.error('<< error sending message >>', error))
 		}
 	
 		connect(callback)

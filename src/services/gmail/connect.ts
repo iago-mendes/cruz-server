@@ -22,12 +22,12 @@ function connect(callback: Function)
 			client_id, client_secret, redirect_uri
 		)
 
-		fs.readFile(TOKEN_PATH, (err, token) =>
+		fs.readFile(TOKEN_PATH, (err, tokens) =>
 		{
 			if (err)
 				return getNewToken(oAuth2Client)
 
-			oAuth2Client.setCredentials(JSON.parse(String(token)))
+			oAuth2Client.setCredentials(JSON.parse(String(tokens)))
 			callback(oAuth2Client)
 		})
 	}
@@ -47,23 +47,33 @@ function connect(callback: Function)
 			output: process.stdout,
 		})
 
-		rl.question('Enter the code from that page here: ', (code) =>
+		rl.question('Enter the code from that page here: ', async code =>
 		{
 			rl.close()
-			oAuth2Client.getToken(code, (err: NodeJS.ErrnoException | null, token: any) =>
-			{
-				if (err)
-					return console.error('Error retrieving access token', err)
 
-				oAuth2Client.setCredentials(token)
-				fs.writeFile(TOKEN_PATH, JSON.stringify(token), (err) =>
+			const {tokens} = await oAuth2Client.getToken(code)
+
+			oAuth2Client.setCredentials(tokens)
+			fs.writeFile(TOKEN_PATH, JSON.stringify(tokens), error =>
 				{
-					if (err) return console.error(err)
-					console.log('Token stored to', TOKEN_PATH)
+					if (error)
+						return console.error('<< error saving tokens >>', error)
+					
+					console.log('Token stored to ', TOKEN_PATH)
 				})
-
-				callback(oAuth2Client)
+			
+			oAuth2Client.on('tokens', (tokens: any) =>
+			{
+				fs.writeFile(TOKEN_PATH, JSON.stringify(tokens), error =>
+				{
+					if (error)
+						return console.error('<< error saving tokens >>', error)
+					
+					console.log('Token stored to ', TOKEN_PATH)
+				})
 			})
+
+			callback(oAuth2Client)
 		})
 	}
 }
