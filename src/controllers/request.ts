@@ -67,8 +67,8 @@ const request =
 			produtos
 		}
 
-		await RequestModel.create(request)
-		return res.status(201).send()
+		const createdRequest = await RequestModel.create(request)
+		return res.status(201).json(createdRequest)
 	},
 
 	update: async (req: Request, res: Response) =>
