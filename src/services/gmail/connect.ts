@@ -3,7 +3,7 @@ import readline from 'readline'
 import {google} from 'googleapis'
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-const TOKEN_PATH = 'google/token.json'
+const TOKENS_PATH = 'google/tokens.json'
 
 function connect(callback: Function)
 {
@@ -22,7 +22,7 @@ function connect(callback: Function)
 			client_id, client_secret, redirect_uri
 		)
 
-		fs.readFile(TOKEN_PATH, (err, tokens) =>
+		fs.readFile(TOKENS_PATH, (err, tokens) =>
 		{
 			if (err)
 				return getNewToken(oAuth2Client)
@@ -52,28 +52,48 @@ function connect(callback: Function)
 			rl.close()
 
 			const {tokens} = await oAuth2Client.getToken(code)
+			const accessToken = tokens.access_token
+			const refreshToken = tokens.refresh_token
 
-			oAuth2Client.setCredentials(tokens)
-			fs.writeFile(TOKEN_PATH, JSON.stringify(tokens), error =>
+			if (!accessToken || !refreshToken)
+				return console.error('<< missing tokens >>', '\naccess_token: ', accessToken, '\nrefresh_token: ', refreshToken)
+
+			oAuth2Client.setCredentials(
 				{
-					if (error)
-						return console.error('<< error saving tokens >>', error)
-					
-					console.log('Token stored to ', TOKEN_PATH)
+					access_token: accessToken,
+					refresh_token: refreshToken
 				})
+			saveTokens(tokens)
 			
 			oAuth2Client.on('tokens', (tokens: any) =>
 			{
-				fs.writeFile(TOKEN_PATH, JSON.stringify(tokens), error =>
+				saveTokens(tokens)
+			})
+
+			callback(oAuth2Client)
+		})
+	}
+
+	function saveTokens(newTokens: any)
+	{
+		fs.readFile(TOKENS_PATH, (error, oldTokens) =>
+		{
+			const oldAccessToken = !error ? JSON.parse(String(oldTokens)).access_token : undefined
+			const oldRefreshToken = !error ? JSON.parse(String(oldTokens)).refresh_token : undefined
+
+			const tokens =
+			{
+				access_token: newTokens.access_token ? newTokens.access_token : oldAccessToken,
+				refresh_token: newTokens.refresh_token ? newTokens.refresh_token : oldRefreshToken
+			}
+
+			fs.writeFile(TOKENS_PATH, JSON.stringify(tokens), error =>
 				{
 					if (error)
 						return console.error('<< error saving tokens >>', error)
 					
-					console.log('Token stored to ', TOKEN_PATH)
+					console.log('Tokens stored to ', TOKENS_PATH)
 				})
-			})
-
-			callback(oAuth2Client)
 		})
 	}
 }
