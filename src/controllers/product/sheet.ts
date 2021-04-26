@@ -1,6 +1,6 @@
 import {Request, Response} from 'express'
 import path from 'path'
-import Company, {CompanyType} from '../../models/Company'
+import Company, {CompanyType, Product} from '../../models/Company'
 
 const productHeader: Array<
 {
@@ -52,7 +52,41 @@ const productSheet =
 
 	getProducts: async (req: Request, res: Response) =>
 	{
-		return res.json([])
+		const {company: companyId} = req.params
+
+		const company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
+		
+		const fullHeader = getFullHeader(company)
+
+		const productsSheet = company.produtos.map(product =>
+			{
+				let tmpProductSheet:
+				{
+					[fieldName: string]: string | number
+				} = {}
+
+				fullHeader.map(({field, name}) =>
+				{
+					if (name.split(' ')[0] === 'Tabela')
+					{
+						const table = product.tabelas.find(({id}) => id == field)
+						if (table)
+							tmpProductSheet[name] = table.preco
+					}
+					else
+					{
+						const value = product[field as keyof Product]
+						if (typeof value === 'string' || typeof value === 'number')
+							tmpProductSheet[name] = value
+					}
+				})
+
+				return tmpProductSheet
+			})
+
+		return res.json(productsSheet)
 	},
 
 	setProducts: async (req: Request, res: Response) =>
