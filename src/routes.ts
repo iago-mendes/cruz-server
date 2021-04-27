@@ -16,6 +16,7 @@ import productSheet from './controllers/product/sheet'
 import clientUtils from './controllers/client/utils'
 import {getBanners} from './controllers'
 import clientSheet from './controllers/client/sheet'
+import companyUtils from './controllers/company/utils'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -32,6 +33,7 @@ routes.put('/companies/:id', [checkKey, upload.single('imagem')], company.update
 routes.delete('/companies/:id', checkKey, company.remove)
 routes.get('/companies/:id', checkKey, company.show)
 routes.get('/companies/:id/raw', checkKey, company.rawOne)
+routes.put('/companies/:company/tables', checkKey, companyUtils.updateTables)
 
 routes.post('/companies/:company/products', [checkKey, upload.single('imagem')], product.create)
 routes.get('/companies/:company/products', checkKey, product.list)
