@@ -54,6 +54,23 @@ const companyUtils =
 		
 		const updatedCompany = await Company.findByIdAndUpdate(company._id, {produtos: products}, {new: true})
 		return res.json(updatedCompany)
+	},
+
+	getTables: async (req: Request, res: Response) =>
+	{
+		const {company: companyId} = req.params
+
+		const company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
+		
+		const tables = company.tabelas.map(table => (
+			{
+				id: String(table._id),
+				nome: table.nome
+			}))
+		
+		return res.json(tables)
 	}
 }
 

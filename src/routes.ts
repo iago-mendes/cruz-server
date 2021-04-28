@@ -34,6 +34,7 @@ routes.delete('/companies/:id', checkKey, company.remove)
 routes.get('/companies/:id', checkKey, company.show)
 routes.get('/companies/:id/raw', checkKey, company.rawOne)
 routes.put('/companies/:company/tables', checkKey, companyUtils.updateTables)
+routes.get('/companies/:company/tables', checkKey, companyUtils.getTables)
 
 routes.post('/companies/:company/products', [checkKey, upload.single('imagem')], product.create)
 routes.get('/companies/:company/products', checkKey, product.list)
