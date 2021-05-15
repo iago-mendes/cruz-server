@@ -31,6 +31,7 @@ export type CompanyType = mongoose.Document &
 	tabelas: Array<{_id?: string, nome: string}>
 	condicoes: Array<{_id?: string, nome: string, precoMin: number}>
 	produtos: Product[]
+	modificadoEm?: string
 }
 
 const CompanySchema = new mongoose.Schema(

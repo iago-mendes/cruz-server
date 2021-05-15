@@ -15,6 +15,7 @@ export type RequestType = mongoose.Document &
 	frete?: string,
 	tipo: {venda: boolean, troca: boolean}
 	status: {concluido: boolean, enviado: boolean, faturado: boolean}
+	modificadoEm?: string
 }
 
 const RequestSchema = new mongoose.Schema(

@@ -29,6 +29,7 @@ export type ClientType = mongoose.Document &
 		id: string
 		tabela: string
 	}>
+	modificadoEm?: string
 }
 
 const ClientSchema = new mongoose.Schema(
