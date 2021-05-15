@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import { getDate } from '../utils/getDate'
+
 export type RequestType = mongoose.Document &
 {
 	cliente: string
@@ -50,7 +52,8 @@ const RequestSchema = new mongoose.Schema(
 		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.produtos', required: true},
 		quantidade: {type: Number, required: true},
 		preco: {type: Number, required: true}
-	}]
+	}],
+	modificadoEm: {type: String, default: getDate()}
 })
 
 export default mongoose.model<RequestType>('Pedido', RequestSchema)

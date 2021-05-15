@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import { getDate } from '../utils/getDate'
+
 export interface Product
 {
 	_id?: string
@@ -75,7 +77,8 @@ const CompanySchema = new mongoose.Schema(
 			id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.tabelas', required: true},
 			preco: {type: Number, required: true}
 		}]
-	}]
+	}],
+	modificadoEm: {type: String, default: getDate()}
 })
 
 export default mongoose.model<CompanyType>('Representada', CompanySchema)

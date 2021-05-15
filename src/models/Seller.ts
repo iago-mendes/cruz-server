@@ -1,5 +1,7 @@
 import mongoose from 'mongoose'
 
+import { getDate } from '../utils/getDate'
+
 export type SellerType = mongoose.Document &
 {
 	nome: string
@@ -30,7 +32,8 @@ const SellerSchema = new mongoose.Schema(
 	[{
 		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
 		comissao: {type: Number, required: true}
-	}]
+	}],
+	modificadoEm: {type: String, default: getDate()}
 })
 
 export default mongoose.model<SellerType>('Vendedor', SellerSchema)
