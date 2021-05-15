@@ -2,6 +2,7 @@ import {Request, Response} from 'express'
 
 import Client from '../../models/Client'
 import Company from '../../models/Company'
+import { getDate } from '../../utils/getDate'
 
 const clientUtils =
 {
@@ -39,7 +40,7 @@ const clientUtils =
 
 		contacts.push({nome, telefone})
 
-		await Client.findByIdAndUpdate(client._id, {contatos: contacts})
+		await Client.findByIdAndUpdate(client._id, {contatos: contacts, modificadoEm: getDate()})
 		return res.send()
 	},
 

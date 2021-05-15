@@ -5,6 +5,7 @@ import path from 'path'
 import Company from '../../models/Company'
 import Client from '../../models/Client'
 import formatImage from '../../utils/formatImage'
+import { getDate } from '../../utils/getDate'
 
 const product =
 {
@@ -33,7 +34,7 @@ const product =
 			volume
 		})
 
-		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		await Company.findByIdAndUpdate(company._id, {produtos: products, modificadoEm: getDate()})
 		return res.send()
 	},
 
@@ -79,7 +80,7 @@ const product =
 			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas
 		}
 
-		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		await Company.findByIdAndUpdate(company._id, {produtos: products, modificadoEm: getDate()})
 		return res.send()
 	},
 
@@ -102,7 +103,7 @@ const product =
 		
 		products.splice(index, 1)
 
-		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		await Company.findByIdAndUpdate(company._id, {produtos: products, modificadoEm: getDate()})
 		return res.send()
 	},
 

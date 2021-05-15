@@ -7,15 +7,7 @@ import Company from '../../models/Company'
 import Seller from '../../models/Seller'
 import formatImage from '../../utils/formatImage'
 import encryptPwd from '../../utils/encryptPwd'
-
-interface List
-{
-	id: string
-	imagem: string
-	nome_fantasia: string
-	razao_social: string
-	status: {ativo: boolean, aberto: boolean, nome_sujo: boolean}
-}
+import { getDate } from '../../utils/getDate'
 
 const client =
 {
@@ -116,7 +108,8 @@ const client =
 			status: status ? JSON.parse(status) : previous.status,
 			condicoes: condicoes ? JSON.parse(condicoes) : previous.condicoes,
 			contatos: contatos ? JSON.parse(contatos) : previous.contatos,
-			representadas: representadas ? JSON.parse(representadas) : previous.representadas
+			representadas: representadas ? JSON.parse(representadas) : previous.representadas,
+			modificadoEm: getDate()
 		}
 
 		const tmp = await Client.findByIdAndUpdate(id, client)

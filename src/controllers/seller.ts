@@ -6,6 +6,7 @@ import bcrypt from 'bcrypt'
 import Seller from '../models/Seller'
 import Company from '../models/Company'
 import formatImage from '../utils/formatImage'
+import { getDate } from '../utils/getDate'
 
 interface List
 {
@@ -75,6 +76,8 @@ export default
 			if (funcao) seller['funcao'] = funcao
 			if (admin) seller['admin'] = admin
 			if (representadas) seller['representadas'] = JSON.parse(representadas)
+
+			seller['modificadoEm'] = getDate()
 
 			const tmp = await Seller.findByIdAndUpdate(id, seller)
 			res.status(200).send()

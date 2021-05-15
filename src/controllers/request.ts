@@ -7,6 +7,7 @@ import Seller from '../models/Seller'
 import formatImage from '../utils/formatImage'
 import getPricedProducts from '../utils/requests/getPricedProducts'
 import getRequest from '../utils/requests/getRequest'
+import { getDate } from '../utils/getDate'
 
 interface ListInterface
 {
@@ -101,7 +102,8 @@ const request =
 			frete,
 			tipo,
 			status,
-			produtos
+			produtos,
+			modificadoEm: getDate()
 		}
 
 		const tmp = await RequestModel.findByIdAndUpdate(id, request, {new: true})

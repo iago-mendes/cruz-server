@@ -1,6 +1,7 @@
 import {Request, Response} from 'express'
 import path from 'path'
 import Company, {CompanyType, Product} from '../../models/Company'
+import { getDate } from '../../utils/getDate'
 
 const productHeader: Array<
 {
@@ -167,7 +168,7 @@ const productSheet =
 				}
 		})
 
-		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		await Company.findByIdAndUpdate(company._id, {produtos: products, modificadoEm: getDate()})
 
 		return res.status(201).send()
 	}

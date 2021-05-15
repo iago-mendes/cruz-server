@@ -2,6 +2,7 @@ import {Request, Response} from 'express'
 
 import Company from '../../models/Company'
 import compareIds from '../../utils/compareIds'
+import { getDate } from '../../utils/getDate'
 
 const companyUtils =
 {
@@ -52,7 +53,7 @@ const companyUtils =
 				return tmpProduct
 			})
 		
-		const updatedCompany = await Company.findByIdAndUpdate(company._id, {produtos: products}, {new: true})
+		const updatedCompany = await Company.findByIdAndUpdate(company._id, {produtos: products, modificadoEm: getDate()}, {new: true})
 		return res.json(updatedCompany)
 	},
 

@@ -4,6 +4,7 @@ import path from 'path'
 
 import Company from '../../models/Company'
 import formatImage from '../../utils/formatImage'
+import { getDate } from '../../utils/getDate'
 
 const company =
 {
@@ -114,6 +115,8 @@ const company =
 			company['tabelas'] = JSON.parse(tabelas)
 		if(condicoes)
 			company['condicoes'] = JSON.parse(condicoes)
+		
+		company['modificadoEm'] = getDate()
 		
 		const tmp = Company.findByIdAndUpdate(id, company)
 		res.status(200).send()

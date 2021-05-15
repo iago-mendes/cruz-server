@@ -1,8 +1,10 @@
 import {Request, Response} from 'express'
 import path from 'path'
+
 import Client from '../../models/Client'
 import Company from '../../models/Company'
 import encryptPwd from '../../utils/encryptPwd'
+import { getDate } from '../../utils/getDate'
 import getRandomNumber from '../../utils/getRandomNumber'
 
 const clientHeader: Array<
@@ -76,7 +78,8 @@ const clientSheet =
 						cidade: String(sheetClient[getFieldName('cidade')]),
 						uf: String(sheetClient[getFieldName('uf')]),
 						cep: String(sheetClient[getFieldName('cep')])
-					}
+					},
+					modificadoEm: getDate()
 				}
 
 				await Client.findByIdAndUpdate(existingClient._id, client)
