@@ -14,7 +14,7 @@ import mail from './controllers/mail'
 import pdf from './controllers/pdf'
 import productSheet from './controllers/product/sheet'
 import clientUtils from './controllers/client/utils'
-import {getBanners} from './controllers'
+import {getBanners, sync} from './controllers'
 import clientSheet from './controllers/client/sheet'
 import companyUtils from './controllers/company/utils'
 
@@ -89,5 +89,6 @@ routes.get('/sheet/clients/header', checkKey, clientSheet.getHeader)
 routes.post('/sheet/clients', checkKey, clientSheet.setClients)
 
 routes.get('/banners', getBanners)
+routes.get('/sync', checkKey, sync)
 
 export default routes
