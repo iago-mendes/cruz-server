@@ -27,33 +27,67 @@ export const getBanners = async (req: Request, res: Response) =>
 export const sync = async (req: Request, res: Response) =>
 {
 	const implementationDate = '2021-05-15'
+	let lastModifiedAt = implementationDate
 
-	const clients = (await Client.find()).map(client => (
-		{
-			id: String(client._id),
-			modifiedAt: client.modificadoEm ? client.modificadoEm : implementationDate
-		}))
+	const clients = (await Client.find()).map(client =>
+	{
+		const modifiedAt = client.modificadoEm ? client.modificadoEm : implementationDate
+		if (modifiedAt > lastModifiedAt)
+			lastModifiedAt = modifiedAt
+
+		return (
+			{
+				id: String(client._id),
+				modifiedAt
+			}
+		)
+	})
 	
-	const companies = (await Company.find()).map(company => (
-		{
-			id: String(company._id),
-			modifiedAt: company.modificadoEm ? company.modificadoEm : implementationDate
-		}))
+	const companies = (await Company.find()).map(company =>
+	{
+		const modifiedAt = company.modificadoEm ? company.modificadoEm : implementationDate
+		if (modifiedAt > lastModifiedAt)
+			lastModifiedAt = modifiedAt
+
+		return (
+			{
+				id: String(company._id),
+				modifiedAt
+			}
+		)
+	})
 	
-	const requests = (await RequestModel.find()).map(request => (
-		{
-			id: String(request._id),
-			modifiedAt: request.modificadoEm ? request.modificadoEm : implementationDate
-		}))
+	const requests = (await RequestModel.find()).map(request =>
+	{
+		const modifiedAt = request.modificadoEm ? request.modificadoEm : implementationDate
+		if (modifiedAt > lastModifiedAt)
+			lastModifiedAt = modifiedAt
+
+		return (
+			{
+				id: String(request._id),
+				modifiedAt
+			}
+		)
+	})
 	
-	const sellers = (await Seller.find()).map(seller => (
-		{
-			id: String(seller._id),
-			modifiedAt: seller.modificadoEm ? seller.modificadoEm : implementationDate
-		}))
+	const sellers = (await Seller.find()).map(seller =>
+	{
+		const modifiedAt = seller.modificadoEm ? seller.modificadoEm : implementationDate
+		if (modifiedAt > lastModifiedAt)
+			lastModifiedAt = modifiedAt
+
+		return (
+			{
+				id: String(seller._id),
+				modifiedAt
+			}
+		)
+	})
 
 	const syncIds =
 	{
+		lastModifiedAt,
 		clients,
 		companies,
 		requests,
