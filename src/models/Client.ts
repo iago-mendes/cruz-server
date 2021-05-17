@@ -1,7 +1,5 @@
 import mongoose from 'mongoose'
 
-import { getDate } from '../utils/getDate'
-
 export type ClientType = mongoose.Document &
 {
 	imagem?: string
@@ -76,7 +74,7 @@ const ClientSchema = new mongoose.Schema(
 		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
 		tabela: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.tabelas', required: true}
 	}],
-	modificadoEm: {type: String, default: getDate()}
+	modificadoEm: {type: String}
 })
 ClientSchema.index({razao_social: 'text', nome_fantasia: 'text', 'endereco.cidade': 'text'})
 
