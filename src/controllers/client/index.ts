@@ -44,12 +44,12 @@ const client =
 			telefone,
 			email,
 			senha: password,
-			vendedores: JSON.parse(vendedores),
-			endereco: JSON.parse(endereco),
-			status: JSON.parse(status),
-			condicoes: JSON.parse(condicoes),
-			contatos: JSON.parse(contatos),
-			representadas: JSON.parse(representadas)
+			vendedores: vendedores ? JSON.parse(vendedores) : undefined,
+			endereco: endereco ? JSON.parse(endereco) : undefined,
+			status: status ? JSON.parse(status) : undefined,
+			condicoes: condicoes ? JSON.parse(condicoes) : undefined,
+			contatos: contatos ? JSON.parse(contatos) : undefined,
+			representadas: representadas ? JSON.parse(representadas) : undefined
 		}
 
 		await Client.create(client)

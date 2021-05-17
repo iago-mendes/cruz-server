@@ -24,7 +24,7 @@ export type ClientType = mongoose.Document &
 		uf?: string
 	}
 	status: {ativo: boolean, aberto: boolean, nome_sujo: boolean}
-	condicoes: {prazo: boolean, cheque: boolean, vista: boolean}
+	condicoes?: {prazo: boolean, cheque: boolean, vista: boolean}
 	contatos: Array<{_id?: string, nome: string, telefone: string}>
 	representadas: Array<
 	{
@@ -62,9 +62,9 @@ const ClientSchema = new mongoose.Schema(
 	},
 	condicoes:
 	{
-		prazo: {type: Boolean, required: true},
-		cheque: {type: Boolean, required: true},
-		vista: {type: Boolean, required: true}
+		prazo: {type: Boolean},
+		cheque: {type: Boolean},
+		vista: {type: Boolean}
 	},
 	contatos:
 	[{
