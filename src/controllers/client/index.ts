@@ -49,7 +49,8 @@ const client =
 			status: status ? JSON.parse(status) : undefined,
 			condicoes: condicoes ? JSON.parse(condicoes) : undefined,
 			contatos: contatos ? JSON.parse(contatos) : undefined,
-			representadas: representadas ? JSON.parse(representadas) : undefined
+			representadas: representadas ? JSON.parse(representadas) : undefined,
+			modificadoEm: getDate()
 		}
 
 		await Client.create(client)

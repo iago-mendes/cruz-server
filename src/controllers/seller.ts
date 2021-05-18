@@ -37,7 +37,8 @@ export default
 				senha: password,
 				funcao,
 				admin,
-				representadas: JSON.parse(representadas)
+				representadas: JSON.parse(representadas),
+				modificadoEm: getDate()
 			})
 			return res.status(201).send()
 		} catch (error) {

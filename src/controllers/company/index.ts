@@ -40,7 +40,8 @@ const company =
 			site,
 			tabelas: JSON.parse(tabelas),
 			condicoes: JSON.parse(condicoes),
-			produtos: []
+			produtos: [],
+			modificadoEm: getDate()
 		}
 		
 		await Company.create(company)

@@ -65,7 +65,8 @@ const request =
 			frete,
 			tipo,
 			status,
-			produtos
+			produtos,
+			modificadoEm: getDate()
 		}
 
 		const createdRequest = await RequestModel.create(request)
