@@ -89,7 +89,7 @@ const client =
 			imagem = image.filename
 			if (previous.imagem)
 				try {
-					fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
+					fs.unlinkSync(path.resolve('uploads', previous.imagem))
 				} catch (error) {
 					if (error.code == 'ENOENT')
 						console.log('file not found!')
@@ -131,7 +131,7 @@ const client =
 
 		if (client.imagem)
 			try {
-				fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', client.imagem))
+				fs.unlinkSync(path.resolve('uploads', client.imagem))
 			} catch (error) {
 				if (error.code == 'ENOENT')
 					console.log('file not found!')

@@ -88,7 +88,7 @@ const company =
 			{
 				try
 				{
-					fs.unlinkSync(path.resolve(__dirname, '..', '..', '..', 'uploads', String(previous.imagem)))
+					fs.unlinkSync(path.resolve('uploads', String(previous.imagem)))
 				}
 				catch (error)
 				{
@@ -139,7 +139,7 @@ const company =
 		{
 			try
 			{
-				fs.unlinkSync(path.resolve(__dirname, '..', '..', '..', 'uploads', company.imagem))
+				fs.unlinkSync(path.resolve('uploads', company.imagem))
 			}
 			catch (error)
 			{

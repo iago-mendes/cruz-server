@@ -64,7 +64,7 @@ const sellerController =
 			const previous = await Seller.findById(id)
 			if (previous?.imagem)
 				try {
-					fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', previous.imagem))
+					fs.unlinkSync(path.resolve('uploads', previous.imagem))
 				} catch (error) {
 					if (error.code == 'ENOENT') console.log('file not found!')
 				}
@@ -88,7 +88,7 @@ const sellerController =
 
 		const company = await Company.findById(id)
 		if (company?.imagem)
-			fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', company.imagem))
+			fs.unlinkSync(path.resolve('uploads', company.imagem))
 
 		const tmp = await Seller.findByIdAndDelete(id)
 		res.status(200).send()
