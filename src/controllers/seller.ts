@@ -7,6 +7,7 @@ import Seller from '../models/Seller'
 import Company from '../models/Company'
 import formatImage from '../utils/formatImage'
 import { getDate } from '../utils/getDate'
+import { handleObjectId } from '../utils/handleObjectId'
 
 interface List
 {
@@ -22,7 +23,7 @@ export default
 	{
 		try {
 			const image = req.file
-			const {nome, telefones, email, senha, funcao, admin, representadas} = req.body
+			const {_id, nome, telefones, email, senha, funcao, admin, representadas} = req.body
 
 			const password = bcrypt.hashSync(senha, 10)
 			if (!password)
@@ -30,6 +31,7 @@ export default
 			
 			await Seller.create(
 			{
+				_id: handleObjectId(_id),
 				nome,
 				imagem: image && image.filename,
 				telefones: JSON.parse(telefones),

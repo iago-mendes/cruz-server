@@ -5,12 +5,14 @@ import path from 'path'
 import Company from '../../models/Company'
 import formatImage from '../../utils/formatImage'
 import { getDate } from '../../utils/getDate'
+import { handleObjectId } from '../../utils/handleObjectId'
 
 const company =
 {
 	create: async (req: Request, res: Response) =>
 	{
 		const {
+			_id,
 			razao_social, 
 			nome_fantasia,
 			cnpj,
@@ -28,6 +30,7 @@ const company =
 
 		const company =
 		{
+			_id: handleObjectId(_id),
 			imagem: image && image.filename,
 			razao_social,
 			nome_fantasia,
@@ -85,7 +88,7 @@ const company =
 			{
 				try
 				{
-					fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', String(previous.imagem)))
+					fs.unlinkSync(path.resolve(__dirname, '..', '..', '..', 'uploads', String(previous.imagem)))
 				}
 				catch (error)
 				{
@@ -133,7 +136,16 @@ const company =
 		return res.status(404).json({message: 'company not found!'})
 		
 		if(company.imagem)
-		fs.unlinkSync(path.resolve(__dirname, '..', '..', 'uploads', company.imagem))
+		{
+			try
+			{
+				fs.unlinkSync(path.resolve(__dirname, '..', '..', '..', 'uploads', company.imagem))
+			}
+			catch (error)
+			{
+				console.error('[error while removing file]', error)
+			}
+		}
 		
 		const tmp = Company.findByIdAndDelete(id)
 		res.status(200).send()

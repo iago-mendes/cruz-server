@@ -8,12 +8,14 @@ import Seller from '../../models/Seller'
 import formatImage from '../../utils/formatImage'
 import encryptPwd from '../../utils/encryptPwd'
 import { getDate } from '../../utils/getDate'
+import { handleObjectId } from '../../utils/handleObjectId'
 
 const client =
 {
 	create: async (req: Request, res: Response) =>
 	{
 		const {
+			_id,
 			razao_social,
 			nome_fantasia,
 			cnpj,
@@ -36,6 +38,7 @@ const client =
 
 		const client =
 		{
+			_id: handleObjectId(_id),
 			imagem: image && image.filename,
 			razao_social,
 			nome_fantasia,

@@ -6,13 +6,14 @@ import Company from '../../models/Company'
 import Client from '../../models/Client'
 import formatImage from '../../utils/formatImage'
 import { getDate } from '../../utils/getDate'
+import { handleObjectId } from '../../utils/handleObjectId'
 
 const product =
 {
 	create: async (req: Request, res: Response) =>
 	{
 		const {company: companyId} = req.params
-		const {nome, unidade, ipi, st, tabelas, codigo, comissao, peso, volume} = req.body
+		const {_id, nome, unidade, ipi, st, tabelas, codigo, comissao, peso, volume} = req.body
 		let image = req.file
 
 		let company = await Company.findById(companyId)
@@ -22,6 +23,7 @@ const product =
 		let products = company.produtos
 		products.push(
 		{
+			_id: handleObjectId(_id),
 			imagem: image && image.filename,
 			nome,
 			unidade,

@@ -1,8 +1,9 @@
+import ObjectID from 'bson-objectid'
 import mongoose from 'mongoose'
 
 export interface Product
 {
-	_id?: string
+	_id?: string | ObjectID
 	imagem?: string
 	codigo: string
 	nome: string

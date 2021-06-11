@@ -8,6 +8,7 @@ import formatImage from '../utils/formatImage'
 import getPricedProducts from '../utils/requests/getPricedProducts'
 import getRequest from '../utils/requests/getRequest'
 import { getDate } from '../utils/getDate'
+import { handleObjectId } from '../utils/handleObjectId'
 
 interface ListInterface
 {
@@ -40,6 +41,7 @@ const request =
 	{
 		const
 		{
+			_id,
 			data,
 			condicao,
 			digitado_por,
@@ -55,6 +57,7 @@ const request =
 
 		const request =
 		{
+			_id: handleObjectId(_id),
 			data,
 			condicao,
 			digitado_por,
