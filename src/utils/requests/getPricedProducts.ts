@@ -35,14 +35,14 @@ function getPricedProducts(request: RequestType, company: CompanyType, client: C
 			return
 
 		const clientCompany = client.representadas.find(tmpCompany => String(tmpCompany.id) == String(company._id))
-		if (!clientCompany)
-			return
+		const tableId = clientCompany ? clientCompany.tabela : undefined
+		const clientTable = tableId
+			? product.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
+			: undefined
 
-		const tableId = clientCompany.tabela
-
-		const table = product.tabelas.find(tmpTable => String(tmpTable.id) == String(tableId))
-		if (!table)
-			return
+		const table = clientTable
+			? clientTable
+			: product.tabelas[0]
 		
 		const tablePrice = table.preco
 		
