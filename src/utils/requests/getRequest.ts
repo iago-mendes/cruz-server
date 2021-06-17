@@ -39,17 +39,17 @@ export interface RequestFormated
 		imagem: string
 		endereco:
 		{
-			rua?: string | undefined
-			numero?: number | undefined
-			complemento?: string | undefined
-			bairro?: string | undefined
-			cep?: string | undefined
-			cidade?: string | undefined
-			uf?: string | undefined
+			rua?: string
+			numero?: string
+			complemento?: string
+			bairro?: string
+			cep?: string
+			cidade?: string
+			uf?: string
 		}
 		cnpj: string
 		insc_estadual: string
-		telefone?: number | undefined
+		telefone?: string
 		email: string
 	}
 	vendedor:
