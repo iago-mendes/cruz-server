@@ -7,14 +7,14 @@ export type ClientType = mongoose.Document &
 	nome_fantasia: string
 	cnpj: string
 	insc_estadual: string
-	telefone?: number
+	telefone?: string
 	email: string
 	senha: string
 	vendedores: Array<string>
 	endereco:
 	{
 		rua?: string
-		numero?: number
+		numero?: string
 		complemento?: string
 		bairro?: string
 		cep?: string
@@ -39,14 +39,14 @@ const ClientSchema = new mongoose.Schema(
 	nome_fantasia: {type: String, required: true},
 	cnpj: {type: String, required: true},
 	insc_estadual: {type: String, required: true},
-	telefone: {type: Number, required: false},
+	telefone: {type: String},
 	email: {type: String, required: true},
 	senha: {type: String, required: true},
 	vendedores: [{type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor'}],
 	endereco:
 	{
 		rua: {type: String, required: false},
-		numero: {type: Number, required: false},
+		numero: {type: String, required: false},
 		bairro: {type: String, required: false},
 		cep: {type: String, required: false},
 		cidade: {type: String, required: false},
