@@ -17,6 +17,7 @@ import clientUtils from './controllers/client/utils'
 import {getBanners, sync} from './controllers'
 import clientSheet from './controllers/client/sheet'
 import companyUtils from './controllers/company/utils'
+import { goalController } from './controllers/goal'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -90,5 +91,12 @@ routes.post('/sheet/clients', checkKey, clientSheet.setClients)
 
 routes.get('/banners', getBanners)
 routes.get('/sync', checkKey, sync)
+
+routes.post('/goals', goalController.create)
+routes.get('/goals/raw', goalController.raw)
+routes.put('/goals/:month', goalController.update)
+routes.delete('/goals/:month', goalController.remove)
+routes.get('/goals/:month', goalController.show)
+routes.get('/goals/:month/raw', goalController.rawOne)
 
 export default routes
