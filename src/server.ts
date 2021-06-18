@@ -3,6 +3,7 @@ import cors from 'cors'
 import mongoose from 'mongoose'
 import path from 'path'
 import dotenv from 'dotenv'
+import 'express-async-errors'
 
 import routes from './routes'
 import errorHandler from './errors/handler'
