@@ -13,6 +13,10 @@ export const goalController =
 	{
 		const {month, companies} = req.body
 
+		const existingGoal = await Goal.findOne({month})
+		if (existingGoal)
+			return res.status(400).json({message: 'Já existe uma meta para o mês enviado!'})
+
 		const goal =
 		{
 			month,
