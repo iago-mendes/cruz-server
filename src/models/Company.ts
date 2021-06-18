@@ -24,7 +24,7 @@ export type CompanyType = mongoose.Document &
 	nome_fantasia: string
 	cnpj: string
 	telefones: Array<string>
-	email: string
+	email?: string
 	descricao_curta?: string
 	descricao?: string
 	site?: string
@@ -37,19 +37,19 @@ export type CompanyType = mongoose.Document &
 
 const CompanySchema = new mongoose.Schema(
 {
-	imagem: {type: String, required: false},
+	imagem: {type: String},
 	razao_social: {type: String, required: true},
 	nome_fantasia: {type: String, required: true},
 	cnpj: {type: String, required: true},
 	telefones: [{type: Number, required: true}],
-	email: {type: String, required: true},
-	descricao_curta: {type: String, required: false},
-	descricao: {type: String, required: false},
-	site: {type: String, required: false},
+	email: {type: String},
+	descricao_curta: {type: String},
+	descricao: {type: String},
+	site: {type: String},
 	comissao:
 	{
 		porcentagem: {type: Number, required: true},
-		obs: [{type: String, required: false}]
+		obs: [{type: String}]
 	},
 	tabelas:
 	[{
@@ -62,15 +62,15 @@ const CompanySchema = new mongoose.Schema(
 	}],
 	produtos:
 	[{
-		imagem: {type: String, required: false},
+		imagem: {type: String},
 		codigo: {type: String, required: true},
 		nome: {type: String, required: true},
 		ipi: {type: Number, required: true},
 		st: {type: Number, required: true},
 		unidade: {type: String, required: true},
 		comissao: {type: Number, required: true},
-		peso: {type: Number, required: false},
-		volume: {type: Number, required: false},
+		peso: {type: Number},
+		volume: {type: Number},
 		tabelas:
 		[{
 			id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.tabelas', required: true},
