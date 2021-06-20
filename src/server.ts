@@ -12,8 +12,8 @@ const app = express()
 dotenv.config()
 
 app.use(cors({origin: '*', exposedHeaders: '*'}))
-app.use(express.json({limit: '1mb'}))
-app.use(express.urlencoded({extended: true, limit: '1mb'}))
+app.use(express.json({limit: '5mb'}))
+app.use(express.urlencoded({extended: true, limit: '5mb'}))
 
 mongoose.connect(
 	`mongodb://localhost:27017/${process.env.DB_NAME}?authSource=admin`,
