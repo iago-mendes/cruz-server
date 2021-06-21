@@ -1,4 +1,5 @@
 import { Request, Response } from 'express'
+import { differenceInBusinessDays, lastDayOfMonth } from 'date-fns'
 
 import Goal from '../models/Goal'
 import Company from '../models/Company'
@@ -91,6 +92,11 @@ export const goalController =
 
 		let companies: Companies = []
 		let sellers: Sellers = []
+		let days: Array<
+		{
+			day: string
+			sold: number
+		}> = []
 
 		await Promise.all(goal.companies.map(async company =>
 		{
@@ -116,7 +122,19 @@ export const goalController =
 				let sellerSold = 0
 				monthRequests.forEach(rawRequest =>
 				{
-					sellerSold += getTotalValue(rawRequest, rawCompany)
+					const totalValue = getTotalValue(rawRequest, rawCompany)
+
+					sellerSold += totalValue
+
+					const existingDayIndex = days.findIndex(({day}) => rawRequest.data.includes(day))
+					if (existingDayIndex < 0)
+						days.push(
+						{
+							day: rawRequest.data,
+							sold: totalValue
+						})
+					else
+						days[existingDayIndex].sold += totalValue
 				})
 				
 				companyGoal += seller.goal
@@ -154,7 +172,18 @@ export const goalController =
 			let eCommerceSold = 0
 			monthECommerceRequests.forEach(rawRequest =>
 			{
-				eCommerceSold += getTotalValue(rawRequest, rawCompany)
+				const totalValue = getTotalValue(rawRequest, rawCompany)
+				eCommerceSold += totalValue
+
+				const existingDayIndex = days.findIndex(({day}) => rawRequest.data.includes(day))
+				if (existingDayIndex < 0)
+					days.push(
+					{
+						day: rawRequest.data,
+						sold: totalValue
+					})
+				else
+					days[existingDayIndex].sold += totalValue
 			})
 
 			companyGoal += company.eCommerceGoal
@@ -176,6 +205,12 @@ export const goalController =
 		}))
 
 		sellers.sort((a, b) => a.sold > b.sold ? -1 : 1)
+		days.sort((a, b) => a.day < b.day ? -1 : 1)
+
+		const today = new Date(Date.now())
+		const monthMiddleDate = new Date(`${month}-15`)
+		const lastMonthDay = lastDayOfMonth(monthMiddleDate)
+		const remainingBusinessDays = differenceInBusinessDays(lastMonthDay, today)
 
 		const showResponse =
 		{
@@ -183,7 +218,9 @@ export const goalController =
 			companies,
 			sellers,
 			goal: totalGoal,
-			sold: totalSold
+			sold: totalSold,
+			days,
+			remainingBusinessDays
 		}
 
 		return res.json(showResponse)
