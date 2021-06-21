@@ -3,6 +3,7 @@ import path from 'path'
 
 import Client from '../models/Client'
 import Company from '../models/Company'
+import Goal from '../models/Goal'
 import RequestModel from '../models/Request'
 import Seller from '../models/Seller'
 import formatImage from '../utils/formatImage'
@@ -85,13 +86,28 @@ export const sync = async (req: Request, res: Response) =>
 		)
 	})
 
+	const goals = (await Goal.find()).map(goal =>
+	{
+		const modifiedAt = goal.modifiedAt ? goal.modifiedAt : implementationDate
+		if (modifiedAt > lastModifiedAt)
+			lastModifiedAt = modifiedAt
+
+		return (
+			{
+				month: String(goal.month),
+				modifiedAt
+			}
+		)
+	})
+
 	const syncIds =
 	{
 		lastModifiedAt,
 		clients,
 		companies,
 		requests,
-		sellers
+		sellers,
+		goals
 	}
 
 	return res.json(syncIds)

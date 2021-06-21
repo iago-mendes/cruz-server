@@ -22,7 +22,7 @@ export const goalController =
 		{
 			month,
 			companies,
-			modificadoEm: getDate()
+			modifiedAt: getDate()
 		}
 
 		const createdGoal = await Goal.create(goal)
@@ -42,7 +42,7 @@ export const goalController =
 		{
 			month,
 			companies: companies ? companies : previousGoal.companies,
-			modificadoEm: getDate()
+			modifiedAt: getDate()
 		}
 
 		const updatedGoal = await Goal.findOneAndUpdate({month}, goal)
