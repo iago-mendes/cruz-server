@@ -99,7 +99,7 @@ const product = {
 			unidade: unidade ? unidade : previous.unidade,
 			comissao: comissao ? comissao : previous.comissao,
 			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas,
-			isBlocked: isBlocked ? isBlocked : previous.isBlocked
+			isBlocked: isBlocked != undefined ? isBlocked : previous.isBlocked
 		}
 
 		await Company.findByIdAndUpdate(company._id, {
