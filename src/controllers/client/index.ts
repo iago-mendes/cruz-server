@@ -7,13 +7,11 @@ import Company from '../../models/Company'
 import Seller from '../../models/Seller'
 import formatImage from '../../utils/formatImage'
 import encryptPwd from '../../utils/encryptPwd'
-import { getDate } from '../../utils/getDate'
-import { handleObjectId } from '../../utils/handleObjectId'
+import {getDate} from '../../utils/getDate'
+import {handleObjectId} from '../../utils/handleObjectId'
 
-const client =
-{
-	create: async (req: Request, res: Response) =>
-	{
+const client = {
+	create: async (req: Request, res: Response) => {
 		const {
 			_id,
 			razao_social,
@@ -34,10 +32,11 @@ const client =
 
 		const password = encryptPwd(senha)
 		if (!password)
-			return res.status(500).json({message: 'Algo de errado aconteceu durante a encriptação da senha!'})
+			return res.status(500).json({
+				message: 'Algo de errado aconteceu durante a encriptação da senha!'
+			})
 
-		const client =
-		{
+		const client = {
 			_id: handleObjectId(_id),
 			imagem: image && image.filename,
 			razao_social,
@@ -60,8 +59,7 @@ const client =
 		return res.status(201).send()
 	},
 
-	update: async (req: Request, res: Response) =>
-	{
+	update: async (req: Request, res: Response) => {
 		const {id} = req.params
 		const {
 			razao_social,
@@ -80,26 +78,20 @@ const client =
 		const image = req.file
 
 		const previous = await Client.findById(id)
-		if (!previous)
-			return res.json({message: 'client not found'})
+		if (!previous) return res.json({message: 'client not found'})
 
 		let imagem: string | undefined
-		if (image)
-		{
+		if (image) {
 			imagem = image.filename
 			if (previous.imagem)
 				try {
 					fs.unlinkSync(path.resolve('uploads', previous.imagem))
 				} catch (error) {
-					if (error.code == 'ENOENT')
-						console.log('file not found!')
+					if (error.code == 'ENOENT') console.log('file not found!')
 				}
-		}
-		else if (previous.imagem)
-			imagem = previous.imagem
+		} else if (previous.imagem) imagem = previous.imagem
 
-		const client =
-		{
+		const client = {
 			imagem,
 			razao_social: razao_social || previous.razao_social,
 			nome_fantasia: nome_fantasia || previous.nome_fantasia,
@@ -112,7 +104,9 @@ const client =
 			status: status ? JSON.parse(status) : previous.status,
 			condicoes: condicoes ? JSON.parse(condicoes) : previous.condicoes,
 			contatos: contatos ? JSON.parse(contatos) : previous.contatos,
-			representadas: representadas ? JSON.parse(representadas) : previous.representadas,
+			representadas: representadas
+				? JSON.parse(representadas)
+				: previous.representadas,
 			modificadoEm: getDate()
 		}
 
@@ -121,42 +115,37 @@ const client =
 		return tmp
 	},
 
-	remove: async (req: Request, res: Response) =>
-	{
+	remove: async (req: Request, res: Response) => {
 		const {id} = req.params
-		
+
 		const client = await Client.findById(id)
-		if (!client)
-			return res.json({message: 'client not found'})
+		if (!client) return res.json({message: 'client not found'})
 
 		if (client.imagem)
 			try {
 				fs.unlinkSync(path.resolve('uploads', client.imagem))
 			} catch (error) {
-				if (error.code == 'ENOENT')
-					console.log('file not found!')
+				if (error.code == 'ENOENT') console.log('file not found!')
 			}
-		
+
 		const tmp = await Client.findByIdAndDelete(id)
 		res.status(200).send()
 		return tmp
 	},
 
-	list: async (req: Request, res: Response) =>
-	{
+	list: async (req: Request, res: Response) => {
 		const {search: searchString, page: requestedPage} = req.query
 
 		const filter = searchString ? {$text: {$search: String(searchString)}} : {}
 		const rawClients = await Client.find(filter)
-		rawClients.sort((a, b) => a.nome_fantasia < b.nome_fantasia ? -1 : 1)
+		rawClients.sort((a, b) => (a.nome_fantasia < b.nome_fantasia ? -1 : 1))
 
 		const clientsPerPage = 15
-		const totalPages = rawClients.length > 0
-			? Math.ceil(rawClients.length / clientsPerPage)
-			: 1
+		const totalPages =
+			rawClients.length > 0 ? Math.ceil(rawClients.length / clientsPerPage) : 1
 		res.setHeader('total-pages', totalPages)
 
-		let page = requestedPage ? Number(requestedPage) : 1
+		const page = requestedPage ? Number(requestedPage) : 1
 		if (!(page > 0 && page <= totalPages) || Number.isNaN(page))
 			return res.status(400).json({message: 'Página requisitada é inválida!'})
 		res.setHeader('page', page)
@@ -164,49 +153,41 @@ const client =
 		const sliceStart = (page - 1) * clientsPerPage
 		const clients = rawClients
 			.slice(sliceStart, sliceStart + clientsPerPage)
-			.map(client => (
-			{
+			.map(client => ({
 				id: client._id,
 				imagem: formatImage(client.imagem),
 				nome_fantasia: client.nome_fantasia,
 				razao_social: client.razao_social,
 				status: client.status
 			}))
-		
+
 		return res.json(clients)
 	},
 
-	show: async (req: Request, res: Response) =>
-	{
+	show: async (req: Request, res: Response) => {
 		const {id} = req.params
 
 		const client = await Client.findById(id)
-		if (!client)
-			return res.status(404).json({message: 'client not found'})
+		if (!client) return res.status(404).json({message: 'client not found'})
 
-		let sellers: {id: string, nome: string}[] = []
-		const promises1 = client.vendedores.map(async sellerId =>
-		{
+		const sellers: {id: string; nome: string}[] = []
+		const promises1 = client.vendedores.map(async sellerId => {
 			const tmpSeller = await Seller.findById(sellerId)
-			sellers.push(
-			{
+			sellers.push({
 				id: sellerId,
 				nome: tmpSeller ? tmpSeller.nome : 'not found'
 			})
 		})
 		await Promise.all(promises1)
 
-		let companies:
-		{
+		const companies: {
 			id: string
 			nome_fantasia: string
 			tabela: string
 		}[] = []
-		const promises2 = client.representadas.map(async company =>
-		{
+		const promises2 = client.representadas.map(async company => {
 			const tmpCompany = await Company.findById(company.id)
-			companies.push(
-			{
+			companies.push({
 				id: company.id,
 				nome_fantasia: tmpCompany ? tmpCompany.nome_fantasia : 'not found',
 				tabela: company.tabela
@@ -214,8 +195,7 @@ const client =
 		})
 		await Promise.all(promises2)
 
-		return res.json(
-		{
+		return res.json({
 			id: client.id,
 			imagem: formatImage(client.imagem),
 			razao_social: client.razao_social,
@@ -231,20 +211,18 @@ const client =
 		})
 	},
 
-	raw: async (req: Request, res: Response) =>
-	{
+	raw: async (req: Request, res: Response) => {
 		const {search: searchString, page: requestedPage} = req.query
 
 		const filter = searchString ? {$text: {$search: String(searchString)}} : {}
 		const rawClients = await Client.find(filter)
 
 		const clientsPerPage = 15
-		const totalPages = rawClients.length > 0
-			? Math.ceil(rawClients.length / clientsPerPage)
-			: 1
+		const totalPages =
+			rawClients.length > 0 ? Math.ceil(rawClients.length / clientsPerPage) : 1
 		res.setHeader('total-pages', totalPages)
 
-		let page = requestedPage ? Number(requestedPage) : 1
+		const page = requestedPage ? Number(requestedPage) : 1
 		if (!(page > 0 && page <= totalPages) || Number.isNaN(page))
 			return res.status(400).json({message: 'Página requisitada é inválida!'})
 		res.setHeader('page', page)
@@ -252,23 +230,20 @@ const client =
 		const sliceStart = (page - 1) * clientsPerPage
 		const clients = rawClients
 			.slice(sliceStart, sliceStart + clientsPerPage)
-			.map(client =>
-			{
-				let tmpClient = client
+			.map(client => {
+				const tmpClient = client
 				tmpClient.imagem = formatImage(client.imagem)
 				return tmpClient
 			})
-		
+
 		return res.json(clients)
 	},
 
-	rawOne: async (req: Request, res: Response) =>
-	{
+	rawOne: async (req: Request, res: Response) => {
 		const {id} = req.params
-		
-		let client = await Client.findById(id)
-		if (!client)
-			return res.status(404).json({message: 'client not found!'})
+
+		const client = await Client.findById(id)
+		if (!client) return res.status(404).json({message: 'client not found!'})
 
 		client.imagem = formatImage(client.imagem)
 

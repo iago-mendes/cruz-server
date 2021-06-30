@@ -5,50 +5,42 @@ import {google} from 'googleapis'
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send']
 const TOKENS_PATH = 'google/tokens.json'
 
-function connect(callback: Function)
-{
-	fs.readFile('google/credentials.json', (err, content) =>
-	{
-		if (err)
-			return console.log('[Error loading client secret file]', err)
+function connect(callback: (auth: any) => void) {
+	fs.readFile('google/credentials.json', (err, content) => {
+		if (err) return console.log('[Error loading client secret file]', err)
 		authorize(JSON.parse(String(content)))
 	})
 
-	function authorize(credentials: any)
-	{
+	function authorize(credentials: any) {
 		const {client_secret, client_id, redirect_uri} = credentials.web
 
 		const oAuth2Client = new google.auth.OAuth2(
-			client_id, client_secret, redirect_uri
+			client_id,
+			client_secret,
+			redirect_uri
 		)
 
-		fs.readFile(TOKENS_PATH, (err, tokens) =>
-		{
-			if (err)
-				return getNewToken(oAuth2Client)
+		fs.readFile(TOKENS_PATH, (err, tokens) => {
+			if (err) return getNewToken(oAuth2Client)
 
 			oAuth2Client.setCredentials(JSON.parse(String(tokens)))
 			callback(oAuth2Client)
 		})
 	}
 
-	function getNewToken(oAuth2Client: any)
-	{
-		const authUrl = oAuth2Client.generateAuthUrl(
-		{
+	function getNewToken(oAuth2Client: any) {
+		const authUrl = oAuth2Client.generateAuthUrl({
 			access_type: 'offline',
-			scope: SCOPES,
+			scope: SCOPES
 		})
 		console.log('Authorize this app by visiting this url:', authUrl)
 
-		const rl = readline.createInterface(
-		{
+		const rl = readline.createInterface({
 			input: process.stdin,
-			output: process.stdout,
+			output: process.stdout
 		})
 
-		rl.question('Enter the code from that page here: ', async code =>
-		{
+		rl.question('Enter the code from that page here: ', async code => {
 			rl.close()
 
 			const {tokens} = await oAuth2Client.getToken(code)
@@ -56,17 +48,21 @@ function connect(callback: Function)
 			const refreshToken = tokens.refresh_token
 
 			if (!accessToken || !refreshToken)
-				return console.error('<< missing tokens >>', '\naccess_token: ', accessToken, '\nrefresh_token: ', refreshToken)
+				return console.error(
+					'<< missing tokens >>',
+					'\naccess_token: ',
+					accessToken,
+					'\nrefresh_token: ',
+					refreshToken
+				)
 
-			oAuth2Client.setCredentials(
-				{
-					access_token: accessToken,
-					refresh_token: refreshToken
-				})
+			oAuth2Client.setCredentials({
+				access_token: accessToken,
+				refresh_token: refreshToken
+			})
 			saveTokens(tokens)
-			
-			oAuth2Client.on('tokens', (tokens: any) =>
-			{
+
+			oAuth2Client.on('tokens', (tokens: any) => {
 				saveTokens(tokens)
 			})
 
@@ -74,26 +70,29 @@ function connect(callback: Function)
 		})
 	}
 
-	function saveTokens(newTokens: any)
-	{
-		fs.readFile(TOKENS_PATH, (error, oldTokens) =>
-		{
-			const oldAccessToken = !error ? JSON.parse(String(oldTokens)).access_token : undefined
-			const oldRefreshToken = !error ? JSON.parse(String(oldTokens)).refresh_token : undefined
+	function saveTokens(newTokens: any) {
+		fs.readFile(TOKENS_PATH, (error, oldTokens) => {
+			const oldAccessToken = !error
+				? JSON.parse(String(oldTokens)).access_token
+				: undefined
+			const oldRefreshToken = !error
+				? JSON.parse(String(oldTokens)).refresh_token
+				: undefined
 
-			const tokens =
-			{
-				access_token: newTokens.access_token ? newTokens.access_token : oldAccessToken,
-				refresh_token: newTokens.refresh_token ? newTokens.refresh_token : oldRefreshToken
+			const tokens = {
+				access_token: newTokens.access_token
+					? newTokens.access_token
+					: oldAccessToken,
+				refresh_token: newTokens.refresh_token
+					? newTokens.refresh_token
+					: oldRefreshToken
 			}
 
-			fs.writeFile(TOKENS_PATH, JSON.stringify(tokens), error =>
-				{
-					if (error)
-						return console.error('<< error saving tokens >>', error)
-					
-					console.log('Tokens stored to ', TOKENS_PATH)
-				})
+			fs.writeFile(TOKENS_PATH, JSON.stringify(tokens), error => {
+				if (error) return console.error('<< error saving tokens >>', error)
+
+				console.log('Tokens stored to ', TOKENS_PATH)
+			})
 		})
 	}
 }

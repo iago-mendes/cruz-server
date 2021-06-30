@@ -27,8 +27,8 @@ mongoose.connect(
 	}
 )
 mongoose.connection
-.once('open', () => console.log('database connected'))
-.on('error', error => console.log('[database connection error]:', error))
+	.once('open', () => console.log('database connected'))
+	.on('error', error => console.log('[database connection error]:', error))
 
 app.use(routes)
 app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))

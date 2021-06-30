@@ -1,7 +1,6 @@
-import { Response } from 'express'
+import {Response} from 'express'
 
-export function handleDuplicateKeyError(err: any, res: Response<any>)
-{
+export function handleDuplicateKeyError(err: any, res: Response<any>) {
 	const field = Object.keys(err.keyValue)
 	const message = `Um registro com campo ${field} já existe!`
 

@@ -1,56 +1,73 @@
 import mongoose from 'mongoose'
 
-export type RequestType = mongoose.Document &
-{
+export type RequestType = mongoose.Document & {
 	cliente: string
 	vendedor?: string
 	representada: string
-	produtos: Array<{id: string, quantidade: number, preco: number, linhaId: string}>
+	produtos: Array<{
+		id: string
+		quantidade: number
+		preco: number
+		linhaId: string
+	}>
 	data: string
 	condicao: string
 	digitado_por?: string
 	peso?: number
 	volume?: number
-	contato?: {nome: string, telefone: string},
-	frete?: string,
-	tipo: {venda: boolean, troca: boolean}
-	status: {concluido: boolean, enviado: boolean, faturado: boolean}
+	contato?: {nome: string; telefone: string}
+	frete?: string
+	tipo: {venda: boolean; troca: boolean}
+	status: {concluido: boolean; enviado: boolean; faturado: boolean}
 	modificadoEm?: string
 }
 
-const RequestSchema = new mongoose.Schema(
-{
+const RequestSchema = new mongoose.Schema({
 	data: {type: String, required: true},
 	condicao: {type: String, required: true},
 	digitado_por: {type: String, required: false},
-	cliente: {type: mongoose.Schema.Types.ObjectId, ref: 'Cliente', required: true},
-	vendedor: {type: mongoose.Schema.Types.ObjectId, ref: 'Vendedor', required: false},
-	representada: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada', required: true},
+	cliente: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Cliente',
+		required: true
+	},
+	vendedor: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Vendedor',
+		required: false
+	},
+	representada: {
+		type: mongoose.Schema.Types.ObjectId,
+		ref: 'Representada',
+		required: true
+	},
 	peso: {type: Number, required: false},
 	volume: {type: Number, required: false},
-	contato:
-	{
+	contato: {
 		nome: {type: String, required: false},
 		telefone: {type: String, required: false}
 	},
 	frete: {type: String, required: false},
-	tipo:
-	{
+	tipo: {
 		venda: {type: Boolean, required: true},
 		troca: {type: Boolean, required: true}
 	},
-	status:
-	{
+	status: {
 		concluido: {type: Boolean, required: true},
 		enviado: {type: Boolean, required: true},
 		faturado: {type: Boolean, required: true}
 	},
-	produtos:
-	[{
-		id: {type: mongoose.Schema.Types.ObjectId, ref: 'Representada.produtos', required: true},
-		quantidade: {type: Number, required: true},
-		preco: {type: Number, required: true}
-	}],
+	produtos: [
+		{
+			id: {
+				type: mongoose.Schema.Types.ObjectId,
+				ref: 'Representada.produtos',
+				required: true
+			},
+			quantidade: {type: Number, required: true},
+			preco: {type: Number, required: true}
+		}
+	],
 	modificadoEm: {type: String}
 })
 

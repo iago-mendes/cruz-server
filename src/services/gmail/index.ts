@@ -3,17 +3,19 @@ import MailComposer from 'nodemailer/lib/mail-composer'
 
 import connect from './connect'
 
-const validFrom =
-[
+const validFrom = [
 	'sistema@cruzrepresentacoes.com.br',
-	'e-commerce@cruzrepresentacoes.com.br',
+	'e-commerce@cruzrepresentacoes.com.br'
 ]
 
-export function sendMail
-(subject: string, text: string, to: string[], from: string = validFrom[0], attachment?: {name: string, file: any})
-{
-	const mail = new MailComposer(
-	{
+export function sendMail(
+	subject: string,
+	text: string,
+	to: string[],
+	from: string = validFrom[0],
+	attachment?: {name: string; file: any}
+) {
+	const mail = new MailComposer({
 		from: `Cruz Representacoes <${from}>`,
 		to: to.join(', '),
 		text: text,
@@ -21,41 +23,40 @@ export function sendMail
 		subject: subject,
 		textEncoding: 'base64',
 		attachments: attachment
-		? [{
-				filename: attachment.name,
-				content: attachment.file,
-				encoding: 'base64'
-			}]
-		: []
+			? [
+					{
+						filename: attachment.name,
+						content: attachment.file,
+						encoding: 'base64'
+					}
+					// eslint-disable-next-line no-mixed-spaces-and-tabs
+			  ]
+			: []
 	})
 
-	mail.compile().build((error, msg) =>
-	{
-		if (error)
-			console.error('<< error compiling mail >>', error)
-		
+	mail.compile().build((error, msg) => {
+		if (error) console.error('<< error compiling mail >>', error)
+
 		const encodedMessage = Buffer.from(msg)
 			.toString('base64')
 			.replace(/\+/g, '-')
 			.replace(/\//g, '_')
 			.replace(/=+$/, '')
-		
-		async function callback(auth: any)
-		{
+
+		async function callback(auth: any) {
 			const gmail = google.gmail({version: 'v1', auth})
-	
-			await gmail.users.messages.send(
-				{
+
+			await gmail.users.messages
+				.send({
 					userId: 'me',
-					requestBody:
-					{
-						raw: encodedMessage,
-					},
+					requestBody: {
+						raw: encodedMessage
+					}
 				})
 				.then(res => console.log('<< res.data >>', res.data))
 				.catch(error => console.error('<< error sending message >>', error))
 		}
-	
+
 		connect(callback)
 	})
 }

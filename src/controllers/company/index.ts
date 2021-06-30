@@ -4,16 +4,14 @@ import path from 'path'
 
 import Company from '../../models/Company'
 import formatImage from '../../utils/formatImage'
-import { getDate } from '../../utils/getDate'
-import { handleObjectId } from '../../utils/handleObjectId'
+import {getDate} from '../../utils/getDate'
+import {handleObjectId} from '../../utils/handleObjectId'
 
-const company =
-{
-	create: async (req: Request, res: Response) =>
-	{
+const company = {
+	create: async (req: Request, res: Response) => {
 		const {
 			_id,
-			razao_social, 
+			razao_social,
 			nome_fantasia,
 			cnpj,
 			telefones,
@@ -23,13 +21,12 @@ const company =
 			descricao,
 			site,
 			tabelas,
-			condicoes,
+			condicoes
 		} = req.body
-		
+
 		const image = req.file
 
-		const company =
-		{
+		const company = {
 			_id: handleObjectId(_id),
 			imagem: image && image.filename,
 			razao_social,
@@ -46,16 +43,15 @@ const company =
 			produtos: [],
 			modificadoEm: getDate()
 		}
-		
+
 		await Company.create(company)
 		return res.status(201).send()
 	},
-		
-	update: async (req: Request, res: Response) =>
-	{
+
+	update: async (req: Request, res: Response) => {
 		const id = req.params.id
 		const {
-			razao_social, 
+			razao_social,
 			nome_fantasia,
 			cnpj,
 			telefones,
@@ -65,118 +61,88 @@ const company =
 			descricao,
 			site,
 			tabelas,
-			condicoes,
+			condicoes
 		} = req.body
-		
-		let image = req.file
-		
-		interface Update
-		{
+
+		const image = req.file
+
+		interface Update {
 			[letter: string]: any
 		}
-		let company: Update = {}
+		const company: Update = {}
 
 		const previous = await Company.findById(id)
-		if (!previous)
-			return res.json({message: 'company not found'})
-		
+		if (!previous) return res.json({message: 'company not found'})
+
 		company['_id'] = id
-		if(image)
-		{
+		if (image) {
 			company['imagem'] = image.filename
-			if (previous && previous.imagem)
-			{
-				try
-				{
+			if (previous && previous.imagem) {
+				try {
 					fs.unlinkSync(path.resolve('uploads', String(previous.imagem)))
-				}
-				catch (error)
-				{
+				} catch (error) {
 					console.error('[error while removing file]', error)
 				}
 			}
-				
 		}
-		if(razao_social)
-			company['razao_social'] = razao_social
-		if(nome_fantasia)
-			company['nome_fantasia'] = nome_fantasia
-		if(cnpj)
-			company['cnpj'] = cnpj
-		if(telefones)
-			company['telefones'] = JSON.parse(telefones)
-		if(email)
-			company['email'] = email
-		if(comissao)
-			company['comissao'] = JSON.parse(comissao)
-		if(descricao_curta)
-			company['descricao_curta'] = descricao_curta
-		if(descricao)
-			company['descricao'] = descricao
-		if(site)
-			company['site'] = site
-		if(tabelas)
-			company['tabelas'] = JSON.parse(tabelas)
-		if(condicoes)
-			company['condicoes'] = JSON.parse(condicoes)
-		
+		if (razao_social) company['razao_social'] = razao_social
+		if (nome_fantasia) company['nome_fantasia'] = nome_fantasia
+		if (cnpj) company['cnpj'] = cnpj
+		if (telefones) company['telefones'] = JSON.parse(telefones)
+		if (email) company['email'] = email
+		if (comissao) company['comissao'] = JSON.parse(comissao)
+		if (descricao_curta) company['descricao_curta'] = descricao_curta
+		if (descricao) company['descricao'] = descricao
+		if (site) company['site'] = site
+		if (tabelas) company['tabelas'] = JSON.parse(tabelas)
+		if (condicoes) company['condicoes'] = JSON.parse(condicoes)
+
 		company['modificadoEm'] = getDate()
-		
+
 		const tmp = Company.findByIdAndUpdate(id, company)
 		res.status(200).send()
 		return tmp
 	},
-		
-	remove: async (req: Request, res: Response) =>
-	{
+
+	remove: async (req: Request, res: Response) => {
 		const {id} = req.params
-		
+
 		const company = await Company.findById(id)
-		if (!company)
-		return res.status(404).json({message: 'company not found!'})
-		
-		if(company.imagem)
-		{
-			try
-			{
+		if (!company) return res.status(404).json({message: 'company not found!'})
+
+		if (company.imagem) {
+			try {
 				fs.unlinkSync(path.resolve('uploads', company.imagem))
-			}
-			catch (error)
-			{
+			} catch (error) {
 				console.error('[error while removing file]', error)
 			}
 		}
-		
+
 		const tmp = Company.findByIdAndDelete(id)
 		res.status(200).send()
 		return tmp
 	},
-		
-	list: async (req: Request, res: Response) =>
-	{
+
+	list: async (req: Request, res: Response) => {
 		const companies = await Company.find()
-		
-		const list = companies.map(company => (
-		{
+
+		const list = companies.map(company => ({
 			id: company._id,
 			imagem: formatImage(company.imagem),
 			nome_fantasia: company.nome_fantasia,
 			descricao_curta: String(company.descricao_curta)
 		}))
-		list.sort((a,b) => a.nome_fantasia < b.nome_fantasia ? -1 : 1)
-		
+		list.sort((a, b) => (a.nome_fantasia < b.nome_fantasia ? -1 : 1))
+
 		return res.json(list)
 	},
-				
-	show: async (req: Request, res: Response) =>
-	{
+
+	show: async (req: Request, res: Response) => {
 		const company = await Company.findById(req.params.id)
-		
-		if (!company)
-		return res.status(404).json({message: 'company not found!'})
-		
-		return res.json(
-		{
+
+		if (!company) return res.status(404).json({message: 'company not found!'})
+
+		return res.json({
 			id: company._id,
 			imagem: formatImage(company.imagem),
 			nome_fantasia: company.nome_fantasia,
@@ -184,26 +150,23 @@ const company =
 			site: company.site
 		})
 	},
-					
-	raw: async (req: Request, res: Response) =>
-	{
+
+	raw: async (req: Request, res: Response) => {
 		const companies = await Company.find()
 
-		const raw = companies.map(company =>
-		{
-			let tmpCompany = company
+		const raw = companies.map(company => {
+			const tmpCompany = company
 			tmpCompany.imagem = formatImage(company.imagem)
 			return tmpCompany
 		})
 
 		return res.json(raw)
 	},
-					
-	rawOne: async (req: Request, res: Response) =>
-	{
+
+	rawOne: async (req: Request, res: Response) => {
 		const {id} = req.params
 
-		let company = await Company.findById(id)
+		const company = await Company.findById(id)
 		if (!company)
 			return res.status(404).json({message: 'Empresa não encontrada!'})
 
