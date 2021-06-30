@@ -9,7 +9,7 @@ import routes from './routes'
 import errorHandler from './errors/handler'
 
 const app = express()
-dotenv.config()
+dotenv.config({path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'})
 
 app.use(cors({origin: '*', exposedHeaders: '*'}))
 app.use(express.json({limit: '5mb'}))

@@ -30,15 +30,17 @@
 		"eslint": "^7.29.0",
 		"eslint-config-prettier": "^8.3.0",
 		"eslint-plugin-prettier": "^3.4.0",
+		"jest": "^27.0.6",
 		"mongo-seeding": "^3.5.0",
 		"prettier": "^2.3.2",
 		"ts-node-dev": "^1.0.0-pre.61",
 		"typescript": "^4.0.2"
 	},
 	"scripts": {
-		"dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts",
+		"dev": "tsnd --transpile-only --ignore-watch node_modules --respawn src/server.ts --ignore tests",
 		"build": "export NODE_OPTIONS=--max_old_space_size=2048 && tsc",
 		"start": "node dist/server.js",
-		"lint": "prettier --write . && eslint --fix ."
+		"lint": "prettier --write . && eslint --fix .",
+		"test": "NODE_ENV=test jest"
 	}
 }
