@@ -1,10 +1,11 @@
 import fs from 'fs'
 import readline from 'readline'
 import {google} from 'googleapis'
+import {OAuth2Client} from 'google-auth-library'
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-const TOKENS_PATH = 'src/config/google/tokens.json'
-const CREDENTIALS_PATH = 'src/config/google/credentials.json'
+const TOKENS_PATH = 'google/tokens.json'
+const CREDENTIALS_PATH = 'google/credentials.json'
 
 function connect(callback: (auth: any) => void) {
 	fs.readFile(CREDENTIALS_PATH, (err, content) => {
@@ -29,7 +30,7 @@ function connect(callback: (auth: any) => void) {
 		})
 	}
 
-	function getNewToken(oAuth2Client: any) {
+	function getNewToken(oAuth2Client: OAuth2Client) {
 		const authUrl = oAuth2Client.generateAuthUrl({
 			access_type: 'offline',
 			scope: SCOPES
@@ -44,30 +45,37 @@ function connect(callback: (auth: any) => void) {
 		rl.question('Enter the code from that page here: ', async code => {
 			rl.close()
 
-			const {tokens} = await oAuth2Client.getToken(code)
-			const accessToken = tokens.access_token
-			const refreshToken = tokens.refresh_token
+			oAuth2Client
+				.getToken(code)
+				.then(({tokens}) => {
+					const accessToken = tokens.access_token
+					const refreshToken = tokens.refresh_token
 
-			if (!accessToken || !refreshToken)
-				return console.error(
-					'<< missing tokens >>',
-					'\naccess_token: ',
-					accessToken,
-					'\nrefresh_token: ',
-					refreshToken
-				)
+					if (!accessToken || !refreshToken)
+						return console.error(
+							'<< missing tokens >>',
+							'\naccess_token: ',
+							accessToken,
+							'\nrefresh_token: ',
+							refreshToken
+						)
 
-			oAuth2Client.setCredentials({
-				access_token: accessToken,
-				refresh_token: refreshToken
-			})
-			saveTokens(tokens)
+					oAuth2Client.setCredentials({
+						access_token: accessToken,
+						refresh_token: refreshToken
+					})
 
-			oAuth2Client.on('tokens', (tokens: any) => {
-				saveTokens(tokens)
-			})
+					saveTokens(tokens)
 
-			callback(oAuth2Client)
+					oAuth2Client.on('tokens', (tokens: any) => {
+						saveTokens(tokens)
+					})
+
+					callback(oAuth2Client)
+				})
+				.catch(error => {
+					console.log('<< error getting token >>', error)
+				})
 		})
 	}
 
