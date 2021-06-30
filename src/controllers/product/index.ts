@@ -54,8 +54,18 @@ const product = {
 	update: async (req: Request, res: Response) => {
 		const {company: companyId, product: productId} = req.params
 
-		const {nome, unidade, ipi, st, tabelas, codigo, comissao, peso, volume} =
-			req.body
+		const {
+			nome,
+			unidade,
+			ipi,
+			st,
+			tabelas,
+			codigo,
+			comissao,
+			peso,
+			volume,
+			isBlocked
+		} = req.body
 		const image = req.file
 
 		const company = await Company.findById(companyId)
@@ -88,7 +98,8 @@ const product = {
 			volume: volume ? volume : previous.volume,
 			unidade: unidade ? unidade : previous.unidade,
 			comissao: comissao ? comissao : previous.comissao,
-			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas
+			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas,
+			isBlocked: isBlocked ? isBlocked : previous.isBlocked
 		}
 
 		await Company.findByIdAndUpdate(company._id, {
@@ -158,17 +169,19 @@ const product = {
 		)?.tabela
 		if (!tableId) return res.json({message: 'Tabela não encontrada!'})
 
-		const products = company.produtos.map(product => ({
-			id: product._id,
-			imagem: formatImage(product.imagem),
-			nome: product.nome,
-			unidade: product.unidade,
-			st: product.st,
-			ipi: product.ipi,
-			preco: product.tabelas.find(
-				tabela => String(tabela.id) == String(tableId)
-			)?.preco
-		}))
+		const products = company.produtos
+			.filter(product => product.isBlocked !== true)
+			.map(product => ({
+				id: product._id,
+				imagem: formatImage(product.imagem),
+				nome: product.nome,
+				unidade: product.unidade,
+				st: product.st,
+				ipi: product.ipi,
+				preco: product.tabelas.find(
+					tabela => String(tabela.id) == String(tableId)
+				)?.preco
+			}))
 		products.sort((a, b) => (a.nome < b.nome ? -1 : 1))
 
 		return res.json(products)

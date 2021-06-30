@@ -13,6 +13,7 @@ export interface Product {
 	peso?: number
 	volume?: number
 	tabelas: Array<{id: string; preco: number}>
+	isBlocked?: boolean
 }
 
 export type CompanyType = mongoose.Document & {
@@ -78,7 +79,8 @@ const CompanySchema = new mongoose.Schema({
 					},
 					preco: {type: Number, required: true}
 				}
-			]
+			],
+			isBlocked: {type: Boolean}
 		}
 	],
 	modificadoEm: {type: String}
