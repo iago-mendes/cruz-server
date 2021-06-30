@@ -1,5 +1,4 @@
 import {Request, Response} from 'express'
-import path from 'path'
 
 import Client from '../models/Client'
 import Company from '../models/Company'
@@ -8,14 +7,11 @@ import RequestModel from '../models/Request'
 import Seller from '../models/Seller'
 import formatImage from '../utils/formatImage'
 
-const banners: Array<{
-	filename: string
-	alt: string
-}> = require(path.resolve('db', 'banners.json'))
+import banners from '../assets/db/banners.json'
 
 export const getBanners = async (req: Request, res: Response) => {
 	const urls = banners.map(banner => {
-		const url = formatImage(banner.filename, 'public/banners')
+		const url = formatImage(banner.filename, 'public/images/banners')
 		return url
 	})
 

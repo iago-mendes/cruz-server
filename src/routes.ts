@@ -2,7 +2,7 @@ import express from 'express'
 import multer from 'multer'
 
 import multerConfig from './config/multer'
-import checkKey from './middleware/checkKey'
+import checkKey from './middlewares/checkKey'
 
 import company from './controllers/company'
 import product from './controllers/product'

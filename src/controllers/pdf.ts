@@ -8,7 +8,14 @@ import formatNumber from '../utils/formatNumber'
 import getRequest, {RequestFormated} from '../utils/requests/getRequest'
 
 export async function createRequestPdf(request: RequestFormated) {
-	const logoPath = path.join(__dirname, '..', '..', 'assets', 'logo.png')
+	const logoPath = path.join(
+		__dirname,
+		'..',
+		'..',
+		'public',
+		'images',
+		'logo.png'
+	)
 	const companyPathParts = request.representada.imagem
 		.replace(baseUrl, '')
 		.split('/')

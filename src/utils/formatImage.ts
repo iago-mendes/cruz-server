@@ -8,5 +8,5 @@ export default function formatImage(
 	folder = 'uploads'
 ) {
 	if (filename) return `${baseUrl}/${folder}/${filename}`
-	else return `${baseUrl}/assets/no-image.svg`
+	else return `${baseUrl}/public/images/no-image.svg`
 }

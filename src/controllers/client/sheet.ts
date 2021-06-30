@@ -1,16 +1,12 @@
 import {Request, Response} from 'express'
-import path from 'path'
+
+import clientHeader from '../../assets/db/sheets/clientHeader.json'
 
 import Client from '../../models/Client'
 import Company from '../../models/Company'
 import encryptPwd from '../../utils/encryptPwd'
 import {getDate} from '../../utils/getDate'
 import getRandomNumber from '../../utils/getRandomNumber'
-
-const clientHeader: Array<{
-	name: string
-	field: string
-}> = require(path.resolve('db', 'sheets', 'clientHeader.json'))
 
 function getFieldName(field: string) {
 	const column = clientHeader.find(column => column.field === field)

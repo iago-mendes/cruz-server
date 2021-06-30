@@ -1,11 +1,11 @@
-const PdfPrinter = require('pdfmake')
+import PdfPrinter from 'pdfmake'
 
 const fonts = {
 	Roboto: {
-		normal: 'fonts/Roboto-Regular.ttf',
-		bold: 'fonts/Roboto-Medium.ttf',
-		italics: 'fonts/Roboto-Italic.ttf',
-		bolditalics: 'fonts/Roboto-MediumItalic.ttf'
+		normal: 'src/assets/fonts/Roboto-Regular.ttf',
+		bold: 'src/assets/fonts/Roboto-Medium.ttf',
+		italics: 'src/assets/fonts/Roboto-Italic.ttf',
+		bolditalics: 'src/assets/fonts/Roboto-MediumItalic.ttf'
 	}
 }
 const printer = new PdfPrinter(fonts)

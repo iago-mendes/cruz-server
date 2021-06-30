@@ -1,12 +1,8 @@
 import {Request, Response} from 'express'
-import path from 'path'
 import Company, {CompanyType, Product} from '../../models/Company'
 import {getDate} from '../../utils/getDate'
 
-const productHeader: Array<{
-	name: string
-	field: string
-}> = require(path.resolve('db', 'sheets', 'productHeader.json'))
+import productHeader from '../../assets/db/sheets/productHeader.json'
 
 function getFullHeader(company: CompanyType) {
 	const tables = company.tabelas

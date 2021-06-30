@@ -3,10 +3,11 @@ import readline from 'readline'
 import {google} from 'googleapis'
 
 const SCOPES = ['https://www.googleapis.com/auth/gmail.send']
-const TOKENS_PATH = 'google/tokens.json'
+const TOKENS_PATH = 'src/config/google/tokens.json'
+const CREDENTIALS_PATH = 'src/config/google/credentials.json'
 
 function connect(callback: (auth: any) => void) {
-	fs.readFile('google/credentials.json', (err, content) => {
+	fs.readFile(CREDENTIALS_PATH, (err, content) => {
 		if (err) return console.log('[Error loading client secret file]', err)
 		authorize(JSON.parse(String(content)))
 	})
