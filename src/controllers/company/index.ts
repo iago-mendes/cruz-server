@@ -23,6 +23,7 @@ const company = {
 			tabelas,
 			condicoes
 		} = req.body
+		console.log('<< req.body >>', req.body)
 
 		const image = req.file
 
@@ -32,17 +33,21 @@ const company = {
 			razao_social,
 			nome_fantasia,
 			cnpj,
-			telefones: JSON.parse(telefones),
+			telefones:
+				typeof telefones !== 'string' ? telefones : JSON.parse(telefones),
 			email,
-			comissao: JSON.parse(comissao),
+			comissao: typeof comissao !== 'string' ? comissao : JSON.parse(comissao),
 			descricao_curta,
 			descricao,
 			site,
-			tabelas: JSON.parse(tabelas),
-			condicoes: JSON.parse(condicoes),
+			tabelas: typeof tabelas !== 'string' ? tabelas : JSON.parse(tabelas),
+			condicoes:
+				typeof condicoes !== 'string' ? condicoes : JSON.parse(condicoes),
 			produtos: [],
 			modificadoEm: getDate()
 		}
+
+		console.log('<< company >>', company)
 
 		await Company.create(company)
 		return res.status(201).send()

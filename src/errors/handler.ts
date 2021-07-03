@@ -4,7 +4,7 @@ import {handleDuplicateKeyError} from './duplicateKey'
 import {handleValidationError} from './validation'
 
 const errorHandler: ErrorRequestHandler = (err, req, res) => {
-	console.error(err)
+	console.log('<< error caught by middleware >>', err)
 
 	if (err && err.name === 'ValidationError')
 		return (err = handleValidationError(err, res))

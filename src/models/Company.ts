@@ -39,7 +39,7 @@ const CompanySchema = new mongoose.Schema({
 	razao_social: {type: String, required: true},
 	nome_fantasia: {type: String, required: true},
 	cnpj: {type: String, required: true},
-	telefones: [{type: Number, required: true}],
+	telefones: [{type: String, required: true}],
 	email: {type: String},
 	descricao_curta: {type: String},
 	descricao: {type: String},
