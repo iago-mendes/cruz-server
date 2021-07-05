@@ -31,6 +31,11 @@ export type CompanyType = mongoose.Document & {
 	tabelas: Array<{_id?: string; nome: string}>
 	condicoes: Array<{_id?: string; nome: string; precoMin: number}>
 	produtos: Product[]
+	relatedTables?: Array<{
+		id: string
+		target: string
+		relation: number
+	}>
 	modificadoEm?: string
 }
 
@@ -81,6 +86,13 @@ const CompanySchema = new mongoose.Schema({
 				}
 			],
 			isBlocked: {type: Boolean}
+		}
+	],
+	relatedTables: [
+		{
+			id: {type: String, required: true},
+			target: {type: String, required: true},
+			relation: {type: Number, required: true}
 		}
 	],
 	modificadoEm: {type: String}

@@ -52,9 +52,19 @@ const companyUtils = {
 			return tmpProduct
 		})
 
+		const savedRelatedTables = relatedTables.map(table => ({
+			id: table.id,
+			target: targetTable.id,
+			relation: table.relation
+		}))
+
 		const updatedCompany = await Company.findByIdAndUpdate(
 			company._id,
-			{produtos: products, modificadoEm: getDate()},
+			{
+				produtos: products,
+				relatedTables: savedRelatedTables,
+				modificadoEm: getDate()
+			},
 			{new: true}
 		)
 		return res.json(updatedCompany)
