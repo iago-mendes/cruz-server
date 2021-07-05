@@ -71,7 +71,7 @@ const product = {
 		const company = await Company.findById(companyId)
 		if (!company)
 			return res.status(404).json({message: 'Representada não encontrada!'})
-		const products = company.produtos
+		const {produtos: products, relatedTables} = company
 
 		const index = company.produtos.findIndex(
 			product => String(product._id) == String(productId)
@@ -79,6 +79,40 @@ const product = {
 		if (index < 0)
 			return res.status(404).json({message: 'Produto não encontrado'})
 		const previous = products[index]
+
+		let tables: Array<{
+			id: string
+			preco: number
+		}> = !tabelas ? previous.tabelas : JSON.parse(tabelas)
+		const relatedTablesIds = !relatedTables
+			? []
+			: relatedTables.map(table => table.id)
+
+		if (tabelas) {
+			tables.sort((a, b) => {
+				const isARelated = relatedTablesIds.includes(a.id)
+				const isBRelated = relatedTablesIds.includes(b.id)
+
+				if (isARelated && !isBRelated) return 1
+				else if (!isARelated && isBRelated) return -1
+				else return 0
+			})
+
+			tables = tables.map(table => {
+				if (!relatedTables) return table
+
+				const relatedTable = relatedTables.find(({id}) => id === table.id)
+				if (!relatedTable) return table
+
+				const targetTable = tables.find(({id}) => id === relatedTable.target)
+				if (!targetTable) return table
+
+				return {
+					id: table.id,
+					preco: targetTable.preco * relatedTable.relation
+				}
+			})
+		}
 
 		let imagem: string | undefined
 		if (image) {
@@ -98,7 +132,7 @@ const product = {
 			volume: volume ? volume : previous.volume,
 			unidade: unidade ? unidade : previous.unidade,
 			comissao: comissao ? comissao : previous.comissao,
-			tabelas: tabelas ? JSON.parse(tabelas) : previous.tabelas,
+			tabelas: tables,
 			isBlocked: isBlocked != undefined ? isBlocked : previous.isBlocked
 		}
 
