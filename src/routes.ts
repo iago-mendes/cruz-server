@@ -18,6 +18,7 @@ import {getBanners, sync} from './controllers'
 import clientSheet from './controllers/client/sheet'
 import companyUtils from './controllers/company/utils'
 import {goalController} from './controllers/goal'
+import {checkAuth} from './middlewares/auth'
 
 const routes = express.Router()
 const upload = multer(multerConfig)
@@ -26,32 +27,40 @@ routes.post('/login/client', auth.logInClient)
 routes.post('/login/seller', auth.logInSeller)
 routes.put(
 	'/change-password/client/:client',
-	checkKey,
+	[checkKey, checkAuth],
 	auth.changePasswordClient
 )
 routes.put(
 	'/change-password/seller/:seller',
-	checkKey,
+	[checkKey, checkAuth],
 	auth.changePasswordSeller
 )
 
-routes.post('/companies', [checkKey, upload.single('imagem')], company.create)
+routes.post(
+	'/companies',
+	[checkKey, checkAuth, upload.single('imagem')],
+	company.create
+)
 routes.get('/companies', checkKey, company.list)
 routes.get('/companies/raw', checkKey, company.raw)
 routes.put(
 	'/companies/:id',
-	[checkKey, upload.single('imagem')],
+	[checkKey, checkAuth, upload.single('imagem')],
 	company.update
 )
-routes.delete('/companies/:id', checkKey, company.remove)
+routes.delete('/companies/:id', [checkKey, checkAuth], company.remove)
 routes.get('/companies/:id', checkKey, company.show)
 routes.get('/companies/:id/raw', checkKey, company.rawOne)
-routes.put('/companies/:company/tables', checkKey, companyUtils.updateTables)
+routes.put(
+	'/companies/:company/tables',
+	[checkKey, checkAuth],
+	companyUtils.updateTables
+)
 routes.get('/companies/:company/tables', checkKey, companyUtils.getTables)
 
 routes.post(
 	'/companies/:company/products',
-	[checkKey, upload.single('imagem')],
+	[checkKey, checkAuth, upload.single('imagem')],
 	product.create
 )
 routes.get('/companies/:company/products', checkKey, product.list)
@@ -60,10 +69,14 @@ routes.get('/companies/:company/products/raw', checkKey, product.raw)
 
 routes.put(
 	'/companies/:company/products/:product',
-	[checkKey, upload.single('imagem')],
+	[checkKey, checkAuth, upload.single('imagem')],
 	product.update
 )
-routes.delete('/companies/:company/products/:product', checkKey, product.remove)
+routes.delete(
+	'/companies/:company/products/:product',
+	[checkKey, checkAuth],
+	product.remove
+)
 routes.get('/companies/:company/products/:product', checkKey, product.show)
 routes.get(
 	'/companies/:company/products/:product/priced',
@@ -76,17 +89,33 @@ routes.get(
 	product.rawOne
 )
 
-routes.post('/sellers', [checkKey, upload.single('imagem')], seller.create)
-routes.put('/sellers/:id', [checkKey, upload.single('imagem')], seller.update)
-routes.delete('/sellers/:id', checkKey, seller.remove)
+routes.post(
+	'/sellers',
+	[checkKey, checkAuth, upload.single('imagem')],
+	seller.create
+)
+routes.put(
+	'/sellers/:id',
+	[checkKey, checkAuth, upload.single('imagem')],
+	seller.update
+)
+routes.delete('/sellers/:id', [checkKey, checkAuth], seller.remove)
 routes.get('/sellers', checkKey, seller.list)
 routes.get('/sellers/:id', checkKey, seller.show)
 routes.get('/sellers-raw', checkKey, seller.raw)
 routes.get('/sellers-raw/:id', checkKey, seller.rawOne)
 
-routes.post('/clients', [checkKey, upload.single('imagem')], client.create)
-routes.put('/clients/:id', [checkKey, upload.single('imagem')], client.update)
-routes.delete('/clients/:id', checkKey, client.remove)
+routes.post(
+	'/clients',
+	[checkKey, checkAuth, upload.single('imagem')],
+	client.create
+)
+routes.put(
+	'/clients/:id',
+	[checkKey, checkAuth, upload.single('imagem')],
+	client.update
+)
+routes.delete('/clients/:id', [checkKey, checkAuth], client.remove)
 routes.get('/clients', checkKey, client.list)
 routes.get('/clients/:id', checkKey, client.show)
 routes.get('/clients-raw', checkKey, client.raw)
@@ -97,12 +126,16 @@ routes.get(
 	checkKey,
 	clientUtils.getConditions
 )
-routes.post('/clients/:client/contacts', checkKey, clientUtils.addContact)
+routes.post(
+	'/clients/:client/contacts',
+	[checkKey, checkAuth],
+	clientUtils.addContact
+)
 routes.get('/clients/:client/contacts', checkKey, clientUtils.getContacts)
 
-routes.post('/requests', checkKey, request.create)
-routes.put('/requests/:id', checkKey, request.update)
-routes.delete('/requests/:id', checkKey, request.remove)
+routes.post('/requests', [checkKey, checkAuth], request.create)
+routes.put('/requests/:id', [checkKey, checkAuth], request.update)
+routes.delete('/requests/:id', [checkKey, checkAuth], request.remove)
 routes.get('/requests', checkKey, request.list)
 routes.get('/requests/:id', checkKey, request.show)
 routes.get('/requests-raw', checkKey, request.raw)
@@ -110,13 +143,17 @@ routes.get('/requests-raw/:id', checkKey, request.rawOne)
 
 routes.post(
 	'/mail/requests/:requestId/ecommerce',
-	checkKey,
+	[checkKey, checkAuth],
 	mail.ecommerceRequest
 )
-routes.post('/mail/requests/:requestId/system', checkKey, mail.systemRequest)
+routes.post(
+	'/mail/requests/:requestId/system',
+	[checkKey, checkAuth],
+	mail.systemRequest
+)
 routes.post('/mail', checkKey, mail.general)
 
-routes.post('/pdf', checkKey, pdf.general)
+routes.post('/pdf', [checkKey, checkAuth], pdf.general)
 routes.get('/pdf/requests/:requestId', pdf.request)
 
 routes.get(
@@ -126,7 +163,7 @@ routes.get(
 )
 routes.post(
 	'/sheet/companies/:company/products',
-	checkKey,
+	[checkKey, checkAuth],
 	productSheet.setProducts
 )
 routes.get(
@@ -135,16 +172,16 @@ routes.get(
 	productSheet.getHeader
 )
 routes.get('/sheet/clients/header', checkKey, clientSheet.getHeader)
-routes.post('/sheet/clients', checkKey, clientSheet.setClients)
+routes.post('/sheet/clients', [checkKey, checkAuth], clientSheet.setClients)
 
 routes.get('/banners', getBanners)
-routes.get('/sync', checkKey, sync)
+routes.get('/sync', [checkKey, checkAuth], sync)
 
-routes.post('/goals', goalController.create)
-routes.get('/goals/raw', goalController.raw)
-routes.put('/goals/:month', goalController.update)
-routes.delete('/goals/:month', goalController.remove)
-routes.get('/goals/:month', goalController.show)
-routes.get('/goals/:month/raw', goalController.rawOne)
+routes.post('/goals', [checkKey, checkAuth], goalController.create)
+routes.get('/goals/raw', [checkKey, checkAuth], goalController.raw)
+routes.put('/goals/:month', [checkKey, checkAuth], goalController.update)
+routes.delete('/goals/:month', [checkKey, checkAuth], goalController.remove)
+routes.get('/goals/:month', [checkKey, checkAuth], goalController.show)
+routes.get('/goals/:month/raw', [checkKey, checkAuth], goalController.rawOne)
 
 export default routes
