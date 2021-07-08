@@ -141,6 +141,8 @@ routes.get('/requests/:id', checkKey, request.show)
 routes.get('/requests-raw', checkKey, request.raw)
 routes.get('/requests-raw/:id', checkKey, request.rawOne)
 
+routes.post('/mail', [checkKey, checkAuth], mail.general)
+routes.post('/mail/contact', checkKey, mail.contact)
 routes.post(
 	'/mail/requests/:requestId/ecommerce',
 	[checkKey, checkAuth],
@@ -151,7 +153,6 @@ routes.post(
 	[checkKey, checkAuth],
 	mail.systemRequest
 )
-routes.post('/mail', checkKey, mail.general)
 
 routes.post('/pdf', [checkKey, checkAuth], pdf.general)
 routes.get('/pdf/requests/:requestId', pdf.request)

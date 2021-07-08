@@ -43,6 +43,16 @@ const mail = {
 		return res.send()
 	},
 
+	contact: async (req: Request, res: Response) => {
+		const {subject, text}: {subject: string; text: string} = req.body
+
+		const to = ['cruzrepresentacoes@gmail.com']
+
+		sendMail(subject, text, to)
+
+		return res.send()
+	},
+
 	general: async (req: Request, res: Response) => {
 		const {to, subject, text}: {to: string[]; subject: string; text: string} =
 			req.body
