@@ -1,5 +1,6 @@
 import {Request, Response} from 'express'
 import bcrypt from 'bcrypt'
+import jwt from 'jsonwebtoken'
 
 import Client from '../models/Client'
 import Seller from '../models/Seller'
@@ -8,54 +9,52 @@ import encryptPwd from '../utils/encryptPwd'
 const auth = {
 	logInClient: async (req: Request, res: Response) => {
 		const {email, password} = req.body
-		let user = {email: '', password: '', id: '', role: ''}
 
 		const client = await Client.findOne({email})
-		if (client)
-			user = {
-				email: client.email,
-				password: client.senha,
-				id: client._id,
-				role: 'client'
-			}
-		else
+		if (!client)
 			return res
 				.status(404)
-				.json({message: 'Usuário de cliente não encontrado.'})
+				.json({token: null, message: 'Usuário de cliente não encontrado.'})
 
 		const isPasswordValid = await bcrypt.compare(password, client.senha)
 		if (!isPasswordValid)
 			return res.status(401).json({
-				user: null,
+				token: null,
 				message: 'Senha inválida!'
 			})
-		else return res.status(200).send({user: {id: user.id, role: user.role}})
+
+		const token = jwt.sign(
+			{id: String(client._id), role: 'client'},
+			String(process.env.AUTH_SECRET)
+		)
+
+		return res.status(200).json({token})
 	},
 
 	logInSeller: async (req: Request, res: Response) => {
 		const {email, password} = req.body
-		let user = {email: '', password: '', id: '', role: ''}
 
 		const seller = await Seller.findOne({email})
-		if (seller)
-			user = {
-				email: seller.email,
-				password: seller.senha,
-				id: seller._id,
-				role: seller.admin ? 'admin' : 'seller'
-			}
-		else
+		if (!seller)
 			return res
 				.status(404)
-				.json({message: 'Usuário de vendedor não encontrado.'})
+				.json({token: null, message: 'Usuário de vendedor não encontrado.'})
+
+		const role = seller.admin ? 'admin' : 'seller'
 
 		const isPasswordValid = await bcrypt.compare(password, seller.senha)
 		if (!isPasswordValid)
-			return res.status(401).send({
-				user: null,
+			return res.status(401).json({
+				token: null,
 				message: 'Senha inválida!'
 			})
-		else return res.status(200).send({user: {id: user.id, role: user.role}})
+
+		const token = jwt.sign(
+			{id: String(seller._id), role},
+			String(process.env.AUTH_SECRET)
+		)
+
+		return res.status(200).json({token})
 	},
 
 	changePasswordClient: async (req: Request, res: Response) => {
