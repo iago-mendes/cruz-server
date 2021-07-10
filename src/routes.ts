@@ -176,7 +176,7 @@ routes.get('/sheet/clients/header', checkKey, clientSheet.getHeader)
 routes.post('/sheet/clients', [checkKey, checkAuth], clientSheet.setClients)
 
 routes.get('/banners', getBanners)
-routes.get('/sync', [checkKey, checkAuth], sync)
+routes.get('/sync', checkKey, sync)
 
 routes.post('/goals', [checkKey, checkAuth], goalController.create)
 routes.get('/goals/raw', [checkKey, checkAuth], goalController.raw)
