@@ -4,7 +4,8 @@ import jwt from 'jsonwebtoken'
 export function checkAuth(req: Request, res: Response, next: NextFunction) {
 	const authHeader = req.headers.authorization
 
-	if (!authHeader) return res.status(401).json({message: 'No token provided!'})
+	if (!authHeader)
+		return res.status(401).json({message: 'Nenhum token informado!'})
 
 	const [, token] = authHeader.split(' ')
 
@@ -14,6 +15,6 @@ export function checkAuth(req: Request, res: Response, next: NextFunction) {
 		jwt.verify(token, String(process.env.AUTH_SECRET))
 		return next()
 	} catch (error) {
-		return res.status(401).json({message: 'Provided token is invalid!'})
+		return res.status(401).json({message: 'Token informado é inválido!'})
 	}
 }
