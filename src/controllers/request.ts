@@ -92,18 +92,18 @@ const request = {
 			return res.status(404).json({message: 'Pedido não encontrado!'})
 
 		const request = {
-			data: data ? data : previous.data,
-			condicao: condicao ? condicao : previous.condicao,
-			digitado_por: digitado_por ? digitado_por : previous.digitado_por,
-			cliente: cliente ? cliente : previous.cliente,
-			vendedor: vendedor ? vendedor : previous.vendedor,
-			representada: representada ? representada : previous.representada,
-			contato: contato ? JSON.parse(contato) : previous.contato,
-			frete: frete ? frete : previous.frete,
-			tipo: tipo ? JSON.parse(tipo) : previous.tipo,
-			status: status ? JSON.parse(status) : previous.status,
-			produtos: produtos ? JSON.parse(produtos) : previous.produtos,
-			obs: obs ? obs : previous.obs,
+			data: data,
+			condicao: condicao,
+			digitado_por: digitado_por,
+			cliente: cliente,
+			vendedor: vendedor,
+			representada: representada,
+			contato: contato,
+			frete: frete,
+			tipo: tipo,
+			status: status,
+			produtos: produtos,
+			obs: obs,
 			modificadoEm: getDate()
 		}
 
