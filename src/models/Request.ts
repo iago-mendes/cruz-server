@@ -19,6 +19,7 @@ export type RequestType = mongoose.Document & {
 	frete?: string
 	tipo: {venda: boolean; troca: boolean}
 	status: {concluido: boolean; enviado: boolean; faturado: boolean}
+	obs?: string
 	modificadoEm?: string
 }
 
@@ -68,6 +69,7 @@ const RequestSchema = new mongoose.Schema({
 			preco: {type: Number, required: true}
 		}
 	],
+	obs: {type: String},
 	modificadoEm: {type: String}
 })
 
