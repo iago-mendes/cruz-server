@@ -26,6 +26,7 @@ export type ClientType = mongoose.Document & {
 		id: string
 		tabela: string
 	}>
+	obs?: string
 	modificadoEm?: string
 }
 
@@ -77,6 +78,7 @@ const ClientSchema = new mongoose.Schema({
 			}
 		}
 	],
+	obs: {type: String},
 	modificadoEm: {type: String}
 })
 ClientSchema.index({

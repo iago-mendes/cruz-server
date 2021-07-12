@@ -26,7 +26,8 @@ const client = {
 			status,
 			condicoes,
 			contatos,
-			representadas
+			representadas,
+			obs
 		} = req.body
 		const image = req.file
 
@@ -52,6 +53,7 @@ const client = {
 			condicoes: condicoes ? JSON.parse(condicoes) : undefined,
 			contatos: contatos ? JSON.parse(contatos) : undefined,
 			representadas: representadas ? JSON.parse(representadas) : undefined,
+			obs,
 			modificadoEm: getDate()
 		}
 
@@ -73,7 +75,8 @@ const client = {
 			status,
 			condicoes,
 			contatos,
-			representadas
+			representadas,
+			obs
 		} = req.body
 		const image = req.file
 
@@ -107,6 +110,7 @@ const client = {
 			representadas: representadas
 				? JSON.parse(representadas)
 				: previous.representadas,
+			obs: obs ? obs : previous.obs,
 			modificadoEm: getDate()
 		}
 
