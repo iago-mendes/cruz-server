@@ -17,7 +17,7 @@ export type RequestType = mongoose.Document & {
 	volume?: number
 	contato?: {nome: string; telefone: string}
 	frete?: string
-	tipo: {venda: boolean; troca: boolean}
+	tipo: {venda: boolean; troca: boolean; bonus?: boolean}
 	status: {concluido: boolean; enviado: boolean; faturado: boolean}
 	obs?: string
 	modificadoEm?: string
@@ -51,7 +51,8 @@ const RequestSchema = new mongoose.Schema({
 	frete: {type: String, required: false},
 	tipo: {
 		venda: {type: Boolean, required: true},
-		troca: {type: Boolean, required: true}
+		troca: {type: Boolean, required: true},
+		bonus: {type: Boolean}
 	},
 	status: {
 		concluido: {type: Boolean, required: true},
