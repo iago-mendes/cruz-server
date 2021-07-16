@@ -36,13 +36,14 @@ export const goalController = {
 		if (!previousGoal)
 			return res.status(404).json({message: 'Meta não encontrada!'})
 
-		const goal = {
-			month,
-			companies: companies ? companies : previousGoal.companies,
+		const newGoal = {
+			companies,
 			modifiedAt: getDate()
 		}
 
-		const updatedGoal = await Goal.findOneAndUpdate({month}, goal)
+		const updatedGoal = await Goal.findOneAndUpdate({month}, newGoal, {
+			new: true
+		})
 		return res.json(updatedGoal)
 	},
 
