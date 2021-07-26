@@ -57,6 +57,11 @@ routes.put(
 	companyUtils.updateTables
 )
 routes.get('/companies/:company/tables', checkKey, companyUtils.getTables)
+routes.put(
+	'/companies/:company/images',
+	[checkKey, checkAuth, upload.array('imagens')],
+	companyUtils.updateProductsImage
+)
 
 routes.post(
 	'/companies/:company/products',

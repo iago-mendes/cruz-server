@@ -1,4 +1,6 @@
 import {Request, Response} from 'express'
+import fs from 'fs'
+import path from 'path'
 
 import Company from '../../models/Company'
 import compareIds from '../../utils/compareIds'
@@ -83,6 +85,48 @@ const companyUtils = {
 		}))
 
 		return res.json(tables)
+	},
+
+	updateProductsImage: async (req: Request, res: Response) => {
+		const {company: companyId} = req.params
+		const {relations: sentRelations} = req.body
+		const images = req.files as Express.Multer.File[]
+
+		const relations: Array<{imageFilename: string; productId: string}> =
+			JSON.parse(String(sentRelations))
+
+		const company = await Company.findById(companyId)
+		if (!company)
+			return res.status(404).json({message: 'Representada não encontrada!'})
+
+		const products = company.produtos
+		await Promise.all(
+			images.map(async image => {
+				const relation = relations.find(
+					({imageFilename}) => imageFilename === image.originalname
+				)
+				if (!relation) return
+
+				const productIndex = products.findIndex(({_id}) =>
+					compareIds(_id, relation.productId)
+				)
+				if (productIndex < 0) return
+
+				const previousImage = products[productIndex].imagem
+				if (previousImage)
+					try {
+						fs.unlinkSync(path.resolve('uploads', previousImage))
+					} catch (error) {
+						console.log('<< error while removing image >>', error)
+					}
+
+				products[productIndex].imagem = image.filename
+			})
+		)
+
+		await Company.findByIdAndUpdate(company._id, {produtos: products})
+
+		return res.send()
 	}
 }
 
