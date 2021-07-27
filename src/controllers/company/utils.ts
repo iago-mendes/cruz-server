@@ -129,7 +129,10 @@ const companyUtils = {
 			})
 		)
 
-		await Company.findByIdAndUpdate(company._id, {produtos: products})
+		await Company.findByIdAndUpdate(company._id, {
+			produtos: products,
+			modificadoEm: getDate()
+		})
 
 		return res.send()
 	}
