@@ -90,10 +90,15 @@ const companyUtils = {
 	updateProductsImage: async (req: Request, res: Response) => {
 		const {company: companyId} = req.params
 		const {relations: sentRelations} = req.body
+
 		const images = req.files as Express.Multer.File[]
+		if (!images)
+			return res.status(400).json({message: 'Nenhuma imagem foi enviada!'})
 
 		const relations: Array<{imageFilename: string; productId: string}> =
-			JSON.parse(String(sentRelations))
+			typeof sentRelations === 'string'
+				? JSON.parse(String(sentRelations))
+				: sentRelations
 
 		const company = await Company.findById(companyId)
 		if (!company)
