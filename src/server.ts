@@ -12,12 +12,8 @@ const app = express()
 dotenv.config({path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'})
 
 app.use(cors({origin: '*', exposedHeaders: '*'}))
-app.use((req, res, next) => {
-	res.header('Access-Control-Allow-Origin', '*')
-	next()
-})
-app.use(express.json({limit: '1000mb'}))
-app.use(express.urlencoded({extended: true, limit: '1000mb'}))
+app.use(express.json({limit: '500mb'}))
+app.use(express.urlencoded({extended: true, limit: '500mb'}))
 
 mongoose.connect(
 	`mongodb://localhost:27017/${process.env.DB_NAME}?authSource=admin`,
