@@ -14,7 +14,7 @@ const mail = {
 
 		const pdf = await createRequestPdf(request)
 		sendMail(
-			`E-commerce: ${request.cliente.razao_social}`,
+			`${request.cliente.razao_social} criou orçamento`,
 			text,
 			to,
 			'e-commerce@cruzrepresentacoes.com.br',
