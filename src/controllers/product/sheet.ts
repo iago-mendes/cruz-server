@@ -108,8 +108,12 @@ const productSheet = {
 		const products = company.produtos
 
 		sheetProducts.map(sheetProduct => {
-			const tables: Table[] = []
+			const code = sheetProduct[getFieldName('codigo')]
+			if (code === undefined || code === null) {
+				return
+			}
 
+			const tables: Table[] = []
 			fullHeader.map(({name: fieldName, field}) => {
 				if (fieldName.split(' ')[0] === 'Tabela')
 					tables.push({
@@ -119,7 +123,7 @@ const productSheet = {
 			})
 
 			const product = {
-				codigo: String(sheetProduct[getFieldName('codigo')] ?? ''),
+				codigo: String(code),
 				nome: String(sheetProduct[getFieldName('nome')] ?? ''),
 				comissao: Number(sheetProduct[getFieldName('comissao')] ?? 0),
 				unidade: String(sheetProduct[getFieldName('unidade')] ?? ''),
