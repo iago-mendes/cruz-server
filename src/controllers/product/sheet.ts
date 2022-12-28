@@ -114,19 +114,19 @@ const productSheet = {
 				if (fieldName.split(' ')[0] === 'Tabela')
 					tables.push({
 						id: field,
-						preco: Number(sheetProduct[fieldName])
+						preco: Number(sheetProduct[fieldName] ?? 0)
 					})
 			})
 
 			const product = {
-				codigo: String(sheetProduct[getFieldName('codigo')]),
-				nome: String(sheetProduct[getFieldName('nome')]),
-				comissao: Number(sheetProduct[getFieldName('comissao')]),
-				unidade: String(sheetProduct[getFieldName('unidade')]),
-				peso: Number(sheetProduct[getFieldName('peso')]),
-				volume: Number(sheetProduct[getFieldName('volume')]),
-				ipi: Number(sheetProduct[getFieldName('ipi')]),
-				st: Number(sheetProduct[getFieldName('st')]),
+				codigo: String(sheetProduct[getFieldName('codigo')] ?? ''),
+				nome: String(sheetProduct[getFieldName('nome')] ?? ''),
+				comissao: Number(sheetProduct[getFieldName('comissao')] ?? 0),
+				unidade: String(sheetProduct[getFieldName('unidade')] ?? ''),
+				peso: Number(sheetProduct[getFieldName('peso')] ?? 0),
+				volume: Number(sheetProduct[getFieldName('volume')] ?? 0),
+				ipi: Number(sheetProduct[getFieldName('ipi')] ?? 0),
+				st: Number(sheetProduct[getFieldName('st')] ?? 0),
 				tabelas: tables
 			}
 
