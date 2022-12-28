@@ -42,7 +42,9 @@ export async function createRequestPdf(request: RequestFormated) {
 										{text: 'Cruz representações\n', fontSize: 15, bold: true},
 										'contato@cruzrepresentacoes.com.br\n',
 										'(38) 99985-6208 (38) 99986-6208 (38) 99166-5923\n',
-										'\nID do pedido: ',
+										'\n',
+										request.status.concluido ? 'Pedido' : 'Orçamento',
+										'N° ',
 										String(request.id)
 									]
 								},
