@@ -44,7 +44,7 @@ export async function createRequestPdf(request: RequestFormated) {
 										'(38) 99985-6208 (38) 99986-6208 (38) 99166-5923\n',
 										'\n',
 										request.status.concluido ? 'Pedido' : 'Orçamento',
-										'N° ',
+										' N° ',
 										String(request.id)
 									]
 								},
